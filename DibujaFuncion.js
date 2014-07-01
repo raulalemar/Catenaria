@@ -30,7 +30,8 @@ function funGraph (ctx,axes,func,color,thick) {
   else         ctx.lineTo(x0+xx,y0-yy);
  }
  ctx.stroke();
-}
+ console.log("He hecho un dibujo!");
+};
 
 function showAxes(ctx,axes) {
  var x0=axes.x0, w=ctx.canvas.width;
@@ -41,4 +42,7 @@ function showAxes(ctx,axes) {
  ctx.moveTo(xmin,y0); ctx.lineTo(w,y0);  // X axis
  ctx.moveTo(x0,0);    ctx.lineTo(x0,h);  // Y axis
  ctx.stroke();
-}
+};
+
+
+
