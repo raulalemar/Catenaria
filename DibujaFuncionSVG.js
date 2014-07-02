@@ -7,7 +7,7 @@ function changeDimensions()
 
 function dibujaSeno()
 {
-	var svg = document.getElementById('Grafica').children[0];
+	var svg = document.getElementById('Grafica');
 	var origin = { //origin of axes
 	    x: 400,
 	    y: 250
