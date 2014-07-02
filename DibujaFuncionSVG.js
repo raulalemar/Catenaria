@@ -1,10 +1,5 @@
 var Parametro=25;         // Parámetro de la catenaria, valores entre 22 y 100 quedan bien
 
-function changeDimensions()
-{
-	document.getElementById("rect1").setAttribute("width", "100");
-}
-
 function dibujaSeno()
 {
 	var svg = document.getElementById('Grafica');
