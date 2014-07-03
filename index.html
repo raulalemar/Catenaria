@@ -15,12 +15,12 @@
 	</div>
 
 	<script>
-		dibujaEjes();
 		dibujaCatenaria();
+		dibujaEjes();
 	</script>
 
 	<input id="button1" type="button" value="Incrementar parametro" onclick="Parametro += 5"/>
 	<input id="button1" type="button" value="Disminuir parametro" onclick="Parametro -= 5"/>
-	<input id="button1" type="button" value="Actualizar" onclick="dibujaCatenaria();"/>
+	<input id="button1" type="button" value="Actualizar" onclick="dibujaCatenaria(); dibujaEjes();"/>
 </body>
 </html>

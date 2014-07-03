@@ -37,6 +37,15 @@ function dibujaCatenaria()
 	};     
 	var rarity = 1;      // point spacing
 
+	var lineas = document.getElementsByTagName('line');
+
+	for (var i = 0; i<lineas.length; i++)
+	{
+		svg.removeChild(lineas[i]);
+	}
+
+	
+
 	for (var i = -300; i < 300; i++)
 	{
 		var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
