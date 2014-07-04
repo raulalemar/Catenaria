@@ -1,4 +1,6 @@
 var Parametro=25;         // Parámetro de la catenaria, valores entre 22 y 100 quedan bien
+var YMAX = 400, YMIN = -400;
+
 
 function dibujaSeno()
 {
@@ -28,6 +30,8 @@ function dibujaSeno()
 	}
 }
 
+
+
 function dibujaCatenaria()
 {
 	var svg = document.getElementById('Grafica');
@@ -36,67 +40,56 @@ function dibujaCatenaria()
 	    y: 250
 	};     
 
-	/*var lineas = svg.getElementsByTagName('line');
-
-	console.log('Tipo de lineas: ' + typeof(lineas));
-
-	console.log('Antes de hacer remove: ');
-	console.log('Longitud de lineas: ' + lineas.length);
-
-	for (var i = 0; i<lineas.length; i++)
-	{
-		console.log('lineas[i]: ' + lineas[i]);
-		svg.removeChild(lineas[0]);
-	}
-
-
-	console.log('Despues de hacer remove: ');
-	console.log('Longitud de lineas: ' + lineas.length);
-
-	for (var i = 0; i<lineas.length; i++)
-	{
-		console.log('lineas[i]: ' + lineas[i]);
-	}
-
-
-
-	// A partir de aqui tenemos el dibujo usando 'line'
-	// Borramos todo lo que hay en svg
-	while (svg.firstChild)
-	{
-		svg.removeChild(svg.firstChild);
-	}
-
-	for (var i = -300; i < 300; i++)
-	{
-		var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-
-	    	line.setAttribute('x1', (i - 1)  + origin.x);
-	    	line.setAttribute('y1', -Catenaria(i-1) + origin.y); // El signo menos es porque el eje va para abajo
-
-	    	line.setAttribute('x2', i  + origin.x);
-	    	line.setAttribute('y2', -Catenaria(i)   + origin.y); // Idem
-	
-	    	line.setAttribute('style', "stroke:black;stroke-width:3");
-
-	    	//svg.appendChild(line);
-	}*/
-
-	var pathCatenaria = svg.getElementById('pathCatenaria');
-	if(pathCatenaria)
-		svg.removeChild(pathCatenaria);
+	function pathXY(i) {
+		var valorX = i  + origin.x;
+	        var valorY = -Catenaria(i) + origin.y;
+		if (valorY < YMAX && valorY > YMIN){ 
+	      		return "" + valorX + " " + valorY;
+		}
+	};
 
 	// Aqui vamos a intentarlo haciendo path
+	var pathCatenaria = svg.getElementById('pathCatenaria');
+	if(pathCatenaria)
+	{
+		svg.removeChild(pathCatenaria);
+	}
+
 	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-	var ruta = "M" + ((300 - 1)  + origin.x) + " " + (-Catenaria(300-1) + origin.y);
+	var ruta = "M";
 	for (var i=-300; i<300; i++)
 	{
-		ruta += " L" + ((i)  + origin.x) + " " + (-Catenaria(i) + origin.y)
+		var xy = pathXY(i);
+		if (xy) {
+			if (ruta!="M") {ruta += " L";}
+			ruta += xy;
+		}
+		
+		
 	}
 	myPath.setAttribute('style', "stroke:red;stroke-width:3; fill:none");
 	myPath.setAttribute('id', "pathCatenaria");
 	myPath.setAttribute('d', ruta);
 	svg.appendChild(myPath);
+
+
+
+	// Aqui vamos a añadir el texto con el valor del parametro
+	var textoCatenaria = svg.getElementById('textoCatenaria');
+	if(textoCatenaria)
+	{
+		svg.removeChild(textoCatenaria);
+	}
+
+	var myText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	myText.setAttribute('id', "textoCatenaria");
+	myText.setAttribute('x', 20);
+	myText.setAttribute('y', 20);
+
+	var texto = document.createTextNode('Parámetro: ' + Parametro);
+	myText.appendChild(texto);
+
+	svg.appendChild(myText);
 
 }
 
