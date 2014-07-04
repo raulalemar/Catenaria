@@ -10,18 +10,17 @@
 	</head>
 
 <body>
-	<div>	
-		<svg id='Grafica' width="800" height="500">
+	<div id='divCatenaria' width="80vw" height="50vh">	
+		<svg id='Grafica'>
 		</svg>
 	</div>
 
 	<script>
-		dibujaCatenaria();
+		dibujaCat2();
 		dibujaEjes();
 	</script>
 
-	<input id="button1" type="button" value="Incrementar parametro" onclick="Parametro += 5"/>
-	<input id="button1" type="button" value="Disminuir parametro" onclick="Parametro -= 5"/>
-	<input id="button1" type="button" value="Actualizar" onclick="dibujaCatenaria();"/>
+	<input id="button1" type="button" value="Incrementar parametro" onclick="Parametro += 5; dibujaCat2();"/>
+	<input id="button1" type="button" value="Disminuir parametro" onclick="Parametro -= 5; dibujaCat2();"/>
 </body>
 </html>

@@ -1,50 +1,24 @@
 var Parametro=25;         // Parámetro de la catenaria, valores entre 22 y 100 quedan bien
-var YMAX = 400, YMIN = -400;
-
-
-function dibujaSeno()
-{
-	var svg = document.getElementById('Grafica');
-	var origin = { //origin of axes
-	    x: 400,
-	    y: 250
-	};
-	var amplitude = 50;  // wave amplitude
-	var rarity = 1;      // point spacing
-	var freq = 0.05;     // angular frequency
-	var phase = 0;       // phase angle
-
-	for (var i = 1; i < 300; i++)
-	{
-		var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-
-	    	line.setAttribute('x1', (i - 1) * rarity + origin.x);
-	    	line.setAttribute('y1', -Math.sin(freq * (i - 1)) * amplitude + origin.y); // El signo menos es porque el eje va para abajo
-
-	    	line.setAttribute('x2', i * rarity + origin.x);
-	    	line.setAttribute('y2', -Math.sin(freq * (i)) * amplitude + origin.y);     // Idem
-	
-	    	line.setAttribute('style', "stroke:black;stroke-width:3");
-
-	    	svg.appendChild(line);
-	}
-}
-
-
+var YMIN= -5, YMAX = 200;
+var XMIN = -350, XMAX = 350;
+var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
 
 function dibujaCatenaria()
 {
+	var divCatenaria = document.getElementById('divCatenaria');
+	var divWidth = divCatenaria.attributes.width.nodeValue;
+	var divHeight = divCatenaria.attributes.height.nodeValue;
+
 	var svg = document.getElementById('Grafica');
-	var origin = { //origin of axes
-	    x: 400,
-	    y: 250
-	};     
+	svg.setAttribute('width', '100%');
+	svg.setAttribute('height', '90%');
+	svg.setAttribute('viewBox', '' + XMIN + ' ' + (-YMAX) + ' ' + xRange + ' ' + yRange);
 
 	function pathXY(i) {
-		var valorX = i  + origin.x;
-	        var valorY = -Catenaria(i) + origin.y;
+		var valorX = i;
+	        var valorY = Catenaria(i);
 		if (valorY < YMAX && valorY > YMIN){ 
-	      		return "" + valorX + " " + valorY;
+	      		return "" + valorX + " " + -valorY;
 		}
 	};
 
@@ -57,7 +31,7 @@ function dibujaCatenaria()
 
 	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	var ruta = "M";
-	for (var i=-300; i<300; i++)
+	for (var i=XMIN; i<XMAX; i++)
 	{
 		var xy = pathXY(i);
 		if (xy) {
@@ -93,6 +67,74 @@ function dibujaCatenaria()
 
 }
 
+function dibuja(functionGraph)
+{
+	var divCatenaria = document.getElementById('divCatenaria');
+	var divWidth = divCatenaria.attributes.width.nodeValue;
+	var divHeight = divCatenaria.attributes.height.nodeValue;
+
+	var svg = document.getElementById('Grafica');
+	svg.setAttribute('width', '100%');
+	svg.setAttribute('height', '90%');
+	svg.setAttribute('viewBox', '' + XMIN + ' ' + (-YMAX) + ' ' + xRange + ' ' + yRange);
+
+	function pathXY(i) {
+		var valorX = i;
+	        var valorY = functionGraph(i);
+		if (valorY < YMAX && valorY > YMIN){ 
+	      		return "" + valorX + " " + -valorY;
+		}
+	};
+
+	// Aqui vamos a intentarlo haciendo path
+	var pathCatenaria = svg.getElementById('pathCatenaria');
+	if(pathCatenaria)
+	{
+		svg.removeChild(pathCatenaria);
+	}
+
+	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	var ruta = "M";
+	for (var i=XMIN; i<XMAX; i++)
+	{
+		var xy = pathXY(i);
+		if (xy) {
+			if (ruta!="M") {ruta += " L";}
+			ruta += xy;
+		}
+		
+		
+	}
+	myPath.setAttribute('style', "stroke:red;stroke-width:3; fill:none");
+	myPath.setAttribute('id', "pathCatenaria");
+	myPath.setAttribute('d', ruta);
+	svg.appendChild(myPath);
+
+
+
+	// Aqui vamos a añadir el texto con el valor del parametro
+	var textoCatenaria = svg.getElementById('textoCatenaria');
+	if(textoCatenaria)
+	{
+		svg.removeChild(textoCatenaria);
+	}
+
+	var myText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	myText.setAttribute('id', "textoCatenaria");
+	myText.setAttribute('x', 20);
+	myText.setAttribute('y', 20);
+
+	var texto = document.createTextNode('Parámetro: ' + Parametro);
+	myText.appendChild(texto);
+
+	svg.appendChild(myText);
+
+}
+
+function dibujaCat2(){
+   dibuja(Catenaria)
+}
+
 function dibujaEjes()
 {
 	var svg = document.getElementById('Grafica');
@@ -100,17 +142,17 @@ function dibujaEjes()
 	var ejeX = document.createElementNS("http://www.w3.org/2000/svg", "line");
 	var ejeY = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
-	// Posicion X
-	ejeX.setAttribute('x1', 100);
-	ejeX.setAttribute('y1', 250);
-	ejeX.setAttribute('x2', 700);
-	ejeX.setAttribute('y2', 250);
+	// Eje X
+	ejeX.setAttribute('x1', XMIN);
+	ejeX.setAttribute('y1', 0);
+	ejeX.setAttribute('x2', XMAX);
+	ejeX.setAttribute('y2', 0);
 
-	// Posicion Y
-	ejeY.setAttribute('x1', 400);
-	ejeY.setAttribute('y1',  10);
-	ejeY.setAttribute('x2', 400);
-	ejeY.setAttribute('y2', 490);
+	// Eje Y
+	ejeY.setAttribute('x1', 0);
+	ejeY.setAttribute('y1', -YMIN);
+	ejeY.setAttribute('x2', 0);
+	ejeY.setAttribute('y2', -YMAX);
 	
 
 	// Colores
