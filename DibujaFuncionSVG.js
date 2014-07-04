@@ -3,69 +3,6 @@ var YMIN= -5, YMAX = 200;
 var XMIN = -350, XMAX = 350;
 var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
 
-function dibujaCatenaria()
-{
-	var divCatenaria = document.getElementById('divCatenaria');
-	var divWidth = divCatenaria.attributes.width.nodeValue;
-	var divHeight = divCatenaria.attributes.height.nodeValue;
-
-	var svg = document.getElementById('Grafica');
-	svg.setAttribute('width', '100%');
-	svg.setAttribute('height', '90%');
-	svg.setAttribute('viewBox', '' + XMIN + ' ' + (-YMAX) + ' ' + xRange + ' ' + yRange);
-
-	function pathXY(i) {
-		var valorX = i;
-	        var valorY = Catenaria(i);
-		if (valorY < YMAX && valorY > YMIN){ 
-	      		return "" + valorX + " " + -valorY;
-		}
-	};
-
-	// Aqui vamos a intentarlo haciendo path
-	var pathCatenaria = svg.getElementById('pathCatenaria');
-	if(pathCatenaria)
-	{
-		svg.removeChild(pathCatenaria);
-	}
-
-	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-	var ruta = "M";
-	for (var i=XMIN; i<XMAX; i++)
-	{
-		var xy = pathXY(i);
-		if (xy) {
-			if (ruta!="M") {ruta += " L";}
-			ruta += xy;
-		}
-		
-		
-	}
-	myPath.setAttribute('style', "stroke:red;stroke-width:3; fill:none");
-	myPath.setAttribute('id', "pathCatenaria");
-	myPath.setAttribute('d', ruta);
-	svg.appendChild(myPath);
-
-
-
-	// Aqui vamos a añadir el texto con el valor del parametro
-	var textoCatenaria = svg.getElementById('textoCatenaria');
-	if(textoCatenaria)
-	{
-		svg.removeChild(textoCatenaria);
-	}
-
-	var myText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-	myText.setAttribute('id', "textoCatenaria");
-	myText.setAttribute('x', 20);
-	myText.setAttribute('y', 20);
-
-	var texto = document.createTextNode('Parámetro: ' + Parametro);
-	myText.appendChild(texto);
-
-	svg.appendChild(myText);
-
-}
 
 function dibuja(functionGraph)
 {
