@@ -15,11 +15,20 @@
 	</div>
 
 	<script>
-		dibuja(Catenaria);
 		dibujaEjes();
+		Parametro=1;
+		var parUp = true;
+		var render = function () {
+		  requestAnimationFrame(render);
+		  if(Parametro>=9) {parUp = false};
+		  if(Parametro<=1) {parUp = true};
+		  if (parUp) {
+		    Parametro += 0.01
+		  } else {Parametro -= 0.01};
+		  dibuja(Catenaria);
+		};
+	render();
 	</script>
 
-	<input id="button1" type="button" value="Incrementar parametro" onclick="if(Parametro!=9) Parametro += 1; dibuja(Catenaria);"/>
-	<input id="button1" type="button" value="Disminuir parametro"   onclick="if(Parametro!=1) Parametro -= 1; dibuja(Catenaria);"/>
 </body>
 </html>
