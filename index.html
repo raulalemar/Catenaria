@@ -20,7 +20,7 @@
 		dibujaEjes();
 	</script>
 
-	<input id="button1" type="button" value="Incrementar parametro" onclick="Parametro += 5; dibuja(Catenaria);"/>
-	<input id="button1" type="button" value="Disminuir parametro" onclick="Parametro -= 5; dibuja(Catenaria);"/>
+	<input id="button1" type="button" value="Incrementar parametro" onclick="if(Parametro!=9) Parametro += 1; dibuja(Catenaria);"/>
+	<input id="button1" type="button" value="Disminuir parametro"   onclick="if(Parametro!=1) Parametro -= 1; dibuja(Catenaria);"/>
 </body>
 </html>

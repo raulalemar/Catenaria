@@ -1,6 +1,7 @@
-var Parametro=25;         // Parámetro de la catenaria, valores entre 22 y 100 quedan bien
-var YMIN= -5, YMAX = 200;
-var XMIN = -350, XMAX = 350;
+var Parametro=1; 
+var NUMBER_POINTS = 600;
+var YMIN= -2, YMAX = 10;
+var XMIN = -8, XMAX = 8;
 var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
 
 
@@ -32,17 +33,16 @@ function dibuja(functionGraph)
 
 	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	var ruta = "M";
-	for (var i=XMIN; i<XMAX; i++)
-	{
-		var xy = pathXY(i);
+	for (var i=0; i<600; i++)
+	{	
+		var x = XMIN + i*xRange/NUMBER_POINTS;
+		var xy = pathXY(x);
 		if (xy) {
 			if (ruta!="M") {ruta += " L";}
 			ruta += xy;
 		}
-		
-		
 	}
-	myPath.setAttribute('style', "stroke:red;stroke-width:3; fill:none");
+	myPath.setAttribute('style', "stroke:red;stroke-width:1%; fill:none");
 	myPath.setAttribute('id', "pathCatenaria");
 	myPath.setAttribute('d', ruta);
 	svg.appendChild(myPath);
@@ -58,8 +58,9 @@ function dibuja(functionGraph)
 
 	var myText = document.createElementNS("http://www.w3.org/2000/svg", "text");
 	myText.setAttribute('id', "textoCatenaria");
-	myText.setAttribute('x', 20);
-	myText.setAttribute('y', 20);
+	myText.setAttribute('x', XMIN  + 0.01*xRange);
+	myText.setAttribute('y', 0     + 0.10*yRange);
+	myText.setAttribute('font-size', '5%');
 
 	var texto = document.createTextNode('Parámetro: ' + Parametro);
 	myText.appendChild(texto);
@@ -68,9 +69,6 @@ function dibuja(functionGraph)
 
 }
 
-function dibujaCat2(){
-   dibuja(Catenaria)
-}
 
 function dibujaEjes()
 {
@@ -93,8 +91,8 @@ function dibujaEjes()
 	
 
 	// Colores
-	ejeX.setAttribute('style', "stroke:#006600;stroke-width:3");
-	ejeY.setAttribute('style', "stroke:#006600;stroke-width:3");
+	ejeX.setAttribute('style', "stroke:#006600;stroke-width:0.5%");
+	ejeY.setAttribute('style', "stroke:#006600;stroke-width:0.5%");
 
 	// Las añadimos
 	svg.appendChild(ejeX);
@@ -105,4 +103,4 @@ function Catenaria(x)
 {
 	var a = Parametro;
 	return a*(Math.exp(x/a) + Math.exp(-x/a)) / 2;
-}
+};
