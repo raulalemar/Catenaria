@@ -87,6 +87,20 @@ function dibujaEjes()
 	// Las añadimos
 	svg.appendChild(ejeX);
 	svg.appendChild(ejeY);
+
+	//flechas
+	var flechaDelta = 0.001;
+	var flechaX = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	var pointsX = ""+(XMAX-flechaDelta)+","+(-flechaDelta)+" "+(XMAX-flechaDelta)+","+flechaDelta+" "+XMAX+",0"
+	console.log(pointsX);
+	flechaX.setAttribute('points', pointsX);
+	flechaX.setAttribute('style',"stroke:#006600;");
+	svg.appendChild(flechaX);
+	var flechaY = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	var pointsY = ""+(-flechaDelta)+","+(-YMAX+flechaDelta)+" "+flechaDelta+","+(-YMAX+flechaDelta)+" "+" "+"0,"+(-YMAX)
+	flechaY.setAttribute('points', pointsY);
+	flechaY.setAttribute('style',"stroke:#006600;");
+	svg.appendChild(flechaY);
 }
 
 function Catenaria(x)
