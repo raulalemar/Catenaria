@@ -13,7 +13,7 @@ function dibuja(functionGraph)
 	var svg = document.getElementById('Grafica');
 	svg.setAttribute('width', '100%');
 	svg.setAttribute('height', '90%');
-	svg.setAttribute('viewBox', '' + XMIN + ' ' + (-YMAX) + ' ' + xRange + ' ' + yRange);
+	svg.setAttribute('viewBox', '' + (XMIN-0.1*xRange) + ' ' + (-YMAX-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 
 	// Aqui vamos a intentarlo haciendo path
 	var pathCatenaria = svg.getElementById('pathCatenaria');
@@ -53,7 +53,7 @@ function dibuja(functionGraph)
 	myText.setAttribute('y', 0     + 0.10*yRange);
 	myText.setAttribute('font-size', '5%');
 
-	var texto = document.createTextNode('Parámetro: ' + Parametro);
+	var texto = document.createTextNode('Parámetro: ' + Parametro.toFixed(2));
 	myText.appendChild(texto);
 
 	svg.appendChild(myText);
@@ -89,17 +89,19 @@ function dibujaEjes()
 	svg.appendChild(ejeY);
 
 	//flechas
-	var flechaDelta = 0.001;
+	var flechaDelta = 0.0005;
+
 	var flechaX = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 	var pointsX = ""+(XMAX-flechaDelta)+","+(-flechaDelta)+" "+(XMAX-flechaDelta)+","+flechaDelta+" "+XMAX+",0"
 	console.log(pointsX);
 	flechaX.setAttribute('points', pointsX);
-	flechaX.setAttribute('style',"stroke:#006600;");
+	flechaX.setAttribute('style',"stroke:#006600;stroke-width:2%;");
 	svg.appendChild(flechaX);
+
 	var flechaY = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 	var pointsY = ""+(-flechaDelta)+","+(-YMAX+flechaDelta)+" "+flechaDelta+","+(-YMAX+flechaDelta)+" "+" "+"0,"+(-YMAX)
 	flechaY.setAttribute('points', pointsY);
-	flechaY.setAttribute('style',"stroke:#006600;");
+	flechaY.setAttribute('style',"stroke:#006600;stroke-width:2%;");
 	svg.appendChild(flechaY);
 }
 
