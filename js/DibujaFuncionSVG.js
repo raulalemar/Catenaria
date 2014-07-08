@@ -1,4 +1,4 @@
-var Parametro=9; 
+var Parametro=1; 
 var NUMBER_POINTS = 600;
 var YMIN= -2, YMAX = 10;
 var XMIN = -8, XMAX = 8;
@@ -112,9 +112,7 @@ function Catenaria(x)
 };
 
 
-function Plot(functionGraph) {
-    
-    this.functionGraph = functionGraph;
+function Plot() {
     
     this.xMin = XMIN;
     this.xMax = XMAX;
@@ -142,36 +140,48 @@ function Plot(functionGraph) {
     }
 
     var svg = this.creaSVG();
-    
-    this.pathXY = function(i) {
-	var valorX = i;
-	var valorY = this.functionGraph(i);
-	if (valorY < this.yMax && valorY > this.yMin){ 
-	    return "" + valorX + " " + -valorY;
+
+    // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
+    this.add = function(elemento) {
+	elemento.plot();
+    }
+
+    this.remove = function() {
+	elemento.remove();
+    }
+
+    this.creaFuncion = function(f, rango, identificador) {
+	
+	var fxMin = rango.xMin;
+	var fxMax = rango.xMax;
+	var fxRange = fxMax - fxMin;
+
+	var pathf = svg.getElementById('tramo' + identificador);
+	if(pathf) { svg.removeChild(pathf) }
+	
+	pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	pathf.setAttribute('style', "stroke:red;stroke-width:1%; fill:none");
+	pathf.setAttribute('id', 'tramo' + identificador);
+	
+	function pathXY (i) {
+	    var valorX = i;
+	    var valorY = f(i);
+	    if (valorY < rango.yMax && valorY > rango.yMin){ 
+		return "" + valorX + " " + -valorY;
+	    }
 	}
-    };
 
-    this.creaPath = function() {
-	// Aqui vamos a intentarlo haciendo path
-	var pathCatenaria = svg.getElementById('pathCatenaria');
-	if(pathCatenaria) { svg.removeChild(pathCatenaria) }
-
-	
-	var myPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-	myPath.setAttribute('style', "stroke:red;stroke-width:1%; fill:none");
-	myPath.setAttribute('id', "pathCatenaria");
-	
 	var ruta = "M";
 	for (var i=0; i<600; i++) {	
-	    var x = XMIN + i*xRange/NUMBER_POINTS;
-	    var xy = this.pathXY(x);
+	    var x = fxMin + i*fxRange/NUMBER_POINTS;
+	    var xy = pathXY(x);
 	    if (xy) {
 		if (ruta!="M") {ruta += " L";}
 		ruta += xy;
 	    }
 	}
-	myPath.setAttribute('d', ruta);
-	svg.appendChild(myPath);
+	pathf.setAttribute('d', ruta);
+	svg.appendChild(pathf);
     }
 
 
@@ -223,14 +233,13 @@ function Plot(functionGraph) {
 	var flechaDelta = 0.0005;
 
 	var flechaX = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-	var pointsX = ""+(XMAX-flechaDelta)+","+(-flechaDelta)+" "+(XMAX-flechaDelta)+","+flechaDelta+" "+XMAX+",0"
-	console.log(pointsX);
+	var pointsX = ""+(XMAX-flechaDelta)+","+(-flechaDelta/2)+" "+(XMAX-flechaDelta)+","+flechaDelta/2+" "+XMAX+",0";
 	flechaX.setAttribute('points', pointsX);
 	flechaX.setAttribute('style',"stroke:#006600;stroke-width:2%;");
 	svg.appendChild(flechaX);
 
 	var flechaY = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-	var pointsY = ""+(-flechaDelta)+","+(-YMAX+flechaDelta)+" "+flechaDelta+","+(-YMAX+flechaDelta)+" "+" "+"0,"+(-YMAX)
+	var pointsY = ""+(-flechaDelta/2)+","+(-YMAX+flechaDelta)+" "+flechaDelta/2+","+(-YMAX+flechaDelta)+" "+" "+"0,"+(-YMAX);
 	flechaY.setAttribute('points', pointsY);
 	flechaY.setAttribute('style',"stroke:#006600;stroke-width:2%;");
 	svg.appendChild(flechaY);
