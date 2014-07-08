@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">	
-	<title>	Dibujador de fuciones 
-	</title>
-	<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/jasmine.js"></script>
-	<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/jasmine-html.js"></script>
-	<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/boot.js"></script>
+  <meta charset="utf-8">	
+  <title> Dibujador de fuciones </title>
 
 	<script src="js/DibujaFuncionSVG.js"></script>
+	
 </head>
 
 <body>
@@ -16,13 +13,13 @@
 		<svg id='Grafica'>
 		</svg>
 	</div>
-
+	<script src="js/DibujaCatenaria.js"></script>
 	<script>
-		dibuja(Catenaria);
-		dibujaEjes();
+		//dibuja(Catenaria);
+		//dibujaEjes();
 	</script>
 
-	<input id="button1" type="button" value="Incrementar parametro" onclick="if(Parametro!=9) Parametro += 1; dibuja(Catenaria);"/>
-	<input id="button1" type="button" value="Disminuir parametro"   onclick="if(Parametro!=1) Parametro -= 1; dibuja(Catenaria);"/>
+	<!-- <input id="button1" type="button" value="Incrementar parametro" onclick="if(Parametro!=9) Parametro += 1; dibuja(Catenaria);"/> -->
+	<!-- <input id="button1" type="button" value="Disminuir parametro"   onclick="if(Parametro!=1) Parametro -= 1; dibuja(Catenaria);"/> -->
 </body>
 </html>
