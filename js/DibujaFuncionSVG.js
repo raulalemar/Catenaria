@@ -1,4 +1,4 @@
-var Parametro=1; 
+var Parametro=9; 
 var NUMBER_POINTS = 600;
 var YMIN= -2, YMAX = 10;
 var XMIN = -8, XMAX = 8;
