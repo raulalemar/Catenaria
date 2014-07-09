@@ -3,30 +3,27 @@ var YMIN= -2, YMAX = 10;
 var XMIN = -8, XMAX = 8;
 var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
 
-function Plot() {
+function Plot(rango) {
     
-  this.xMin = XMIN;
-  this.xMax = XMAX;
-  this.yMin = YMIN;
-  this.yMax = YMAX;
+  this.rango = rango;
 
   this.xRange = function() {
-		return this.xMax - this.xMin;
+		return this.rango.xMax - this.rango.xMin;
   }
   this.yRange = function() {
-		return this.yMax - this.yMin;
+		return this.rango.yMax - this.rango.yMin;
   }
 
   this.creaSVG = function() {
-		var divCatenaria = document.getElementById('divCatenaria');
+		/*var divCatenaria = document.getElementById('divCatenaria');
 		var divWidth = divCatenaria.attributes.width.nodeValue;
-		var divHeight = divCatenaria.attributes.height.nodeValue;
+		var divHeight = divCatenaria.attributes.height.nodeValue;*/
 	
 		var svg = document.getElementById('Grafica');
 		svg.setAttribute('width', '100%');
 		svg.setAttribute('height', '90%');
-		svg.setAttribute('viewBox', '' + (this.xMin-0.1*this.xRange()) + 
-										 ' ' + (-this.yMax-0.1*this.yRange()) + ' ' + (1.1*this.xRange()) + ' ' + (1.1)*this.yRange());
+		svg.setAttribute('viewBox', '' + (this.rango.xMin-0.1*this.xRange()) + 
+										 ' ' + (-this.rango.yMax-0.1*this.yRange()) + ' ' + (1.1*this.xRange()) + ' ' + (1.1)*this.yRange());
 		return svg;
   }
 
@@ -46,40 +43,42 @@ function Plot() {
 		var ejeY = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
 		// Eje X
-		ejeX.setAttribute('x1', XMIN);
+		ejeX.setAttribute('x1', this.rango.xMin);
 		ejeX.setAttribute('y1', 0);
-		ejeX.setAttribute('x2', XMAX);
+		ejeX.setAttribute('x2', this.rango.xMax);
 		ejeX.setAttribute('y2', 0);
 
 		// Eje Y
 		ejeY.setAttribute('x1', 0);
-		ejeY.setAttribute('y1', -YMIN);
+		ejeY.setAttribute('y1', -this.rango.yMin);
 		ejeY.setAttribute('x2', 0);
-		ejeY.setAttribute('y2', -YMAX);
+		ejeY.setAttribute('y2', -this.rango.yMax);
 	
 
 		// Colores
-		ejeX.setAttribute('style', "stroke:#006600;stroke-width:0.5%");
-		ejeY.setAttribute('style', "stroke:#006600;stroke-width:0.5%");
+		ejeX.setAttribute('style', "stroke:#006600;stroke-width:2px%");
+		ejeY.setAttribute('style', "stroke:#006600;stroke-width:2px%");
 
 		// Las añadimos
 		svg.appendChild(ejeX);
 		svg.appendChild(ejeY);
 
 		//flechas
-		var flechaDelta = 0.0005;
+		/*var flechaDelta = 0.0005;
 
 		var flechaX = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		var pointsX = ""+(XMAX-flechaDelta)+","+(-flechaDelta/2)+" "+(XMAX-flechaDelta)+","+flechaDelta/2+" "+XMAX+",0";
+		var pointsX = ""+(this.rango.xMax-flechaDelta)+","+(-flechaDelta/2)+" "
+                                +(this.rango.xMax-flechaDelta)+","+flechaDelta/2+" "+this.rango.xMax+",0";
 		flechaX.setAttribute('points', pointsX);
 		flechaX.setAttribute('style',"stroke:#006600;stroke-width:2%;");
 		svg.appendChild(flechaX);
 
 		var flechaY = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		var pointsY = ""+(-flechaDelta/2)+","+(-YMAX+flechaDelta)+" "+flechaDelta/2+","+(-YMAX+flechaDelta)+" "+" "+"0,"+(-YMAX);
+		var pointsY = ""+(-flechaDelta/2)+","+(-this.rango.yMax+flechaDelta)+" "
+                                +flechaDelta/2+","+(-this.rango.yMax+flechaDelta)+" "+" "+"0,"+(-YMAX);
 		flechaY.setAttribute('points', pointsY);
 		flechaY.setAttribute('style',"stroke:#006600;stroke-width:2%;");
-		svg.appendChild(flechaY);
+		svg.appendChild(flechaY);*/
   }
 }
 
@@ -98,8 +97,8 @@ function Funcion (f, rango, identificador) {
 	this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
   this.remove = function(svg) {
-		var pathf = svg.getElementById('tramo' + identificador);
-		if(pathf) { svg.removeChild(pathf) }
+		var pathf = svg.getElementById('tramo' + this.identificador);
+		if(pathf) { svg.removeChild(pathf); console.log(this, ' Ha sido borrado')}
   }
 
 
@@ -107,8 +106,8 @@ function Funcion (f, rango, identificador) {
 		this.remove(svg);
 	
 		var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
-		pathf.setAttribute('style', "stroke:red;stroke-width:1%; fill:none");
-		pathf.setAttribute('id', 'tramo' + identificador);
+		pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
+		pathf.setAttribute('id', 'tramo' + this.identificador);
 	
 		this.pathXY = function (x) {
 	    var valorX = x;
@@ -128,7 +127,7 @@ function Funcion (f, rango, identificador) {
 	    }
 		}
 		pathf.setAttribute('d', ruta);
-		svg.appendChild(pathf);
+		svg.appendChild(pathf); console.log(this, ' Ha sido creado')
   }
 }
 
