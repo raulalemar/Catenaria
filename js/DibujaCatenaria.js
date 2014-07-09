@@ -37,7 +37,7 @@ FuncionCatenaria.prototype = new Funcion();
 var creaLinea = function (distancia, a, alturaPoste) {
   var numeroPostes = Math.floor(distancia/100); //Postes de suspension
   var vano = distancia / (numeroPostes+1);
-  var rango = {xMin: -0.1*distancia, xMax: 1.1*distancia, yMin: -0.2*alturaPoste, yMax: 1.2*alturaPoste};
+  var rango = {xMin: -0.1*distancia, xMax: 1.1*distancia, yMin: -0.2*alturaPoste, yMax: 4*alturaPoste};
   var escena = new Plot(rango)
 
   escena.creaSVG();
@@ -54,7 +54,7 @@ var creaLinea = function (distancia, a, alturaPoste) {
   }
 
   for(var i = 0; i < postes.length - 1; i++) {
-    var rangoCatenaria = {xMin: postes[i].x, xMax: postes[i+1].x, yMin: -0.2*alturaPoste, yMax: 1.2*alturaPoste};
+    var rangoCatenaria = {xMin: postes[i].x, xMax: postes[i+1].x, yMin: -0.2*alturaPoste, yMax: 4*alturaPoste};
     var constantes = calculaConstantes(a, postes[i].x, postes[i].y + postes[i].altura, postes[i+1].x, postes[i+1].y + postes[i+1].altura);
     catenarias[i] = new FuncionCatenaria(a, constantes[0], constantes[1], rangoCatenaria, i);
     escena.add(catenarias[i]);
