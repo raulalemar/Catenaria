@@ -1,4 +1,4 @@
-describe(Catenaria, function() {
+describe("Catenaria", function() {
 
   describe("cuando pasas un argumento", function() {
     
