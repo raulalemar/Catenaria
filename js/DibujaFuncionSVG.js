@@ -1,8 +1,4 @@
 var NUMBER_POINTS = 600;
-/*var YMIN= -2, YMAX = 10;
-var XMIN = -8, XMAX = 8;
-var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
-*/
 
 function Plot(rango) {
     
@@ -16,9 +12,6 @@ function Plot(rango) {
   }
 
   this.creaSVG = function() {
-		/*var divCatenaria = document.getElementById('divCatenaria');
-		var divWidth = divCatenaria.attributes.width.nodeValue;
-		var divHeight = divCatenaria.attributes.height.nodeValue;*/
 	
 		var svg = document.getElementById('Grafica');
 		svg.setAttribute('width', '100%');
