@@ -1,7 +1,8 @@
 var NUMBER_POINTS = 600;
-var YMIN= -2, YMAX = 10;
+/*var YMIN= -2, YMAX = 10;
 var XMIN = -8, XMAX = 8;
 var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
+*/
 
 function Plot(rango) {
     
@@ -98,7 +99,7 @@ function Funcion (f, rango, identificador) {
 
   this.remove = function(svg) {
 		var pathf = svg.getElementById('tramo' + this.identificador);
-		if(pathf) { svg.removeChild(pathf); console.log(this, ' Ha sido borrado')}
+		if(pathf) { svg.removeChild(pathf) }
   }
 
 
@@ -127,7 +128,7 @@ function Funcion (f, rango, identificador) {
 	    }
 		}
 		pathf.setAttribute('d', ruta);
-		svg.appendChild(pathf); console.log(this, ' Ha sido creado')
+		svg.appendChild(pathf); 
   }
 }
 
