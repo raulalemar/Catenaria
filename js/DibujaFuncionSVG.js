@@ -1,8 +1,20 @@
 var NUMBER_POINTS = 600;
 
+function ListaDeElementos(plot) {
+	this._plotThatBelongs = plot;
+	this._lista = [];
+
+	//interface:
+	this.add = function(elemento) {
+	};
+
+}
+
+
 function Plot(rango) {
     
   this.rango = rango;
+	this.elementos = new ListaDeElementos(this);
 
   this.xRange = function() {
 		return this.rango.xMax - this.rango.xMin;
@@ -25,7 +37,7 @@ function Plot(rango) {
 
   // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
-		elemento.plot(svg);
+		this.elemento.push(elemento);
   }
 
   this.remove = function() {

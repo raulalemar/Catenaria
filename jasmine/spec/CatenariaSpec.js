@@ -70,7 +70,7 @@ describe("parbola", function() {
 
 
 describe("resuelvaParabola", function() {
-	var y1,y2 ;
+	var y1,y2;
 
 	beforeEach(function() {
 		y1 = parabola(1,1);
