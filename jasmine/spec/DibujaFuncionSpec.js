@@ -25,10 +25,23 @@ describe("ListaDeElementos", function() {
 		});
 	});
 
+	describe("#length", function() {
+		it("deberia estar definido", function() {
+			expect(elementos.length).toBeDefined();
+		});
+		it("deberia dar 0 al inicio", function() {
+			expect(elementos.length()).toBe(0);
+		});
+	});
+
 	describe("#add", function() {
 		it("deberia estar definido",function() {
 			expect(elementos.add).toBeDefined();
 		});
+		describe("despues de añadir un elemento", function() {
+			xit("deberia tener longitud 1", function() {});
+		});
+
 	});
 });
 

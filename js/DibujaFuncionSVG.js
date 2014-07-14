@@ -5,9 +5,13 @@ function ListaDeElementos(plot) {
 	this._lista = [];
 
 	//interface:
+	this.length = function() {
+		return this._lista.length;
+	};
 	this.add = function(elemento) {
 	};
-
+	
+	
 }
 
 
@@ -37,7 +41,7 @@ function Plot(rango) {
 
   // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
-		this.elemento.push(elemento);
+		elemento.plot(svg);
   }
 
   this.remove = function() {
