@@ -34,6 +34,8 @@ var creaLinea = function (distancia, a, alturaPoste) {
     catenarias[i] = new FuncionCatenaria(a, constantes[0], constantes[1], rangoCatenaria, i);
     escena.add(catenarias[i]);
   }
+
+	escena.plot();
 }
 
 creaLinea(870, 100, 30);

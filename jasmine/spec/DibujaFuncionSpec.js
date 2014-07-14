@@ -32,6 +32,12 @@ describe("ListaDeElementos", function() {
 		it("deberia dar 0 al inicio", function() {
 			expect(elementos.length()).toBe(0);
 		});
+		it("deberia dar 1 is _lista tiene un elemento", function() {
+			var elemento2;
+			elementos._lista.push(elemento2);
+			expect(elementos.length()).toBe(1);
+		});
+		
 	});
 
 	describe("#add", function() {
@@ -39,7 +45,11 @@ describe("ListaDeElementos", function() {
 			expect(elementos.add).toBeDefined();
 		});
 		describe("despues de añadir un elemento", function() {
-			xit("deberia tener longitud 1", function() {});
+			it("deberia tener longitud 1", function() {
+				var elemento2;
+				elementos.add(elemento2);
+				expect(elementos.length()).toBe(1);
+			});
 		});
 
 	});

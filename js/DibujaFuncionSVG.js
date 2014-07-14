@@ -8,10 +8,16 @@ function ListaDeElementos(plot) {
 	this.length = function() {
 		return this._lista.length;
 	};
+	
 	this.add = function(elemento) {
+		this._lista.push(elemento);
 	};
 	
-	
+	this.plot = function(svg) {
+		for(var i=0; i<this.length(); i++) {
+			this._lista[i].plot(svg);
+		}
+	}
 }
 
 
@@ -41,12 +47,18 @@ function Plot(rango) {
 
   // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
-		elemento.plot(svg);
+		this.elementos.add(elemento);
   }
 
   this.remove = function() {
 		elemento.remove(svg);
   }
+
+	//Plot
+	this.plot = function() {
+		console.log("plot");
+		this.elementos.plot(svg);
+	}
 
   this.creaEjes = function() {
 		var ejeX = document.createElementNS("http://www.w3.org/2000/svg", "line");
