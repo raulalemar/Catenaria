@@ -56,7 +56,6 @@ function Plot(rango) {
 
 	//Plot
 	this.plot = function() {
-		console.log("plot");
 		this.elementos.plot(svg);
 	}
 
@@ -107,22 +106,15 @@ function Plot(rango) {
 
 
 function Funcion (f, rango, identificador) {
-
   this.f = f;
 	this.rango = rango;
-//  this.fxMin = this.rango.xMin;
-//  this.fxMax = this.rango.xMax;
-//  this.fyMin = this.rango.yMin;
-//  this.fyMax = this.rango.yMax;
   this.identificador = identificador;
-
 	this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
   this.remove = function(svg) {
 		var pathf = svg.getElementById('tramo' + this.identificador);
 		if(pathf) { svg.removeChild(pathf) }
   }
-
 
   this.plot = function (svg) {
 		this.remove(svg);
@@ -154,35 +146,35 @@ function Funcion (f, rango, identificador) {
 }
 
 function Poste(x, y, altura, identificador) {
-    this.x = x;
-    this.y = y;
-    this.altura = altura;
-    this.identificador = identificador;
+  this.x = x;
+  this.y = y;
+  this.altura = altura;
+  this.identificador = identificador;
 
-    this.remove = function(svg) {
-			var poste = svg.getElementById('poste' + identificador);
-			if(poste) { svg.removeChild(poste) }
-    }
+  this.remove = function(svg) {
+		var poste = svg.getElementById('poste' + identificador);
+		if(poste) { svg.removeChild(poste) }
+  }
 
-    this.plot = function(svg) {
+  this.plot = function(svg) {
 	
-	this.remove(svg);
-
-	var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
-	poste.setAttribute('id', 'poste' + identificador);
+		this.remove(svg);
+		
+		var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		poste.setAttribute('id', 'poste' + identificador);
 	
-	// poste
-	poste.setAttribute('x1', this.x);
-	poste.setAttribute('y1', -this.y);
-	poste.setAttribute('x2', this.x);
-	poste.setAttribute('y2', -(this.y + this.altura));
+		// poste
+		poste.setAttribute('x1', this.x);
+		poste.setAttribute('y1', -this.y);
+		poste.setAttribute('x2', this.x);
+		poste.setAttribute('y2', -(this.y + this.altura));
 	
-	// Colores
-	poste.setAttribute('style', "stroke:#0000aa;stroke-width:1%");
-	
-	// Las añadimos
-	svg.appendChild(poste);
-    }
+		// Colores
+		poste.setAttribute('style', "stroke:#0000aa;stroke-width:1%");
+		
+		// Las añadimos
+		svg.appendChild(poste);
+  }
 }
 
 function Text(texto, x,y, identificador) {
