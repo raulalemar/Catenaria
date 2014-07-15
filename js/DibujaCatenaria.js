@@ -15,6 +15,12 @@ var creaLinea = function (distancia, a, alturaPoste) {
   var rango = {xMin: -0.1*distancia, xMax: 1.1*distancia, yMin: -0.2*alturaPoste, yMax: 4*alturaPoste};
   var escena = new Plot(rango)
 
+  // Prueba de flechas
+  var ejeX = new Flecha(rango.xMin,0,rango.xMax, 0, 'ejeX');
+  var ejeY = new Flecha(0,0,0,3*alturaPoste, 'ejeY');
+  escena.add(ejeX);
+  escena.add(ejeY);
+
   var postes = [];
   var catenarias = [];
 
@@ -22,23 +28,24 @@ var creaLinea = function (distancia, a, alturaPoste) {
     var xPoste = 0 + i*vano;
     var yPoste = 0;
     postes[i] = new Poste(xPoste, yPoste, alturaPoste, i);
+    if (i==0) postes[i].tipo='amarre';
+    if (i==numeroPostes+1) postes[i].tipo='amarre';
     escena.add(postes[i]);
   }
 
   for(var i = 0; i < postes.length - 1; i++) {
-    var rangoCatenaria = {xMin: postes[i].x, xMax: postes[i+1].x, yMin: -0.2*alturaPoste, yMax: 4*alturaPoste};
+    var rangoCatenaria = {
+      xMin: postes[i].x, 
+      xMax: postes[i+1].x, 
+      yMin: -0.2*alturaPoste, 
+      yMax: 4*alturaPoste
+    };
     var constantes = resuelvaParabola(a, postes[i].x, postes[i].y + postes[i].altura, postes[i+1].x, postes[i+1].y + postes[i+1].altura);
     catenarias[i] = new FuncionCatenaria(a, constantes[0], constantes[1], rangoCatenaria, i);
     escena.add(catenarias[i]);
   }
 
-  // Prueba de flechas
-  var ejeX = new Flecha(rango.xMin,0,rango.xMax, 0, 'ejeX');
-  var ejeY = new Flecha(0,0,0,3*alturaPoste, 'ejeY');
-  //var flechaAleatoria = new Flecha (-10, 70, 520, 20, 0);
-  escena.add(ejeX);
-  escena.add(ejeY);
-  //escena.add(flechaAleatoria);
+  
 
   escena.plot();
 }

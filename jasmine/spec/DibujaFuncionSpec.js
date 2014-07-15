@@ -58,31 +58,40 @@ describe("ListaDeElementos", function() {
 
 
 describe("Plot", function() {
-	var rango;
-	var plot;
-	var elemento;
-	
-	beforeEach(function() {
-		rango = {}; //double
-		plot = new Plot(rango); 
-		spyOn(plot.elementos, 'add');
-	});
-
-	describe("#add", function() {
-		it("responde", function() {
-			expect(plot.add).toBeDefined();
-		});
-		it("llama ListaDeElementos#add", function() {
-			plot.add(elemento);
-			expect(plot.elementos.add).toHaveBeenCalled();
-		});
-	});
-	
-	describe("#plot", function() {
-		it("responde", function() {
-			expect(plot.plot).toBeDefined();
-		});
-	});
-
+  var rango;
+  var plot;
+  var elemento;
+  
+  beforeEach(function() {
+    rango = {}; //double
+    plot = new Plot(rango); 
+    spyOn(plot.elementos, 'add');
+  });
+  
+  describe("#add", function() {
+    it("responde", function() {
+      expect(plot.add).toBeDefined();
+    });
+    it("llama ListaDeElementos#add", function() {
+      plot.add(elemento);
+      expect(plot.elementos.add).toHaveBeenCalled();
+    });
+  });
+  
+  describe("#plot", function() {
+    it("responde", function() {
+      expect(plot.plot).toBeDefined();
+    });
+  });
+ 
 
 });
+
+describe("Poste", function() {
+  describe("#tipo", function() {
+    it("cuando creas un poste sin parametro tipo, su tipo es suspension", function() {
+      var poste = new Poste();
+      expect(poste.tipo).toBe('suspension');
+    })
+  })
+})

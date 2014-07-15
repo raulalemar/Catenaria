@@ -25,14 +25,20 @@ function Plot(rango) {
     
   this.rango = rango;
   this.elementos = new ListaDeElementos(this);
-	this.svg = null;
+  this.svg = null;
 
   this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
   this.yRange = function() { return this.rango.yMax - this.rango.yMin; };
 
   this.creaSVG = function() {
-	
-    var svg = document.getElementById('Grafica');
+    var div = document.getElementById('divGrafica');
+    if(!div) {
+      div = document.createElement("div");
+      div.setAttribute("id", "divGrafica");
+      document.body.appendChild(div);
+    };
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    div.appendChild(svg);
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '90%');
     svg.setAttribute('viewBox', '' + (this.rango.xMin-0.1*this.xRange()) + 
@@ -40,9 +46,6 @@ function Plot(rango) {
     return svg;
   };
 
-  //var svg = this.creaSVG();
-
-  // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
     this.elementos.add(elemento);
   }
@@ -51,9 +54,8 @@ function Plot(rango) {
     elemento.remove(this.svg);
   }
 
-  //Plot
   this.plot = function() {
-		if (!this.svg) {this.svg = this.creaSVG()};
+    if (!this.svg) {this.svg = this.creaSVG()};
     this.elementos.plot(this.svg);
   }
 
@@ -101,35 +103,44 @@ function Funcion (f, rango, identificador) {
   }
 }
 
-function Poste(x, y, altura, identificador) {
+function Poste(x, y, altura, identificador, tipo) {
   this.x = x;
   this.y = y;
   this.altura = altura;
   this.identificador = identificador;
 
+  this.tipo = tipo || 'suspension';
+
   this.remove = function(svg) {
-		var poste = svg.getElementById('poste' + identificador);
-		if(poste) { svg.removeChild(poste) }
+    var poste = svg.getElementById('poste' + identificador);
+    if(poste) { svg.removeChild(poste) }
   }
 
   this.plot = function(svg) {
 	
-		this.remove(svg);
-		
-		var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		poste.setAttribute('id', 'poste' + identificador);
-	
-		// poste
-		poste.setAttribute('x1', this.x);
-		poste.setAttribute('y1', -this.y);
-		poste.setAttribute('x2', this.x);
-		poste.setAttribute('y2', -(this.y + this.altura));
-	
-		// Colores
-		poste.setAttribute('style', "stroke:#0000aa;stroke-width:1%");
-		
-		// Las añadimos
-		svg.appendChild(poste);
+    this.remove(svg);
+    
+    var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    poste.setAttribute('id', 'poste' + identificador);
+    
+    // poste
+    poste.setAttribute('x1', this.x);
+    poste.setAttribute('y1', -this.y);
+    poste.setAttribute('x2', this.x);
+    poste.setAttribute('y2', -(this.y + this.altura));
+    
+    // Colores
+    switch(this.tipo) {
+      case 'amarre':
+        poste.setAttribute('style', "stroke:#000000;stroke-width:4px");
+        break;
+      case 'suspension':
+      default:
+        poste.setAttribute('style', "stroke:#0000aa;stroke-width:2px");
+    }
+
+    // Las añadimos
+    svg.appendChild(poste);
   }
 }
 
