@@ -1,5 +1,6 @@
 var NUMBER_POINTS = 600;
 
+
 function ListaDeElementos(plot) {
   this._plotThatBelongs = plot;
   this._lista = [];
@@ -12,6 +13,12 @@ function ListaDeElementos(plot) {
   this.add = function(elemento) {
     this._lista.push(elemento);
   };
+
+	this.remove = function(elemento) {
+		var index = this._lista.indexOf(elemento);
+		this._lista.splice(index, 1);
+		elemento.remove(this._plotThatBelongs.svg);
+	};
 	
   this.plot = function(svg) {
     for(var i=0; i<this.length(); i++) {
@@ -22,10 +29,13 @@ function ListaDeElementos(plot) {
 
 
 function Plot(rango) {
-    
+
   this.rango = rango;
+
+	
   this.elementos = new ListaDeElementos(this);
-  this.svg = null;
+  
+	this.svg = null;
 
   this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
   this.yRange = function() { return this.rango.yMax - this.rango.yMin; };

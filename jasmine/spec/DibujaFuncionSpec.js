@@ -46,12 +46,37 @@ describe("ListaDeElementos", function() {
 		});
 		describe("despues de añadir un elemento", function() {
 			it("deberia tener longitud 1", function() {
-				var elemento2;
-				elementos.add(elemento2);
+				var elemento;
+				elementos.add(elemento);
 				expect(elementos.length()).toBe(1);
 			});
 		});
+	});
+	
+	describe("#remove", function() {
 
+		var elemento;
+
+
+		beforeEach(function() {
+			elemento = {
+				 remove: function() {}
+			 }; //double
+			elementos.add(elemento);
+			spyOn(elemento, 'remove');
+		});
+
+		it("deberia estar definido", function() {
+			expect(elementos.remove).toBeDefined();
+		});
+		it("deberia eliminar el elmento de la lista", function() {
+			elementos.remove(elemento);
+			expect(elementos.length()).toBe(0);
+		});
+		it("deberia llamar remove de elemento", function() {
+			elementos.remove(elemento);
+			expect(elemento.remove).toHaveBeenCalled();
+		})
 	});
 });
 
