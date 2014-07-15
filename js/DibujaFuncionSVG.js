@@ -25,6 +25,7 @@ function Plot(rango) {
     
   this.rango = rango;
   this.elementos = new ListaDeElementos(this);
+	this.svg = null;
 
   this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
   this.yRange = function() { return this.rango.yMax - this.rango.yMin; };
@@ -39,7 +40,7 @@ function Plot(rango) {
     return svg;
   };
 
-  var svg = this.creaSVG();
+  //var svg = this.creaSVG();
 
   // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
@@ -47,56 +48,15 @@ function Plot(rango) {
   }
 
   this.remove = function() {
-    elemento.remove(svg);
+    elemento.remove(this.svg);
   }
 
   //Plot
   this.plot = function() {
-    this.elementos.plot(svg);
+		if (!this.svg) {this.svg = this.creaSVG()};
+    this.elementos.plot(this.svg);
   }
 
-  this.creaEjes = function() {
-    var ejeX = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    var ejeY = document.createElementNS("http://www.w3.org/2000/svg", "line");
-
-    // Eje X
-    ejeX.setAttribute('x1', this.rango.xMin);
-    ejeX.setAttribute('y1', 0);
-    ejeX.setAttribute('x2', this.rango.xMax);
-    ejeX.setAttribute('y2', 0);
-    
-		// Eje Y
-    ejeY.setAttribute('x1', 0);
-    ejeY.setAttribute('y1', -this.rango.yMin);
-    ejeY.setAttribute('x2', 0);
-    ejeY.setAttribute('y2', -this.rango.yMax);
-    
-    
-    // Colores
-    ejeX.setAttribute('style', "stroke:#006600;stroke-width:2px%");
-    ejeY.setAttribute('style', "stroke:#006600;stroke-width:2px%");
-    
-    // Las añadimos
-    svg.appendChild(ejeX);
-    svg.appendChild(ejeY);
-    
-    //flechas
-    /*var flechaDelta = 0.0005;
-      
-      var flechaX = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-      var pointsX = ""+(this.rango.xMax-flechaDelta)+","+(-flechaDelta/2)+" "
-                      +(this.rango.xMax-flechaDelta)+","+flechaDelta/2+" "+this.rango.xMax+",0";
-      flechaX.setAttribute('points', pointsX);
-      flechaX.setAttribute('style',"stroke:#006600;stroke-width:2%;");
-      svg.appendChild(flechaX);
-      
-      var flechaY = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-      var pointsY = ""+(-flechaDelta/2)+","+(-this.rango.yMax+flechaDelta)+" "
-                      +flechaDelta/2+","+(-this.rango.yMax+flechaDelta)+" "+" "+"0,"+(-YMAX);
-      flechaY.setAttribute('points', pointsY);
-      flechaY.setAttribute('style',"stroke:#006600;stroke-width:2%;");
-      svg.appendChild(flechaY);*/
-  }
 }
 
 

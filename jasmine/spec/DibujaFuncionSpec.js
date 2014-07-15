@@ -60,11 +60,12 @@ describe("ListaDeElementos", function() {
 describe("Plot", function() {
 	var rango;
 	var plot;
-
+	var elemento;
+	
 	beforeEach(function() {
 		rango = {}; //double
 		plot = new Plot(rango); 
-		var elemento; //double
+		spyOn(plot.elementos, 'add');
 	});
 
 	describe("#add", function() {
@@ -72,9 +73,8 @@ describe("Plot", function() {
 			expect(plot.add).toBeDefined();
 		});
 		it("llama ListaDeElementos#add", function() {
-			spyOn(elemento, 'add');
-			plot.add;
-			expect(elemento.add).toHaveBeenCalled;
+			plot.add(elemento);
+			expect(plot.elementos.add).toHaveBeenCalled();
 		});
 	});
 	
