@@ -1,4 +1,66 @@
+// Lista de funciones:
+//    Plot
+//    ListaDeElementos
+//    Funcion
+//    Poste
+//    Text
+//    Flecha
+
 var NUMBER_POINTS = 600;
+
+
+function Plot(rango) {
+
+  this.rango = rango;
+
+	
+  this.elementos = new ListaDeElementos(this);
+  
+  this.svg = null;
+
+  this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
+  this.yRange = function() { return this.rango.yMax - this.rango.yMin; };
+
+  this.creaSVG = function() {
+    var div = document.getElementById('divGrafica');
+    if(!div) {
+      div = document.createElement("div");
+      div.setAttribute("id", "divGrafica");
+      document.body.appendChild(div);
+    };
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    div.appendChild(svg);
+    svg.setAttribute('width', '90%');
+    svg.setAttribute('height', '90%');
+    // Lo siguiente deberia hacerse una vez se fija la linea, de modo
+    svg.setAttribute('viewBox', '' + (this.rango.xMin-0.1*this.xRange()) + 
+		     ' ' + (-this.rango.yMax-0.1*this.yRange()) + ' ' + (1.1*this.xRange()) + ' ' + (1.1)*this.yRange());
+    return svg;
+  };
+
+  this.add = function(elemento) {
+    this.elementos.add(elemento);
+  }
+
+  this.remove = function(elemento) {
+    this.elementos.remove(this.svg);
+  }
+
+  this.plot = function() {
+    if (!this.svg) {this.svg = this.creaSVG()};
+    this.elementos.plot(this.svg);
+  }
+
+}
+
+
+
+
+
+
+
+
+
 
 
 function ListaDeElementos(plot) {
@@ -14,62 +76,27 @@ function ListaDeElementos(plot) {
     this._lista.push(elemento);
   };
 
-	this.remove = function(elemento) {
-		var index = this._lista.indexOf(elemento);
-		this._lista.splice(index, 1);
-		elemento.remove(this._plotThatBelongs.svg);
-	};
+  this.remove = function(elemento) {
+    this.svg = this._plotThatBelongs.svg;
+    var index = this._lista.indexOf(elemento);
+    this._lista.splice(index, 1);
+    elemento.remove(this.svg);
+  };
 	
-  this.plot = function(svg) {
+  this.plot = function() {
+    this.svg = this._plotThatBelongs.svg;
     for(var i=0; i<this.length(); i++) {
-      this._lista[i].plot(svg);
+      this._lista[i].plot(this.svg);
     }
   }
 }
 
 
-function Plot(rango) {
 
-  this.rango = rango;
 
-	
-  this.elementos = new ListaDeElementos(this);
-  
-	this.svg = null;
 
-  this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
-  this.yRange = function() { return this.rango.yMax - this.rango.yMin; };
 
-  this.creaSVG = function() {
-    var div = document.getElementById('divGrafica');
-    if(!div) {
-      div = document.createElement("div");
-      div.setAttribute("id", "divGrafica");
-      document.body.appendChild(div);
-    };
-    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-    div.appendChild(svg);
-    svg.setAttribute('width', '100%');
-    svg.setAttribute('height', '90%');
-    svg.setAttribute('viewBox', '' + (this.rango.xMin-0.1*this.xRange()) + 
-		     ' ' + (-this.rango.yMax-0.1*this.yRange()) + ' ' + (1.1*this.xRange()) + ' ' + (1.1)*this.yRange());
-    return svg;
-  };
 
-  this.add = function(elemento) {
-    this.elementos.add(elemento);
-  }
-
-  this.remove = function() {
-    elemento.remove(this.svg);
-  }
-
-  this.plot = function() {
-    if (!this.svg) {this.svg = this.creaSVG()};
-    this.elementos.plot(this.svg);
-  }
-
-}
 
 
 
@@ -113,6 +140,17 @@ function Funcion (f, rango, identificador) {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 function Poste(x, y, altura, identificador, tipo) {
   this.x = x;
   this.y = y;
@@ -154,6 +192,17 @@ function Poste(x, y, altura, identificador, tipo) {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 function Text(texto, x,y, identificador) {
   this.texto = texto;
   this.x = x;
@@ -180,6 +229,15 @@ function Text(texto, x,y, identificador) {
     svg.appendChild(text);
   }
 }
+
+
+
+
+
+
+
+
+
 
 
 function Flecha(x1,y1,x2,y2, identificador) {
