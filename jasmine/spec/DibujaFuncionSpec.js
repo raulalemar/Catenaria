@@ -58,7 +58,31 @@ describe("ListaDeElementos", function() {
 
 
 describe("Plot", function() {
-	xit("deberia responder a add", function() {
-		expect(true).toBe(false);
+	var rango;
+	var plot;
+
+	beforeEach(function() {
+		rango = {}; //double
+		plot = new Plot(rango); 
+		var elemento; //double
 	});
+
+	describe("#add", function() {
+		it("responde", function() {
+			expect(plot.add).toBeDefined();
+		});
+		it("llama ListaDeElementos#add", function() {
+			spyOn(elemento, 'add');
+			plot.add;
+			expect(elemento.add).toHaveBeenCalled;
+		});
+	});
+	
+	describe("#plot", function() {
+		it("responde", function() {
+			expect(plot.plot).toBeDefined();
+		});
+	});
+
+
 });
