@@ -1,11 +1,30 @@
 var NUMBER_POINTS = 600;
-var YMIN= -2, YMAX = 10;
-var XMIN = -8, XMAX = 8;
-var xRange = XMAX-XMIN, yRange = YMAX-YMIN;
+
+function ListaDeElementos(plot) {
+	this._plotThatBelongs = plot;
+	this._lista = [];
+
+	//interface:
+	this.length = function() {
+		return this._lista.length;
+	};
+	
+	this.add = function(elemento) {
+		this._lista.push(elemento);
+	};
+	
+	this.plot = function(svg) {
+		for(var i=0; i<this.length(); i++) {
+			this._lista[i].plot(svg);
+		}
+	}
+}
+
 
 function Plot(rango) {
     
   this.rango = rango;
+	this.elementos = new ListaDeElementos(this);
 
   this.xRange = function() {
 		return this.rango.xMax - this.rango.xMin;
@@ -15,9 +34,6 @@ function Plot(rango) {
   }
 
   this.creaSVG = function() {
-		/*var divCatenaria = document.getElementById('divCatenaria');
-		var divWidth = divCatenaria.attributes.width.nodeValue;
-		var divHeight = divCatenaria.attributes.height.nodeValue;*/
 	
 		var svg = document.getElementById('Grafica');
 		svg.setAttribute('width', '100%');
@@ -31,12 +47,17 @@ function Plot(rango) {
 
   // elemento es un objeto que representa a una funcion, un poste, eje, perfil...
   this.add = function(elemento) {
-		elemento.plot(svg);
+		this.elementos.add(elemento);
   }
 
   this.remove = function() {
 		elemento.remove(svg);
   }
+
+	//Plot
+	this.plot = function() {
+		this.elementos.plot(svg);
+	}
 
   this.creaEjes = function() {
 		var ejeX = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -85,22 +106,15 @@ function Plot(rango) {
 
 
 function Funcion (f, rango, identificador) {
-
   this.f = f;
 	this.rango = rango;
-//  this.fxMin = this.rango.xMin;
-//  this.fxMax = this.rango.xMax;
-//  this.fyMin = this.rango.yMin;
-//  this.fyMax = this.rango.yMax;
   this.identificador = identificador;
-
 	this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
   this.remove = function(svg) {
 		var pathf = svg.getElementById('tramo' + this.identificador);
-		if(pathf) { svg.removeChild(pathf); console.log(this, ' Ha sido borrado')}
+		if(pathf) { svg.removeChild(pathf) }
   }
-
 
   this.plot = function (svg) {
 		this.remove(svg);
@@ -127,40 +141,40 @@ function Funcion (f, rango, identificador) {
 	    }
 		}
 		pathf.setAttribute('d', ruta);
-		svg.appendChild(pathf); console.log(this, ' Ha sido creado')
+		svg.appendChild(pathf); 
   }
 }
 
 function Poste(x, y, altura, identificador) {
-    this.x = x;
-    this.y = y;
-    this.altura = altura;
-    this.identificador = identificador;
+  this.x = x;
+  this.y = y;
+  this.altura = altura;
+  this.identificador = identificador;
 
-    this.remove = function(svg) {
-			var poste = svg.getElementById('poste' + identificador);
-			if(poste) { svg.removeChild(poste) }
-    }
+  this.remove = function(svg) {
+		var poste = svg.getElementById('poste' + identificador);
+		if(poste) { svg.removeChild(poste) }
+  }
 
-    this.plot = function(svg) {
+  this.plot = function(svg) {
 	
-	this.remove(svg);
-
-	var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
-	poste.setAttribute('id', 'poste' + identificador);
+		this.remove(svg);
+		
+		var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		poste.setAttribute('id', 'poste' + identificador);
 	
-	// poste
-	poste.setAttribute('x1', this.x);
-	poste.setAttribute('y1', -this.y);
-	poste.setAttribute('x2', this.x);
-	poste.setAttribute('y2', -(this.y + this.altura));
+		// poste
+		poste.setAttribute('x1', this.x);
+		poste.setAttribute('y1', -this.y);
+		poste.setAttribute('x2', this.x);
+		poste.setAttribute('y2', -(this.y + this.altura));
 	
-	// Colores
-	poste.setAttribute('style', "stroke:#0000aa;stroke-width:1%");
-	
-	// Las añadimos
-	svg.appendChild(poste);
-    }
+		// Colores
+		poste.setAttribute('style', "stroke:#0000aa;stroke-width:1%");
+		
+		// Las añadimos
+		svg.appendChild(poste);
+  }
 }
 
 function Text(texto, x,y, identificador) {
