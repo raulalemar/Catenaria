@@ -15,9 +15,6 @@ var creaLinea = function (distancia, a, alturaPoste) {
   var rango = {xMin: -0.1*distancia, xMax: 1.1*distancia, yMin: -0.2*alturaPoste, yMax: 4*alturaPoste};
   var escena = new Plot(rango)
 
-  escena.creaSVG();
-  //escena.creaEjes();
-
   var postes = [];
   var catenarias = [];
 
