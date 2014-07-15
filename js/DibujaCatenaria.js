@@ -16,7 +16,7 @@ var creaLinea = function (distancia, a, alturaPoste) {
   var escena = new Plot(rango)
 
   escena.creaSVG();
-  escena.creaEjes();
+  //escena.creaEjes();
 
   var postes = [];
   var catenarias = [];
@@ -35,7 +35,15 @@ var creaLinea = function (distancia, a, alturaPoste) {
     escena.add(catenarias[i]);
   }
 
-	escena.plot();
+  // Prueba de flechas
+  var ejeX = new Flecha(rango.xMin,0,rango.xMax, 0, 'ejeX');
+  var ejeY = new Flecha(0,0,0,3*alturaPoste, 'ejeY');
+  //var flechaAleatoria = new Flecha (-10, 70, 520, 20, 0);
+  escena.add(ejeX);
+  escena.add(ejeY);
+  //escena.add(flechaAleatoria);
+
+  escena.plot();
 }
 
 creaLinea(870, 100, 30);
