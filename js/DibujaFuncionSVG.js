@@ -12,13 +12,14 @@ var NUMBER_POINTS = 600;
 function Plot() {
 	
   this.creaSVG = function() {
+		var svg = null;
     var div = document.getElementById('divGrafica');
     if(!div) {
       div = document.createElement("div");
       div.setAttribute("id", "divGrafica");
       document.body.appendChild(div);
     };
-    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
     div.appendChild(svg);
     svg.setAttribute('width' , '90%');
     svg.setAttribute('height', '90%');
