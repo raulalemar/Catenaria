@@ -10,7 +10,7 @@ var NUMBER_POINTS = 600;
 
 
 function Plot() {
-
+	
   this.creaSVG = function() {
     var div = document.getElementById('divGrafica');
     if(!div) {
@@ -25,7 +25,8 @@ function Plot() {
     return svg;
   };
 
-  this.svg = this.creaSVG();
+  this._svg = this.creaSVG();
+	this.svg = function() {return this._svg};
   this.elementos = new ListaDeElementos(this);
 
 
@@ -56,6 +57,15 @@ function Plot() {
 }
 
 
+function Elemento() {
+	this.padre = null;
+	this.svg = 	function() {
+		if (this.padre) {
+			return this.padre.svg();
+		}
+		return null;
+	};
+};
 
 
 var creaRango = function(xMin, xMax, yMin, yMax) {
@@ -74,37 +84,27 @@ var limitaSVG = function(svg, rango) {
   xRange = rango.xMax - rango.xMin;
   yRange = rango.yMax - rango.yMin;
   svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
-		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
+									 ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 }
 
 
 
-
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////
 
 
 function ListaDeElementos(plot) {
-  this._plotThatBelongs = plot;
   this._lista = [];
   this.esLista = true;
-  
+  this.padre = plot;
   //interface:
   this.length = function() {
     return this._lista.length;
   };
 
-  this.svg = function() {
-    return this._plotThatBelongs.svg;
-  };
-
 
   // Manipular la lista
   this.add = function(elemento) {
-    elemento.svg = this.svg(); //asi tienen ya el svg guardado
+		elemento.padre = this;
     this._lista.push(elemento);
   };
 
@@ -119,7 +119,7 @@ function ListaDeElementos(plot) {
     var index = this._lista.indexOf(elemento);
     if(elemento.esLista) { //dibujo cada subelemento
       for(var i=0; i<this._lista[index]._lista.length; i++) {
-	this._lista[index]._lista[i].plot()
+				this._lista[index]._lista[i].plot()
       }
     }
     else {
@@ -132,6 +132,7 @@ function ListaDeElementos(plot) {
   }
 }
 
+ListaDeElementos.prototype = new Elemento();
 
 
 
@@ -146,11 +147,10 @@ function Funcion (f, rango, identificador) {
   this.rango = rango;
   this.identificador = identificador;
   this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
-  this.svg = null;
 
   this.remove = function() {
-    var pathf = this.svg.getElementById('tramo' + this.identificador);
-    if(pathf) { this.svg.removeChild(pathf) }
+    var pathf = this.svg().getElementById('tramo' + this.identificador);
+    if(pathf) { this.svg().removeChild(pathf) }
   }
 
   this.plot = function () {
@@ -178,19 +178,11 @@ function Funcion (f, rango, identificador) {
       }
     }
     pathf.setAttribute('d', ruta);
-    this.svg.appendChild(pathf); 
+    this.svg().appendChild(pathf); 
   }
 }
 
-
-
-
-
-
-
-
-
-
+Funcion.prototype = new Elemento();
 
 
 function Poste(x, y, altura, identificador, tipo) {
@@ -198,13 +190,13 @@ function Poste(x, y, altura, identificador, tipo) {
   this.y = y;
   this.altura = altura;
   this.identificador = identificador;
-  this.svg = null;
+  //this.svg = null;
 
   this.tipo = tipo || 'suspension';
 
   this.remove = function() {
-    var poste = this.svg.getElementById('poste' + identificador);
-    if(poste) { this.svg.removeChild(poste) }
+    var poste = this.svg().getElementById('poste' + identificador);
+    if(poste) { this.svg().removeChild(poste) }
   }
 
   this.plot = function() {
@@ -231,11 +223,11 @@ function Poste(x, y, altura, identificador, tipo) {
     }
 
     // Las añadimos
-    this.svg.appendChild(poste);
+    this.svg().appendChild(poste);
   }
 }
 
-
+Poste.prototype = new Elemento();
 
 
 
@@ -250,15 +242,14 @@ function Text(texto, x,y, identificador) {
   this.texto = texto;
   this.x = x;
   this.y = y;
-  this.svg = null;
 
   this.remove = function() {
-		var text = this.svg.getElementById('texto' + identificador);
-		if(text) { this.svg.removeChild(text) }
+		var text = this.svg().getElementById('texto' + identificador);
+		if(text) { this.svg().removeChild(text) }
   }
 
   this.plot = function() {
-    this.remove(this.svg);
+    this.remove();
     // Aqui vamos a añadir el texto con el valor del parametro
     
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -270,19 +261,13 @@ function Text(texto, x,y, identificador) {
     var textNode = document.createTextNode(this.texto);
     text.appendChild(textNode);
     
-    this.svg.appendChild(text);
+    this.svg().appendChild(text);
   }
 }
 
+Text.prototype = new Elemento();
 
-
-
-
-
-
-
-
-
+/////////////////////////////////////////////
 
 function Flecha(x1,y1,x2,y2, identificador) {
   this.x1 = x1;
@@ -295,15 +280,14 @@ function Flecha(x1,y1,x2,y2, identificador) {
   this.senTheta = this.yRange / Math.sqrt(this.xRange*this.xRange + this.yRange*this.yRange);
   this.size = 20;
   this.anchura = 1/3;
-  this.svg = null;
 
   this.remove = function() {
-    var flecha = this.svg.getElementById('flecha' + identificador);
-    if(flecha) { this.svg.removeChild(flecha); };
-    var punta1 = this.svg.getElementById('punta1_' + identificador);
-    if(punta1) { this.svg.removeChild(punta1); };
-    var punta2 = this.svg.getElementById('punta2_' + identificador);
-    if(punta2) { this.svg.removeChild(punta2); };
+    var flecha = this.svg().getElementById('flecha' + identificador);
+    if(flecha) { this.svg().removeChild(flecha); };
+    var punta1 = this.svg().getElementById('punta1_' + identificador);
+    if(punta1) { this.svg().removeChild(punta1); };
+    var punta2 = this.svg().getElementById('punta2_' + identificador);
+    if(punta2) { this.svg().removeChild(punta2); };
   }
 
   this.plot = function() {
@@ -322,7 +306,7 @@ function Flecha(x1,y1,x2,y2, identificador) {
     flecha.setAttribute('y2', -this.y2);
     flecha.setAttribute('style', "stroke:#00aa00;stroke-width:2px");
     
-    this.svg.appendChild(flecha);
+    this.svg().appendChild(flecha);
 
 
     // Punta de la flecha
@@ -342,8 +326,10 @@ function Flecha(x1,y1,x2,y2, identificador) {
     punta2.setAttribute('y2', - this.y2);
     punta2.setAttribute('style', "stroke:#00aa00;stroke-width:2px");
     
-    this.svg.appendChild(punta1);
-    this.svg.appendChild(punta2);
+    this.svg().appendChild(punta1);
+    this.svg().appendChild(punta2);
 
   }
 }
+
+Flecha.prototype = new Elemento();

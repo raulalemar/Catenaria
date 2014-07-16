@@ -38,8 +38,8 @@ var escena = new Plot();
 var creaLinea = function (distancia, a, alturaPoste) {
 
   var rango = creaRangoLinea(distancia, alturaPoste);
-  limitaSVG(escena.svg, rango);
-  var ejes = creaEjesLinea (escena, rango);
+  limitaSVG(escena._svg, rango);
+  
 
 
   var numeroPostes = Math.floor(distancia/100)+2;
@@ -62,21 +62,13 @@ var creaLinea = function (distancia, a, alturaPoste) {
     catenarias[i] = new FuncionCatenaria(a, constantes[0], constantes[1], rangoCatenaria, i);
     escena.add(catenarias[i]);
   }
+
+	var ejes = creaEjesLinea (escena, rango);
   escena.plotAll();
 }
 
-
-
-
-
-creaLinea(870, 100, 30);
-
-var limpiaPlot = function(plot) {
-  // De momento solo elimino los objetos de svg, no de la lista del plot
-  // El problema viene cuando un elemento de la lista es otra lista
-  // Esto sucede en este caso con los ejes, cuando i=0, por eso empiezo desde i=1
-  console.log(plot.elementos._lista.length);
-  for(var i = 1; i<plot.elementos._lista.length; i++) {
-    plot.remove(plot.elementos._lista[i]);
-  }
+var pideLongitud = function() {
+	var longitud = window.prompt("Longitud de la linea:", 1000);
+	return longitud;
 }
+

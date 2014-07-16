@@ -10,10 +10,14 @@
   </head>
   <body>
     <div id='divGrafica'>
-      <script src="js/DibujaCatenaria.js"></script>
-      <button type="button" onclick="creaLinea(50, 100, 30);">Otra linea</button>
-      <button type="button" onclick="limpiaPlot(escena);">Limpia escena</button>
     </div>
-    
+		<div id='config'>
+		</div>
+		<button type="button" onclick="creaLinea(50, 100, 30);">Otra linea</button>
+		<button type="button" onclick="limpiaPlot(escena);">Limpia escena</button>
+    <script src="js/DibujaCatenaria.js"></script>
+		<script>
+			creaLinea(pideLongitud(), 100, 30);
+		</script>
   </body>
 </html>
