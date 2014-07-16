@@ -107,6 +107,11 @@ describe("Plot", function() {
     it("responde", function() {
       expect(plot.plot).toBeDefined();
     });
+		it("it shoud create div with id 'Grafica'", function() {
+			plot.plot();
+			expect(document.getElementById('divGrafica')).not.toBe(null);
+		});
+
   });
  
 
