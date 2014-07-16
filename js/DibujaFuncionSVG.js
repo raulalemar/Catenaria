@@ -9,17 +9,7 @@
 var NUMBER_POINTS = 600;
 
 
-function Plot(rango) {
-
-  this.rango = rango;
-
-	
-  this.elementos = new ListaDeElementos(this);
-  
-  this.svg = null;
-
-  this.xRange = function() { return this.rango.xMax - this.rango.xMin; };
-  this.yRange = function() { return this.rango.yMax - this.rango.yMin; };
+function Plot() {
 
   this.creaSVG = function() {
     var div = document.getElementById('divGrafica');
@@ -30,27 +20,49 @@ function Plot(rango) {
     };
     var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
     div.appendChild(svg);
-    svg.setAttribute('width', '90%');
+    svg.setAttribute('width' , '90%');
     svg.setAttribute('height', '90%');
-    // Lo siguiente deberia hacerse una vez se fija la linea, de modo
-    svg.setAttribute('viewBox', '' + (this.rango.xMin-0.1*this.xRange()) + 
-		     ' ' + (-this.rango.yMax-0.1*this.yRange()) + ' ' + (1.1*this.xRange()) + ' ' + (1.1)*this.yRange());
     return svg;
   };
+
+  this.svg = this.creaSVG();
+  this.elementos = new ListaDeElementos(this);
 
   this.add = function(elemento) {
     this.elementos.add(elemento);
   }
 
-  this.remove = function(elemento) {
-    this.elementos.remove(this.svg);
-  }
-
-  this.plot = function() {
+  this.plot = function(elemento) {
     if (!this.svg) {this.svg = this.creaSVG()};
-    this.elementos.plot(this.svg);
+    this.elementos.plot(elemento);
   }
 
+  this.remove = function(elemento) {
+    this.elementos.remove(elemento);
+  }
+
+}
+
+
+
+
+var creaRango = function(xMin, xMax, yMin, yMax) {
+  rango = new Object();
+  rango.xMin = xMin;
+  rango.xMax = xMax;
+  rango.yMin = yMin;
+  rango.yMax = yMax;
+
+  return rango;
+}
+
+
+
+var limitaSVG = function(svg, rango) {
+  xRange = rango.xMax - rango.xMin;
+  yRange = rango.yMax - rango.yMin;
+  svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
+		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 }
 
 
@@ -78,8 +90,8 @@ function ListaDeElementos(plot) {
 
   this.remove = function(elemento) {
     this.svg = this._plotThatBelongs.svg;
-    var index = this._lista.indexOf(elemento);
-    this._lista.splice(index, 1);
+    // var index = this._lista.indexOf(elemento);
+    // this._lista.splice(index, 1);
     elemento.remove(this.svg);
   };
 	
@@ -250,8 +262,6 @@ function Flecha(x1,y1,x2,y2, identificador) {
   this.cosTheta = this.xRange / Math.sqrt(this.xRange*this.xRange + this.yRange*this.yRange);
   this.senTheta = this.yRange / Math.sqrt(this.xRange*this.xRange + this.yRange*this.yRange);
   this.size = 20;
-  this.sizeX = this.size * this.cosTheta;
-  this.sizeY = this.size * this.senTheta;
   this.anchura = 1/3;
 
   this.remove = function(svg) {
@@ -265,6 +275,10 @@ function Flecha(x1,y1,x2,y2, identificador) {
 
   this.plot = function(svg) {
     this.remove(svg);
+
+    // Esto lo declaro dentro de plot porque sino, los cambios en size no se reflejan
+    this.sizeX = this.size * this.cosTheta;
+    this.sizeY = this.size * this.senTheta;
     
     // Linea de la flecha
     var flecha =  document.createElementNS("http://www.w3.org/2000/svg", "line");
