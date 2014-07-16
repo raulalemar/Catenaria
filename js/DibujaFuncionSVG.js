@@ -28,17 +28,29 @@ function Plot() {
   this.svg = this.creaSVG();
   this.elementos = new ListaDeElementos(this);
 
+
+  // Estas funciones tontas solo sirven para simplificar el acceso a los elementos
   this.add = function(elemento) {
     this.elementos.add(elemento);
   }
 
+  this.remove = function(elemento) {
+    this.elementos.remove(elemento);
+  }
+
   this.plot = function(elemento) {
-    if (!this.svg) {this.svg = this.creaSVG()};
     this.elementos.plot(elemento);
   }
 
-  this.remove = function(elemento) {
-    this.elementos.remove(elemento);
+  this.hide = function(elemento) {
+    this.elementos.hide(elemento);
+  }
+
+  this.plotAll = function() {
+    for (var i=0; i<this.elementos.length(); i++) {
+      var elemento = this.elementos._lista[i];
+      this.elementos.plot(elemento);
+    }
   }
 
 }
@@ -78,28 +90,45 @@ var limitaSVG = function(svg, rango) {
 function ListaDeElementos(plot) {
   this._plotThatBelongs = plot;
   this._lista = [];
+  this.esLista = true;
   
   //interface:
   this.length = function() {
     return this._lista.length;
   };
-  
+
+  this.svg = function() {
+    return this._plotThatBelongs.svg;
+  };
+
+
+  // Manipular la lista
   this.add = function(elemento) {
+    elemento.svg = this.svg(); //asi tienen ya el svg guardado
     this._lista.push(elemento);
   };
 
   this.remove = function(elemento) {
-    this.svg = this._plotThatBelongs.svg;
-    // var index = this._lista.indexOf(elemento);
-    // this._lista.splice(index, 1);
-    elemento.remove(this.svg);
+    this.hide(elemento); // Por si no lo habiamos borrado antes
+    var index = this._lista.indexOf(elemento);
+    this._lista.splice(index, 1);
   };
-	
-  this.plot = function() {
-    this.svg = this._plotThatBelongs.svg;
-    for(var i=0; i<this.length(); i++) {
-      this._lista[i].plot(this.svg);
+
+  // Manipular los dibujos que estan en la lista
+  this.plot = function(elemento) {
+    var index = this._lista.indexOf(elemento);
+    if(elemento.esLista) { //dibujo cada subelemento
+      for(var i=0; i<this._lista[index]._lista.length; i++) {
+	this._lista[index]._lista[i].plot()
+      }
     }
+    else {
+      this._lista[index].plot(); //esto funciona si elemento no es otra lista dentro de la original
+    }
+  }
+
+  this.hide = function() {
+    // To be defined
   }
 }
 
@@ -117,38 +146,39 @@ function Funcion (f, rango, identificador) {
   this.rango = rango;
   this.identificador = identificador;
   this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
+  this.svg = null;
 
-  this.remove = function(svg) {
-		var pathf = svg.getElementById('tramo' + this.identificador);
-		if(pathf) { svg.removeChild(pathf) }
+  this.remove = function() {
+    var pathf = this.svg.getElementById('tramo' + this.identificador);
+    if(pathf) { this.svg.removeChild(pathf) }
   }
 
-  this.plot = function (svg) {
-		this.remove(svg);
-	
-		var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
-		pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
-		pathf.setAttribute('id', 'tramo' + this.identificador);
-	
-		this.pathXY = function (x) {
-	    var valorX = x;
-	    var valorY = this.f(x);
-	    if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
-				return "" + valorX + " " + -valorY;
-	    }
-		}
+  this.plot = function () {
+    this.remove();
+    
+    var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
+    pathf.setAttribute('id', 'tramo' + this.identificador);
+    
+    this.pathXY = function (x) {
+      var valorX = x;
+      var valorY = this.f(x);
+      if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
+	return "" + valorX + " " + -valorY;
+      }
+    }
 
-		var ruta = "M";
-		for (var i=0; i<600; i++) {	
-	    var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
-	    var xy = this.pathXY(x);
-	    if (xy) {
-				if (ruta!="M") {ruta += " L";}
-				ruta += xy;
-	    }
-		}
-		pathf.setAttribute('d', ruta);
-		svg.appendChild(pathf); 
+    var ruta = "M";
+    for (var i=0; i<600; i++) {	
+      var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
+      var xy = this.pathXY(x);
+      if (xy) {
+	if (ruta!="M") {ruta += " L";}
+	ruta += xy;
+      }
+    }
+    pathf.setAttribute('d', ruta);
+    this.svg.appendChild(pathf); 
   }
 }
 
@@ -168,17 +198,18 @@ function Poste(x, y, altura, identificador, tipo) {
   this.y = y;
   this.altura = altura;
   this.identificador = identificador;
+  this.svg = null;
 
   this.tipo = tipo || 'suspension';
 
-  this.remove = function(svg) {
-    var poste = svg.getElementById('poste' + identificador);
-    if(poste) { svg.removeChild(poste) }
+  this.remove = function() {
+    var poste = this.svg.getElementById('poste' + identificador);
+    if(poste) { this.svg.removeChild(poste) }
   }
 
-  this.plot = function(svg) {
+  this.plot = function() {
 	
-    this.remove(svg);
+    this.remove();
     
     var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
     poste.setAttribute('id', 'poste' + identificador);
@@ -200,7 +231,7 @@ function Poste(x, y, altura, identificador, tipo) {
     }
 
     // Las añadimos
-    svg.appendChild(poste);
+    this.svg.appendChild(poste);
   }
 }
 
@@ -219,14 +250,15 @@ function Text(texto, x,y, identificador) {
   this.texto = texto;
   this.x = x;
   this.y = y;
+  this.svg = null;
 
-  this.remove = function(svg) {
-		var text = svg.getElementById('texto' + identificador);
-		if(text) { svg.removeChild(text) }
+  this.remove = function() {
+		var text = this.svg.getElementById('texto' + identificador);
+		if(text) { this.svg.removeChild(text) }
   }
 
-  this.plot = function(svg) {
-    this.remove(svg);
+  this.plot = function() {
+    this.remove(this.svg);
     // Aqui vamos a añadir el texto con el valor del parametro
     
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -238,7 +270,7 @@ function Text(texto, x,y, identificador) {
     var textNode = document.createTextNode(this.texto);
     text.appendChild(textNode);
     
-    svg.appendChild(text);
+    this.svg.appendChild(text);
   }
 }
 
@@ -263,18 +295,19 @@ function Flecha(x1,y1,x2,y2, identificador) {
   this.senTheta = this.yRange / Math.sqrt(this.xRange*this.xRange + this.yRange*this.yRange);
   this.size = 20;
   this.anchura = 1/3;
+  this.svg = null;
 
-  this.remove = function(svg) {
-    var flecha = svg.getElementById('flecha' + identificador);
-    if(flecha) { svg.removeChild(flecha); };
-    var punta1 = svg.getElementById('punta1_' + identificador);
-    if(punta1) { svg.removeChild(punta1); };
-    var punta2 = svg.getElementById('punta2_' + identificador);
-    if(punta2) { svg.removeChild(punta2); };
+  this.remove = function() {
+    var flecha = this.svg.getElementById('flecha' + identificador);
+    if(flecha) { this.svg.removeChild(flecha); };
+    var punta1 = this.svg.getElementById('punta1_' + identificador);
+    if(punta1) { this.svg.removeChild(punta1); };
+    var punta2 = this.svg.getElementById('punta2_' + identificador);
+    if(punta2) { this.svg.removeChild(punta2); };
   }
 
-  this.plot = function(svg) {
-    this.remove(svg);
+  this.plot = function() {
+    this.remove();
 
     // Esto lo declaro dentro de plot porque sino, los cambios en size no se reflejan
     this.sizeX = this.size * this.cosTheta;
@@ -289,7 +322,7 @@ function Flecha(x1,y1,x2,y2, identificador) {
     flecha.setAttribute('y2', -this.y2);
     flecha.setAttribute('style', "stroke:#00aa00;stroke-width:2px");
     
-    svg.appendChild(flecha);
+    this.svg.appendChild(flecha);
 
 
     // Punta de la flecha
@@ -309,8 +342,8 @@ function Flecha(x1,y1,x2,y2, identificador) {
     punta2.setAttribute('y2', - this.y2);
     punta2.setAttribute('style', "stroke:#00aa00;stroke-width:2px");
     
-    svg.appendChild(punta1);
-    svg.appendChild(punta2);
+    this.svg.appendChild(punta1);
+    this.svg.appendChild(punta2);
 
   }
 }
