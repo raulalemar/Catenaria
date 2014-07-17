@@ -19,8 +19,8 @@ describe("clase Elemento", function() {
     it("deberia estar definida", function() {
       expect(elemento.svg).toBeDefined();
     });
-    xit("deberia saltar una excepcion si no tiene padre", function() {
-      expect(elemento.svg()).toThrowError();
+    it("deberia saltar una excepcion si no tiene padre", function() {
+      expect(elemento.svg).toThrow(new SVGException());
     });
     it("devuelve svg del padre", function() {
       elemento2 = new Elemento();
@@ -47,10 +47,11 @@ describe("Funcion", function() {
     });
     describe("identificador", function() {
       it("deberia tener identificador definido", function() {
-	expect(funcion.identificador).toBeDefined();
+				expect(funcion.identificador ).toBeDefined();
       });
-      it("deberia ser no nulo", function () {
-	expect(funcion.identificador).not.toBeNull();
+      it("deberia ser str con un numero entre 0 y 1", function () {
+				expect(parseFloat(funcion.identificador)<=1).toBe(true);
+				expect(parseFloat(funcion.identificador)>=0).toBe(true);
       });
     });
 
