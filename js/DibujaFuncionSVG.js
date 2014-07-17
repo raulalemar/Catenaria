@@ -54,15 +54,21 @@ function Plot() {
   }
 }
 
+function SVGException() {
+  this.message = 'Funcion Elemento#svg llamada, pero elemento no tiene padre';
+  this.name = "SVGException";
+}
+
 function Elemento() {
-	this.padre = null;
-	this.identificador = null;
-	this.svg = 	function() {
-		if (this.padre) {
-			return this.padre.svg();
-		}
-		return null;
-	};
+  this.padre = null;
+  this.identificador = Math.random().toString();
+
+  this.svg = 	function() {
+	  if (this.padre) {
+	    return this.padre.svg();
+	  }
+    throw new SVGException;
+  };
 };
 
 var Rango = function(xMin, xMax, yMin, yMax) {
@@ -118,23 +124,27 @@ function ListaDeElementos(padre) {
 
 ListaDeElementos.prototype = new Elemento();
 
-function Funcion (f, rango, identificador) {
-  this.f = f;
-  this.rango = rango;
-  this.identificador = identificador;
+function Funcion (f, rango) {
+  if (f)      this.f = f
+  else        this.f = function(x) {return 4*x*(1-x/100);};
+
+  if (rango)  this.rango = rango
+  else        this.rango = new Rango(0,100,0,100);
+
   this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
   this.remove = function() {
-    var pathf = this.svg().getElementById('tramo' + this.identificador);
+    var pathf = this.svg().getElementById(this.identificador);
     if(pathf) { this.svg().removeChild(pathf) }
   }
 
   this.plot = function () {
     this.remove();
     
+   
     var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
-    pathf.setAttribute('id', 'tramo' + this.identificador);
+    pathf.setAttribute('id', this.identificador);
     
     this.pathXY = function (x) {
       var valorX = x;

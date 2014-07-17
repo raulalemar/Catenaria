@@ -19,8 +19,8 @@ describe("clase Elemento", function() {
     it("deberia estar definida", function() {
       expect(elemento.svg).toBeDefined();
     });
-    it("deberia devolver null is no tiene padre", function() {
-      expect(elemento.svg()).toBeNull();
+    xit("deberia saltar una excepcion si no tiene padre", function() {
+      expect(elemento.svg()).toThrowError();
     });
     it("devuelve svg del padre", function() {
       elemento2 = new Elemento();
@@ -33,16 +33,47 @@ describe("clase Elemento", function() {
 });
 
 describe("Funcion", function() {
-  var funcion;
-  beforeEach(function() {
-    funcion = new Funcion();
+  describe("Constructor sin parametros", function() {
+    var funcion;
+    beforeEach(function() {
+      funcion = new Funcion();
+    });
+
+    it("deberia tener rango definido", function() {
+      expect(funcion.rango).toBeDefined();
+    });
+    it("deberia tener padre null", function() {
+      expect(funcion.padre).toBeNull();
+    });
+    describe("identificador", function() {
+      it("deberia tener identificador definido", function() {
+	expect(funcion.identificador).toBeDefined();
+      });
+      it("deberia ser no nulo", function () {
+	expect(funcion.identificador).not.toBeNull();
+      });
+    });
+
+
+    describe("#plot", function() {
+      beforeEach(function() {
+	spyOn(funcion, 'remove');
+	spyOn(funcion, 'svg').and.returnValue(document.createElementNS("http://www.w3.org/2000/svg","svg"));
+	funcion.plot();
+      });
+      it("deberia empezar llamando a remove", function() {
+	expect(funcion.remove).toHaveBeenCalled();
+      });
+      it("deberia crear un dibujo reconocible por su identificador", function() {
+	expect(funcion.svg().getElementById(funcion.identificador)).not.toBeNull();
+      });
+      
+    });
+    //describe("#remove", function() {
+    
+    //});
   });
-  it("deberia tener padre definido", function() {
-    expect(funcion.padre).toBeDefined();
-  });
-	//describe("#remove", function() {
-		
-	//});
+
 });
 
 describe("ListaDeElementos", function() {
