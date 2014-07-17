@@ -10,8 +10,8 @@ describe("clase Elemento", function() {
 	});
 
 	describe("#identificador", function() {
-		it("deberia estar definido", function() {
-			expect(elemento.identificador).toBeDefined();
+		it("deberia ser null", function() {
+			expect(elemento.identificador).toBeNull();
 		});
 	});
 
@@ -45,14 +45,33 @@ describe("Funcion", function() {
     it("deberia tener padre null", function() {
       expect(funcion.padre).toBeNull();
     });
-    describe("identificador", function() {
+    describe("#identificador", function() {
       it("deberia tener identificador definido", function() {
-				expect(funcion.identificador ).toBeDefined();
+				expect(funcion.identificador).toBeDefined();
       });
       it("deberia ser str con un numero entre 0 y 1", function () {
 				expect(parseFloat(funcion.identificador)<=1).toBe(true);
 				expect(parseFloat(funcion.identificador)>=0).toBe(true);
       });
+			describe("cuando hay mas que uno", function() {
+				it("si se crea dos no deberian repetirse", function() {
+					var f1 = new Funcion();
+					var f2 = new Funcion();
+					expect(f1.identificador).not.toBe(f2.identificador);
+				});
+				it("si se crea 10000 no deberian repetirse", function() {
+					var identificadores=[];
+					for (var i=0;i<10000;i++) {
+						elemento = new Funcion();
+						identificadores.push(elemento.identificador);
+					}
+					identificadores = identificadores.filter(function(elem, pos, self) {
+						return self.indexOf(elem) == pos;
+					})
+					expect(identificadores.length).toBe(10000);
+				});
+			});
+			
     });
 
 

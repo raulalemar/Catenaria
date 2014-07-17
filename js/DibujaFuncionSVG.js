@@ -8,7 +8,6 @@
 
 var NUMBER_POINTS = 600;
 
-
 function Plot() {
 	
 	this.rango = new Rango(0,100,0,100); 
@@ -61,7 +60,7 @@ function SVGException() {
 
 function Elemento() {
   this.padre = null;
-  this.identificador = Math.random().toString();
+  this.identificador = null;
 
   this.svg = 	function() {
 	  if (this.padre) {
@@ -124,12 +123,14 @@ function ListaDeElementos(padre) {
 
 ListaDeElementos.prototype = new Elemento();
 
-function Funcion (f, rango) {
-  if (f)      this.f = f
-  else        this.f = function(x) {return 4*x*(1-x/100);};
+function Funcion(f, rango) {
+	this.identificador = Math.random().toString();
+
+  if (f) this.f = f
+  else this.f = function(x) {return 4*x*(1-x/100);};
 
   if (rango)  this.rango = rango
-  else        this.rango = new Rango(0,100,0,100);
+  else this.rango = new Rango(0,100,0,100);
 
   this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
@@ -139,8 +140,8 @@ function Funcion (f, rango) {
   }
 
   this.plot = function () {
+		console.log(this.identificador);
     this.remove();
-    
    
     var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
