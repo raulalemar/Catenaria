@@ -7,8 +7,13 @@ describe("clase Elemento", function() {
     it("deberia tener padre definido", function() {
       expect(elemento.padre).toBeDefined();
     });
-  });
+	});
 
+	describe("#identificador", function() {
+		it("deberia estar definido", function() {
+			expect(elemento.identificador).toBeDefined();
+		});
+	});
 
   describe("#svg", function() {
     it("deberia estar definida", function() {
@@ -35,6 +40,9 @@ describe("Funcion", function() {
   it("deberia tener padre definido", function() {
     expect(funcion.padre).toBeDefined();
   });
+	//describe("#remove", function() {
+		
+	//});
 });
 
 describe("ListaDeElementos", function() {
@@ -94,16 +102,16 @@ describe("ListaDeElementos", function() {
     describe("despues de añadir un elemento", function() {
       var elemento;
       beforeEach(function() {
-	elemento = {padre: null};
-	elementos.add(elemento);
+				elemento = {padre: null};
+				elementos.add(elemento);
       });
 
       it("deberia asignar el padre al elemento", function() {
-	expect(elemento.padre).toBe(elementos);
+				expect(elemento.padre).toBe(elementos);
       });
 
       it("deberia tener longitud 1", function() {
-	expect(elementos.length()).toBe(1);
+				expect(elementos.length()).toBe(1);
       });
     });
   });
@@ -114,11 +122,9 @@ describe("ListaDeElementos", function() {
 
 
     beforeEach(function() {
-      elemento = {
-	remove: function() {}
-      }; //double
+      elemento = {};
+			elemento.remove = jasmine.createSpy();
       elementos.add(elemento);
-      spyOn(elemento, 'remove');
     });
 
     it("deberia estar definido", function() {
@@ -133,19 +139,49 @@ describe("ListaDeElementos", function() {
       expect(elemento.remove).toHaveBeenCalled();
     })
   });
+
+	describe("#plot", function() {
+		beforeEach(function() {
+      elemento = {};
+			elemento.plot = jasmine.createSpy();
+      elementos.add(elemento);
+			elementos.plot();
+    });
+		it('deberia llamar Elemento#plot', function() {
+			expect(elemento.plot).toHaveBeenCalled();
+		});
+	});
 });
 
-
+describe("Rango", function() {
+	var rango=new Rango();
+	it("deberia ser un constructor", function() {
+		expect(rango).toBeDefined();
+	});
+});
 
 describe("Plot", function() {
   var plot;
   var elemento;
-  
+  var numeroDeSVG;
+
   beforeEach(function() {
+		numeroDeSVG = document.getElementsByTagName('svg').length;
     plot = new Plot(); 
     spyOn(plot.elementos, 'add');
+		spyOn(plot.elementos, 'plot');
   });
   
+	it("al inicio no deberia crear svg", function() {
+		expect(document.getElementsByTagName('svg').length).toBe(numeroDeSVG);
+	});
+
+	describe("#rango", function() {
+		it("al inicion deberia tener xMin = 0", function() {
+			expect(plot.rango.xMin).toBe(0);
+		});
+	});
+
   describe("#add", function() {
     it("responde", function() {
       expect(plot.add).toBeDefined();
@@ -157,19 +193,27 @@ describe("Plot", function() {
   });
   
   describe("#plot", function() {
+		beforeEach(function(){
+			plot.plot();
+		});
     it("responde", function() {
       expect(plot.plot).toBeDefined();
     });
-    it("it shoud create div with id 'Grafica'", function() {
-      plot.plot();
+		it("deberia llamar elementos.plot", function() {
+			expect(plot.elementos.plot).toHaveBeenCalled();
+		});
+  });
+
+  describe("#svg", function() {
+		beforeEach(function() {
+			plot.svg();
+		});
+		it("it shoud create div with id 'Grafica'", function() {
       expect(document.getElementById('divGrafica')).not.toBe(null);
     });
-  });
-  
-  describe("#svg", function() {
-    it("deberia estar definido", function() {
-      expect(plot.svg).toBeDefined();
-    });
+		it("deberia crear svg", function() {
+			expect(document.getElementsByTagName('svg').length).toBe(numeroDeSVG+1);
+		});
   })
 
 });

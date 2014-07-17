@@ -11,6 +11,8 @@ var NUMBER_POINTS = 600;
 
 function Plot() {
 	
+	this.rango = new Rango(0,100,0,100); 
+
   this.creaSVG = function() {
 		var svg = null;
     var div = document.getElementById('divGrafica');
@@ -23,11 +25,18 @@ function Plot() {
     div.appendChild(svg);
     svg.setAttribute('width' , '90%');
     svg.setAttribute('height', '90%');
+		
     return svg;
   };
 
-  this._svg = this.creaSVG();
-  this.svg = function() {return this._svg};
+  this._svg = function() {
+		var svg = null;
+		return function() {
+			if (!svg) {svg = this.creaSVG()};
+			return svg;
+		}
+	}
+  this.svg = this._svg();
   this.elementos = new ListaDeElementos(this);
 
 
@@ -40,26 +49,14 @@ function Plot() {
     this.elementos.remove(elemento);
   }
 
-  this.plot = function(elemento) {
-    this.elementos.plot(elemento);
+  this.plot = function() {
+    this.elementos.plot();
   }
-
-  this.hide = function(elemento) {
-    this.elementos.hide(elemento);
-  }
-
-  this.plotAll = function() {
-    for (var i=0; i<this.elementos.length(); i++) {
-      var elemento = this.elementos._lista[i];
-      this.elementos.plot(elemento);
-    }
-  }
-
 }
-
 
 function Elemento() {
 	this.padre = null;
+	this.identificador = null;
 	this.svg = 	function() {
 		if (this.padre) {
 			return this.padre.svg();
@@ -68,18 +65,12 @@ function Elemento() {
 	};
 };
 
-
-var creaRango = function(xMin, xMax, yMin, yMax) {
-  rango = new Object();
-  rango.xMin = xMin;
-  rango.xMax = xMax;
-  rango.yMin = yMin;
-  rango.yMax = yMax;
-
-  return rango;
+var Rango = function(xMin, xMax, yMin, yMax) {
+  this.xMin = xMin;
+  this.xMax = xMax;
+  this.yMin = yMin;
+  this.yMax = yMax;
 }
-
-
 
 var limitaSVG = function(svg, rango) {
   xRange = rango.xMax - rango.xMin;
@@ -95,7 +86,6 @@ var limitaSVG = function(svg, rango) {
 
 function ListaDeElementos(padre) {
   this._lista = [];
-  this.esLista = true;
   this.padre = padre;
   //interface:
   this.length = function() {
@@ -116,16 +106,8 @@ function ListaDeElementos(padre) {
   };
 
   // Manipular los dibujos que estan en la lista
-  this.plot = function(elemento) {
-    var index = this._lista.indexOf(elemento);
-    if(elemento.esLista) { //dibujo cada subelemento
-      for(var i=0; i<this._lista[index]._lista.length; i++) {
-				this._lista[index]._lista[i].plot()
-      }
-    }
-    else {
-      this._lista[index].plot(); //esto funciona si elemento no es otra lista dentro de la original
-    }
+  this.plot = function() {
+		this._lista.forEach(function(elemento) {elemento.plot()});
   }
 
   this.hide = function(elemento) {
@@ -135,14 +117,6 @@ function ListaDeElementos(padre) {
 }
 
 ListaDeElementos.prototype = new Elemento();
-
-
-
-
-
-
-
-
 
 function Funcion (f, rango, identificador) {
   this.f = f;
@@ -230,13 +204,6 @@ function Poste(x, y, altura, identificador, tipo) {
 }
 
 Poste.prototype = new Elemento();
-
-
-
-
-
-
-
 
 
 

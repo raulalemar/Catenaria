@@ -11,11 +11,11 @@ FuncionCatenaria.prototype = new Funcion();
 
 
 var creaRangoLinea = function(distancia, altura) {
-  return creaRango(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
+  return new Rango(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
 }
 
 var creaRangoCatenaria = function(postes, i, alturaPoste) {
-  return creaRango(postes[i].x, postes[i+1].x, -0.2*alturaPoste, 4*alturaPoste);
+  return new Rango(postes[i].x, postes[i+1].x, -0.2*alturaPoste, 4*alturaPoste);
 }
 
 
@@ -64,7 +64,7 @@ var creaLinea = function (distancia, a, alturaPoste) {
     escena.add(catenarias[i]);
   }
 
-  escena.plotAll();
+  escena.plot();
 }
 
 var pideLongitud = function() {
