@@ -27,7 +27,7 @@ function Plot() {
   };
 
   this._svg = this.creaSVG();
-	this.svg = function() {return this._svg};
+  this.svg = function() {return this._svg};
   this.elementos = new ListaDeElementos(this);
 
 
@@ -85,7 +85,7 @@ var limitaSVG = function(svg, rango) {
   xRange = rango.xMax - rango.xMin;
   yRange = rango.yMax - rango.yMin;
   svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
-									 ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
+		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 }
 
 
@@ -93,10 +93,10 @@ var limitaSVG = function(svg, rango) {
 //////////////////////////////////////////////////////////////////////////////
 
 
-function ListaDeElementos(plot) {
+function ListaDeElementos(padre) {
   this._lista = [];
   this.esLista = true;
-  this.padre = plot;
+  this.padre = padre;
   //interface:
   this.length = function() {
     return this._lista.length;
@@ -110,7 +110,7 @@ function ListaDeElementos(plot) {
   };
 
   this.remove = function(elemento) {
-    this.hide(elemento); // Por si no lo habiamos borrado antes
+    elemento.remove();
     var index = this._lista.indexOf(elemento);
     this._lista.splice(index, 1);
   };
@@ -128,8 +128,9 @@ function ListaDeElementos(plot) {
     }
   }
 
-  this.hide = function() {
+  this.hide = function(elemento) {
     // To be defined
+    
   }
 }
 

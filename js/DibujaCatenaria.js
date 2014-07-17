@@ -38,7 +38,7 @@ var escena = new Plot();
 var creaLinea = function (distancia, a, alturaPoste) {
 
   var rango = creaRangoLinea(distancia, alturaPoste);
-  limitaSVG(escena._svg, rango);
+  limitaSVG(escena.svg(), rango);
   
 
 
@@ -46,6 +46,7 @@ var creaLinea = function (distancia, a, alturaPoste) {
   var vano = distancia / (numeroPostes-1);
   var postes = [];
   var catenarias = [];
+  var ejes = creaEjesLinea (escena, rango);
 
   for(var i = 0; i < numeroPostes; i++) {
     var xPoste = 0 + i*vano;
@@ -63,7 +64,6 @@ var creaLinea = function (distancia, a, alturaPoste) {
     escena.add(catenarias[i]);
   }
 
-	var ejes = creaEjesLinea (escena, rango);
   escena.plotAll();
 }
 
