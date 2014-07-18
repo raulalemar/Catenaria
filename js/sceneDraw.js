@@ -1,7 +1,7 @@
 // Lista de funciones:
 //    Plot
 //    ListaDeElementos
-//    Funcion
+//    FunctionGraph
 //    Poste
 //    Text
 //    Flecha
@@ -62,12 +62,14 @@ function Elemento() {
   this.padre = null;
   this.identificador = null;
 
-  this.svg = 	function() {
+  this.svg = function() {
 	  if (this.padre) {
 	    return this.padre.svg();
 	  }
     throw new SVGException;
   };
+
+	this.tagSVG = function() {return null};
 };
 
 var Rango = function(xMin, xMax, yMin, yMax) {
@@ -123,7 +125,7 @@ function ListaDeElementos(padre) {
 
 ListaDeElementos.prototype = new Elemento();
 
-function Funcion(f, rango) {
+function FunctionGraph(f, rango) {
 	this.identificador = Math.random().toString();
 
   if (f) this.f = f
@@ -140,7 +142,6 @@ function Funcion(f, rango) {
   }
 
   this.plot = function () {
-		console.log(this.identificador);
     this.remove();
    
     var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -151,7 +152,7 @@ function Funcion(f, rango) {
       var valorX = x;
       var valorY = this.f(x);
       if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
-	return "" + valorX + " " + -valorY;
+				return ""+valorX+" "+ (-valorY);
       }
     }
 
@@ -160,8 +161,8 @@ function Funcion(f, rango) {
       var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
       var xy = this.pathXY(x);
       if (xy) {
-	if (ruta!="M") {ruta += " L";}
-	ruta += xy;
+				if (ruta!="M") {ruta += " L";}
+				ruta += xy;
       }
     }
     pathf.setAttribute('d', ruta);
@@ -169,8 +170,7 @@ function Funcion(f, rango) {
   }
 }
 
-Funcion.prototype = new Elemento();
-
+FunctionGraph.prototype = new Elemento();
 
 function Poste(x, y, altura, identificador, tipo) {
   this.x = x;

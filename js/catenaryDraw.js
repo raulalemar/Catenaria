@@ -7,7 +7,7 @@ function FuncionCatenaria(a,c1,c2,rango,identificador) {
   this.identificador = identificador;
 }
 
-FuncionCatenaria.prototype = new Funcion();
+FuncionCatenaria.prototype = new FunctionGraph();
 
 
 var creaRangoLinea = function(distancia, altura) {

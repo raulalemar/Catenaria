@@ -2,8 +2,9 @@
   <head>
     <meta charset="utf-8">	
 
-    <script src="js/Catenaria.js"></script>
-    <script src="js/DibujaFuncionSVG.js"></script>
+
+    <script src="js/catenary.js"></script>
+    <script src="js/sceneDraw.js"></script>
 
 
     <title>Linea </title>
@@ -12,10 +13,11 @@
     <div id='divGrafica'>
     </div>
 		<div id='config'>
+			<button type="button" onclick="creaLinea(pideLongitud(), 100, 30);">
+				Otra linea
+			</button>
 		</div>
-		<button type="button" onclick="creaLinea(50, 100, 30);">Otra linea</button>
-		<button type="button" onclick="limpiaPlot(escena);">Limpia escena</button>
-    <script src="js/DibujaCatenaria.js"></script>
+    <script src="js/catenaryDraw.js"></script>
 		<script>
 			creaLinea(pideLongitud(), 100, 30);
 		</script>

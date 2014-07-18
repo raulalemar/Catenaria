@@ -30,13 +30,19 @@ describe("clase Elemento", function() {
       expect(elemento2.svg).toHaveBeenCalled();
     })
   });
+
+	describe("#tag", function() {
+		it("al inicio deberia ser null", function() {
+			expect(elemento.tagSVG()).toBeNull();
+		});
+	});
 });
 
-describe("Funcion", function() {
+describe("FunctionGraph", function() {
   describe("Constructor sin parametros", function() {
     var funcion;
     beforeEach(function() {
-      funcion = new Funcion();
+      funcion = new FunctionGraph();
     });
 
     it("deberia tener rango definido", function() {
@@ -55,14 +61,14 @@ describe("Funcion", function() {
       });
 			describe("cuando hay mas que uno", function() {
 				it("si se crea dos no deberian repetirse", function() {
-					var f1 = new Funcion();
-					var f2 = new Funcion();
+					var f1 = new FunctionGraph();
+					var f2 = new FunctionGraph();
 					expect(f1.identificador).not.toBe(f2.identificador);
 				});
 				it("si se crea 10000 no deberian repetirse", function() {
 					var identificadores=[];
 					for (var i=0;i<10000;i++) {
-						elemento = new Funcion();
+						elemento = new FunctionGraph();
 						identificadores.push(elemento.identificador);
 					}
 					identificadores = identificadores.filter(function(elem, pos, self) {
@@ -77,15 +83,15 @@ describe("Funcion", function() {
 
     describe("#plot", function() {
       beforeEach(function() {
-	spyOn(funcion, 'remove');
-	spyOn(funcion, 'svg').and.returnValue(document.createElementNS("http://www.w3.org/2000/svg","svg"));
-	funcion.plot();
+				spyOn(funcion, 'remove');
+				spyOn(funcion, 'svg').and.returnValue(document.createElementNS("http://www.w3.org/2000/svg","svg"));
+				funcion.plot();
       });
       it("deberia empezar llamando a remove", function() {
-	expect(funcion.remove).toHaveBeenCalled();
+				expect(funcion.remove).toHaveBeenCalled();
       });
       it("deberia crear un dibujo reconocible por su identificador", function() {
-	expect(funcion.svg().getElementById(funcion.identificador)).not.toBeNull();
+				expect(funcion.svg().getElementById(funcion.identificador)).not.toBeNull();
       });
       
     });
