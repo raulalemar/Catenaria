@@ -1,3 +1,40 @@
+Array.prototype.duplicates = function() {
+	var duplicates = this.filter(function(elem, pos, self) {
+		return self.indexOf(elem) != pos;
+	});
+	var duplicatesWithoutDuplicates = 	duplicates.filter(function(elem, pos, self) {
+		return self.indexOf(elem) == pos;
+	});
+	return duplicatesWithoutDuplicates;
+};
+
+beforeEach(function() {
+	jasmine.addMatchers({
+		toBeBetween: function() {
+			return {
+				compare: function(actual,lower, upper) {
+					return {
+						pass: actual >= lower && actual <= upper,
+						message: "Expected " + actual + " to be between " + lower + " and " + upper + " (inclusive)"
+					}
+				}
+			}
+		},
+		toHaveDistinctValues: function() {
+			return {
+				compare: function(actual) {
+					duplicates = actual.duplicates();
+					return {
+						pass: duplicates.length==0,
+						message: "Expected the list not to have duplicates. However the following element(s):" +duplicates.toString() + " is/are repeated."
+					}
+				}
+			}
+		},
+	});
+});
+
+
 describe("clase Elemento", function() {
   var elemento, elemento2;
   beforeEach(function() {
@@ -56,8 +93,7 @@ describe("FunctionGraph", function() {
 				expect(funcion.identificador).toBeDefined();
       });
       it("deberia ser str con un numero entre 0 y 1", function () {
-				expect(parseFloat(funcion.identificador)<=1).toBe(true);
-				expect(parseFloat(funcion.identificador)>=0).toBe(true);
+				expect(parseFloat(funcion.identificador)).toBeBetween(0, 1);
       });
 			describe("cuando hay mas que uno", function() {
 				it("si se crea dos no deberian repetirse", function() {
@@ -71,13 +107,9 @@ describe("FunctionGraph", function() {
 						elemento = new FunctionGraph();
 						identificadores.push(elemento.identificador);
 					}
-					identificadores = identificadores.filter(function(elem, pos, self) {
-						return self.indexOf(elem) == pos;
-					})
-					expect(identificadores.length).toBe(10000);
+					expect(identificadores).toHaveDistinctValues();
 				});
 			});
-			
     });
 
 
