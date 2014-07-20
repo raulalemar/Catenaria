@@ -54,17 +54,18 @@ function Plot() {
 }
 
 function SVGException() {
-  this.message = 'Funcion Elemento#svg llamada, pero elemento no tiene padre';
+  this.message = 'Function Element#svg called, but element does not have a father';
   this.name = "SVGException";
 }
 
-function Elemento() {
-  this.padre = null;
-  this.identificador = null;
+function Element() {
+  this.father = null;
+  this.identificator = null;
 
   this.svg = function() {
-	  if (this.padre) {
-	    return this.padre.svg();
+		console.log(this.father);
+	  if (this.father) {
+	    return this.father.svg();
 	  }
     throw new SVGException;
   };
@@ -91,9 +92,9 @@ var limitaSVG = function(svg, rango) {
 //////////////////////////////////////////////////////////////////////////////
 
 
-function ListaDeElementos(padre) {
+function ListaDeElementos(father) {
   this._lista = [];
-  this.padre = padre;
+  this.father = father;
   //interface:
   this.length = function() {
     return this._lista.length;
@@ -102,7 +103,7 @@ function ListaDeElementos(padre) {
 
   // Manipular la lista
   this.add = function(elemento) {
-		elemento.padre = this;
+		elemento.father = this;
     this._lista.push(elemento);
   };
 
@@ -123,10 +124,10 @@ function ListaDeElementos(padre) {
   }
 }
 
-ListaDeElementos.prototype = new Elemento();
+ListaDeElementos.prototype = new Element();
 
 function FunctionGraph(f, rango) {
-	this.identificador = Math.random().toString();
+	this.identificator = Math.random().toString();
 
   if (f) this.f = f
   else this.f = function(x) {return 4*x*(1-x/100);};
@@ -137,7 +138,7 @@ function FunctionGraph(f, rango) {
   this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
 
   this.remove = function() {
-    var pathf = this.svg().getElementById(this.identificador);
+    var pathf = this.svg().getElementById(this.identificator);
     if(pathf) { this.svg().removeChild(pathf) }
   }
 
@@ -146,7 +147,7 @@ function FunctionGraph(f, rango) {
    
     var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
-    pathf.setAttribute('id', this.identificador);
+    pathf.setAttribute('id', this.identificator);
     
     this.pathXY = function (x) {
       var valorX = x;
@@ -170,19 +171,19 @@ function FunctionGraph(f, rango) {
   }
 }
 
-FunctionGraph.prototype = new Elemento();
+FunctionGraph.prototype = new Element();
 
-function Poste(x, y, altura, identificador, tipo) {
+function Poste(x, y, altura, identificator, tipo) {
   this.x = x;
   this.y = y;
   this.altura = altura;
-  this.identificador = identificador;
+  this.identificator = identificator;
   //this.svg = null;
 
   this.tipo = tipo || 'suspension';
 
   this.remove = function() {
-    var poste = this.svg().getElementById('poste' + identificador);
+    var poste = this.svg().getElementById('poste' + identificator);
     if(poste) { this.svg().removeChild(poste) }
   }
 
@@ -191,7 +192,7 @@ function Poste(x, y, altura, identificador, tipo) {
     this.remove();
     
     var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    poste.setAttribute('id', 'poste' + identificador);
+    poste.setAttribute('id', 'poste' + identificator);
     
     // poste
     poste.setAttribute('x1', this.x);
@@ -214,17 +215,17 @@ function Poste(x, y, altura, identificador, tipo) {
   }
 }
 
-Poste.prototype = new Elemento();
+Poste.prototype = new Element();
 
 
 
-function Text(texto, x,y, identificador) {
+function Text(texto, x,y, identificator) {
   this.texto = texto;
   this.x = x;
   this.y = y;
 
   this.remove = function() {
-		var text = this.svg().getElementById('texto' + identificador);
+		var text = this.svg().getElementById('texto' + identificator);
 		if(text) { this.svg().removeChild(text) }
   }
 
@@ -233,7 +234,7 @@ function Text(texto, x,y, identificador) {
     // Aqui vamos a añadir el texto con el valor del parametro
     
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('id', "texto"+identificador);
+    text.setAttribute('id', "texto"+identificator);
     text.setAttribute('x', this.x);
     text.setAttribute('y', this.y);
     text.setAttribute('font-size', '5%');
@@ -245,11 +246,11 @@ function Text(texto, x,y, identificador) {
   }
 }
 
-Text.prototype = new Elemento();
+Text.prototype = new Element();
 
 /////////////////////////////////////////////
 
-function Flecha(x1,y1,x2,y2, identificador) {
+function Flecha(x1,y1,x2,y2, identificator) {
   this.x1 = x1;
   this.y1 = y1;
   this.x2 = x2;
@@ -262,11 +263,11 @@ function Flecha(x1,y1,x2,y2, identificador) {
   this.anchura = 1/3;
 
   this.remove = function() {
-    var flecha = this.svg().getElementById('flecha' + identificador);
+    var flecha = this.svg().getElementById('flecha' + identificator);
     if(flecha) { this.svg().removeChild(flecha); };
-    var punta1 = this.svg().getElementById('punta1_' + identificador);
+    var punta1 = this.svg().getElementById('punta1_' + identificator);
     if(punta1) { this.svg().removeChild(punta1); };
-    var punta2 = this.svg().getElementById('punta2_' + identificador);
+    var punta2 = this.svg().getElementById('punta2_' + identificator);
     if(punta2) { this.svg().removeChild(punta2); };
   }
 
@@ -279,7 +280,7 @@ function Flecha(x1,y1,x2,y2, identificador) {
     
     // Linea de la flecha
     var flecha =  document.createElementNS("http://www.w3.org/2000/svg", "line");
-    flecha.setAttribute('id', 'flecha' + identificador);
+    flecha.setAttribute('id', 'flecha' + identificator);
     flecha.setAttribute('x1',  this.x1);
     flecha.setAttribute('y1', -this.y1); // Recordar que las coordenadas van al reves
     flecha.setAttribute('x2',  this.x2);
@@ -291,7 +292,7 @@ function Flecha(x1,y1,x2,y2, identificador) {
 
     // Punta de la flecha
     var punta1 =  document.createElementNS("http://www.w3.org/2000/svg", "line");
-    punta1.setAttribute('id',  'punta1_' + identificador);
+    punta1.setAttribute('id',  'punta1_' + identificator);
     punta1.setAttribute('x1',   this.x2-this.sizeX + this.sizeY*this.anchura);
     punta1.setAttribute('y1', -(this.y2-this.sizeY + this.sizeX*this.anchura)); // Recordar que las coordenadas van al reves
     punta1.setAttribute('x2',   this.x2);
@@ -299,7 +300,7 @@ function Flecha(x1,y1,x2,y2, identificador) {
     punta1.setAttribute('style', "stroke:#00aa00;stroke-width:2px");
 
     var punta2 =  document.createElementNS("http://www.w3.org/2000/svg", "line");
-    punta2.setAttribute('id',  'punta2_' + identificador);
+    punta2.setAttribute('id',  'punta2_' + identificator);
     punta2.setAttribute('x1',   this.x2-this.sizeX - this.sizeY*this.anchura);
     punta2.setAttribute('y1', -(this.y2-this.sizeY - this.sizeX*this.anchura)); // Recordar que las coordenadas van al reves
     punta2.setAttribute('x2',   this.x2);
@@ -312,4 +313,4 @@ function Flecha(x1,y1,x2,y2, identificador) {
   }
 }
 
-Flecha.prototype = new Elemento();
+Flecha.prototype = new Element();

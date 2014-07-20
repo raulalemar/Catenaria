@@ -35,42 +35,42 @@ beforeEach(function() {
 });
 
 
-describe("clase Elemento", function() {
-  var elemento, elemento2;
+describe("Element", function() {
+  var element, element2;
   beforeEach(function() {
-    elemento = new Elemento();
+    element = new Element();
   });
-  describe("#padre", function() {
-    it("deberia tener padre definido", function() {
-      expect(elemento.padre).toBeDefined();
+  describe("#father", function() {
+    it("should have #father defined", function() {
+      expect(element.father).toBeDefined();
     });
 	});
 
-	describe("#identificador", function() {
-		it("deberia ser null", function() {
-			expect(elemento.identificador).toBeNull();
+	describe("#identificator", function() {
+		it("should be null", function() {
+			expect(element.identificator).toBeNull();
 		});
 	});
 
   describe("#svg", function() {
     it("deberia estar definida", function() {
-      expect(elemento.svg).toBeDefined();
+      expect(element.svg).toBeDefined();
     });
-    it("deberia saltar una excepcion si no tiene padre", function() {
-      expect(elemento.svg).toThrow(new SVGException());
+    it("deberia saltar una excepcion si no tiene father", function() {
+      expect(element.svg).toThrow(new SVGException());
     });
-    it("devuelve svg del padre", function() {
-      elemento2 = new Elemento();
-      elemento.padre = elemento2;
-      spyOn(elemento2,'svg');
-      elemento.svg();
-      expect(elemento2.svg).toHaveBeenCalled();
+    it("devuelve svg del father", function() {
+      element2 = new Element();
+      element.father = element2;
+      spyOn(element2,'svg');
+      element.svg();
+      expect(element2.svg).toHaveBeenCalled();
     })
   });
 
 	describe("#tag", function() {
 		it("al inicio deberia ser null", function() {
-			expect(elemento.tagSVG()).toBeNull();
+			expect(element.tagSVG()).toBeNull();
 		});
 	});
 });
@@ -85,29 +85,29 @@ describe("FunctionGraph", function() {
     it("deberia tener rango definido", function() {
       expect(funcion.rango).toBeDefined();
     });
-    it("deberia tener padre null", function() {
-      expect(funcion.padre).toBeNull();
+    it("deberia tener father null", function() {
+      expect(funcion.father).toBeNull();
     });
-    describe("#identificador", function() {
-      it("deberia tener identificador definido", function() {
-				expect(funcion.identificador).toBeDefined();
+    describe("#identificator", function() {
+      it("deberia tener identificator definido", function() {
+				expect(funcion.identificator).toBeDefined();
       });
       it("deberia ser str con un numero entre 0 y 1", function () {
-				expect(parseFloat(funcion.identificador)).toBeBetween(0, 1);
+				expect(parseFloat(funcion.identificator)).toBeBetween(0, 1);
       });
 			describe("cuando hay mas que uno", function() {
 				it("si se crea dos no deberian repetirse", function() {
 					var f1 = new FunctionGraph();
 					var f2 = new FunctionGraph();
-					expect(f1.identificador).not.toBe(f2.identificador);
+					expect(f1.identificator).not.toBe(f2.identificator);
 				});
 				it("si se crea 10000 no deberian repetirse", function() {
-					var identificadores=[];
+					var identificatores=[];
 					for (var i=0;i<10000;i++) {
-						elemento = new FunctionGraph();
-						identificadores.push(elemento.identificador);
+						element = new FunctionGraph();
+						identificatores.push(element.identificator);
 					}
-					expect(identificadores).toHaveDistinctValues();
+					expect(identificatores).toHaveDistinctValues();
 				});
 			});
     });
@@ -122,8 +122,8 @@ describe("FunctionGraph", function() {
       it("deberia empezar llamando a remove", function() {
 				expect(funcion.remove).toHaveBeenCalled();
       });
-      it("deberia crear un dibujo reconocible por su identificador", function() {
-				expect(funcion.svg().getElementById(funcion.identificador)).not.toBeNull();
+      it("deberia crear un dibujo reconocible por su identificator", function() {
+				expect(funcion.svg().getElementById(funcion.identificator)).not.toBeNull();
       });
       
     });
@@ -134,110 +134,103 @@ describe("FunctionGraph", function() {
 
 });
 
-describe("ListaDeElementos", function() {
+describe("ListaDeElements", function() {
   var plot;
-  var elementos;
+  var elements;
 
   beforeEach(function() {
     plot = {
     }; //double
-    elementos = new ListaDeElementos(plot);
+    elements = new ListaDeElementos(plot);
   });
 
   it("deberia estar definidos", function() {
-    expect(elementos).toBeDefined();
+    expect(elements).toBeDefined();
   });
   
   describe("#_plotThatBelongs", function() {
     it("no deberia tener su plot definido", function() {
-      expect(elementos._plotThatBelongs).not.toBeDefined();
+      expect(elements._plotThatBelongs).not.toBeDefined();
     });
   });
 
-  describe("#padre", function() {
-    it("deberia tener padre definido", function() {
-      expect(elementos.padre).toBeDefined();
+  describe("#father", function() {
+    it("deberia tener father definido", function() {
+      expect(elements.father).toBeDefined();
     });
   });
 
   describe("#_lista", function() {
     it("deberia tener lista definida", function() {
-      expect(elementos._lista).toBeDefined();
+      expect(elements._lista).toBeDefined();
     });
     it("al principio deberia tener longitud 0", function() {
-      expect(elementos._lista.length).toBe(0);
+      expect(elements._lista.length).toBe(0);
     });
   });
 
   describe("#length", function() {
     it("deberia estar definido", function() {
-      expect(elementos.length).toBeDefined();
+      expect(elements.length).toBeDefined();
     });
     it("deberia dar 0 al inicio", function() {
-      expect(elementos.length()).toBe(0);
+      expect(elements.length()).toBe(0);
     });
-    it("deberia dar 1 is _lista tiene un elemento", function() {
-      var elemento2;
-      elementos._lista.push(elemento2);
-      expect(elementos.length()).toBe(1);
+    it("deberia dar 1 is _lista tiene un element", function() {
+      var element2;
+      elements._lista.push(element2);
+      expect(elements.length()).toBe(1);
     });
     
   });
 
   describe("#add", function() {
     it("deberia estar definido",function() {
-      expect(elementos.add).toBeDefined();
+      expect(elements.add).toBeDefined();
     });
-    describe("despues de añadir un elemento", function() {
-      var elemento;
+    describe("despues de añadir un element", function() {
+      var element;
       beforeEach(function() {
-				elemento = {padre: null};
-				elementos.add(elemento);
+				element = {father: null};
+				elements.add(element);
       });
 
-      it("deberia asignar el padre al elemento", function() {
-				expect(elemento.padre).toBe(elementos);
+      it("deberia asignar el father al element", function() {
+				expect(element.father).toBe(elements);
       });
 
       it("deberia tener longitud 1", function() {
-				expect(elementos.length()).toBe(1);
+				expect(elements.length()).toBe(1);
       });
     });
   });
   
   describe("#remove", function() {
 
-    var elemento;
-
-
-    beforeEach(function() {
-      elemento = {};
-			elemento.remove = jasmine.createSpy();
-      elementos.add(elemento);
-    });
+		var element = jasmine.createSpyObj('element', ['remove']);
 
     it("deberia estar definido", function() {
-      expect(elementos.remove).toBeDefined();
+      expect(elements.remove).toBeDefined();
     });
     it("deberia eliminar el elmento de la lista", function() {
-      elementos.remove(elemento);
-      expect(elementos.length()).toBe(0);
+      elements.remove(element);
+      expect(elements.length()).toBe(0);
     });
-    it("deberia llamar remove de elemento", function() {
-      elementos.remove(elemento);
-      expect(elemento.remove).toHaveBeenCalled();
+    it("deberia llamar remove de element", function() {
+      elements.remove(element);
+      expect(element.remove).toHaveBeenCalled();
     })
   });
 
 	describe("#plot", function() {
 		beforeEach(function() {
-      elemento = {};
-			elemento.plot = jasmine.createSpy();
-      elementos.add(elemento);
-			elementos.plot();
+      element = {};
+			element.plot = jasmine.createSpy();
+      elements.add(element);
+			elements.plot();
     });
-		it('deberia llamar Elemento#plot', function() {
-			expect(elemento.plot).toHaveBeenCalled();
+		it('deberia llamar Element#plot', function() {
+			expect(element.plot).toHaveBeenCalled();
 		});
 	});
 });
@@ -251,7 +244,7 @@ describe("Rango", function() {
 
 describe("Plot", function() {
   var plot;
-  var elemento;
+  var element;
   var numeroDeSVG;
 
   beforeEach(function() {
@@ -275,8 +268,8 @@ describe("Plot", function() {
     it("responde", function() {
       expect(plot.add).toBeDefined();
     });
-    it("llama ListaDeElementos#add", function() {
-      plot.add(elemento);
+    it("llama ListaDeElements#add", function() {
+      plot.add(element);
       expect(plot.elementos.add).toHaveBeenCalled();
     });
   });
@@ -288,7 +281,7 @@ describe("Plot", function() {
     it("responde", function() {
       expect(plot.plot).toBeDefined();
     });
-		it("deberia llamar elementos.plot", function() {
+		it("deberia llamar elements.plot", function() {
 			expect(plot.elementos.plot).toHaveBeenCalled();
 		});
   });
