@@ -9,7 +9,6 @@ function FuncionCatenaria(a,c1,c2,rango,identificador) {
 
 FuncionCatenaria.prototype = new FunctionGraph();
 
-
 var creaRangoLinea = function(distancia, altura) {
   return new Rango(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
 }
@@ -18,11 +17,10 @@ var creaRangoCatenaria = function(postes, i, alturaPoste) {
   return new Rango(postes[i].x, postes[i+1].x, -0.2*alturaPoste, 4*alturaPoste);
 }
 
-
 var creaEjesLinea = function(escena, rango) {
   var ejeX = new Flecha(rango.xMin, 0, rango.xMax, 0, 'ejeX');
   var ejeY = new Flecha(0, rango.yMin, 0, rango.yMax, 'ejeY');
-  var ejes = new ListaDeElementos(escena);
+  var ejes = new GroupOfSceneElements(escena);
 
   ejes.add(ejeX);
   ejes.add(ejeY)
@@ -30,10 +28,7 @@ var creaEjesLinea = function(escena, rango) {
   return ejes;
 }
 
-
-var escena = new Plot();
-
-
+var escena = new Scene();
 
 var creaLinea = function (distancia, a, alturaPoste) {
 
