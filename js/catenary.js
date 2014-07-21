@@ -36,3 +36,20 @@ function resuelvaParabola(a,x1,y1,x2,y2) {
   var c2 = y1-parabola(x1,a,c1);
   return [c1,c2];
 };
+
+
+
+function Tramo(referenceSpecs, cableSpecs) {
+
+  this.referenceSpecs = referenceSpecs;
+  this.cableSpecs = cableSpecs;
+
+  this.sag = function() {
+    return this.referenceSpecs.span*this.referenceSpecs.span*this.referenceSpecs.linearDensity*this.cableSpecs.loadRate*G / (8*this.cableSpecs.tension);
+  };
+
+  this.a = function() {
+    return this.referenceSpecs.tension/(G*this.referenceSpecs.linearDensity);
+  };
+
+};
