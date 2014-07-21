@@ -34,11 +34,103 @@ beforeEach(function() {
 	});
 });
 
+describe("Scene", function() {
+  var scene;
+  var element;
+  var numbersOfSVGtags;
 
-describe("Element", function() {
+  beforeEach(function() {
+		numbersOfSVGtags = document.getElementsByTagName('svg').length;
+    scene = new Scene(); 
+    spyOn(scene.elements, 'add');
+		spyOn(scene.elements, 'plot');
+  });
+  
+	it("should be instance of SceneElement", function() {
+		expect(scene instanceof SceneElement).toBe(true);
+	});
+
+	it("al inicio no deberia crear svg", function() {
+		expect(document.getElementsByTagName('svg').length).toBe(numbersOfSVGtags);
+	});
+
+	describe("#tagSVG", function() {
+
+		describe("after calling #updateTagSVG()",function() {
+			beforeEach(function () {
+				scene.updateTagSVG();
+			});
+			it("should be an object", function() {
+				expect(scene.tagSVG instanceof SVGElement).toBe(true);
+			});
+		});
+
+		describe("after calling #updateTagSVG(div)",function() {
+			var div = document.createElement("div");
+			beforeEach(function () {
+				scene.updateTagSVG(div);
+			});
+			it("should have div as parent", function() {
+				expect(scene.tagSVG.parentNode).toBe(div);
+			});
+		});
+	});
+
+	describe("#elements", function() {
+		it("should be instance of GroupOfSceneElements", function() {
+			expect(scene.elements instanceof GroupOfSceneElements).toBe(true);
+		});
+	});
+
+
+	describe("#rango", function() {
+		it("al inicion deberia tener xMin = 0", function() {
+			expect(scene.rango.xMin).toBe(0);
+		});
+	});
+
+  describe("#add", function() {
+    it("responde", function() {
+      expect(scene.add).toBeDefined();
+    });
+    it("llama ListaDeElements#add", function() {
+      scene.add(element);
+      expect(scene.elements.add).toHaveBeenCalled();
+    });
+  });
+  
+  describe("#plot", function() {
+		beforeEach(function(){
+			scene.plot();
+		});
+    it("responde", function() {
+      expect(scene.plot).toBeDefined();
+    });
+		it("deberia llamar elements.plot", function() {
+			expect(scene.elements.plot).toHaveBeenCalled();
+		});
+  });
+
+  describe("#svg", function() {
+		beforeEach(function() {
+			scene.svg();
+		});
+		it("it shoud create div with id 'Grafica'", function() {
+      expect(document.getElementById('divGrafica')).not.toBe(null);
+    });
+		it("deberia crear svg", function() {
+			expect(document.getElementsByTagName('svg').length).toBe(numbersOfSVGtags+1);
+		});
+  })
+
+});
+
+
+
+describe("SceneElement", function() {
   var element, element2;
   beforeEach(function() {
-    element = new Element();
+    element = new SceneElement();
   });
   describe("#father", function() {
     it("should have #father defined", function() {
@@ -52,6 +144,12 @@ describe("Element", function() {
 		});
 	});
 
+	describe("#tagSVG", function() {
+		it("should be null", function() {
+			expect(element.tagSVG).toBeNull();
+		});
+	});
+
   describe("#svg", function() {
     it("deberia estar definida", function() {
       expect(element.svg).toBeDefined();
@@ -60,7 +158,7 @@ describe("Element", function() {
       expect(element.svg).toThrow(new SVGException());
     });
     it("devuelve svg del father", function() {
-      element2 = new Element();
+      element2 = new SceneElement();
       element.father = element2;
       spyOn(element2,'svg');
       element.svg();
@@ -68,32 +166,44 @@ describe("Element", function() {
     })
   });
 
-	describe("#tag", function() {
-		it("al inicio deberia ser null", function() {
-			expect(element.tagSVG()).toBeNull();
-		});
-	});
 });
 
 describe("FunctionGraph", function() {
-  describe("Constructor sin parametros", function() {
-    var funcion;
+  describe("new FunctionGraph()", function() {
+    var functionGraph;
     beforeEach(function() {
-      funcion = new FunctionGraph();
+      functionGraph = new FunctionGraph();
     });
 
-    it("deberia tener rango definido", function() {
-      expect(funcion.rango).toBeDefined();
-    });
-    it("deberia tener father null", function() {
-      expect(funcion.father).toBeNull();
-    });
+		describe("#range", function() {
+			it("should be null", function() {
+				expect(functionGraph.rango).toBeDefined();
+			})
+		});
+
+		describe("#father", function() {
+			it("should be null", function() {
+				expect(functionGraph.father).toBeNull();
+			});
+		});
+
+		describe("#tagSVG", function() {
+			describe("after calling #updatetagSVG", function() {
+				beforeEach(function() {
+					functionGraph.updateTagSVG();
+				});
+				it("should have an object as its value", function() {
+					expect(typeof(functionGraph.tagSVG)).toBe("object");
+				});
+			});
+		});
+
     describe("#identificator", function() {
       it("deberia tener identificator definido", function() {
-				expect(funcion.identificator).toBeDefined();
+				expect(functionGraph.identificator).toBeDefined();
       });
       it("deberia ser str con un numero entre 0 y 1", function () {
-				expect(parseFloat(funcion.identificator)).toBeBetween(0, 1);
+				expect(parseFloat(functionGraph.identificator)).toBeBetween(0, 1);
       });
 			describe("cuando hay mas que uno", function() {
 				it("si se crea dos no deberian repetirse", function() {
@@ -112,18 +222,17 @@ describe("FunctionGraph", function() {
 			});
     });
 
-
     describe("#plot", function() {
       beforeEach(function() {
-				spyOn(funcion, 'remove');
-				spyOn(funcion, 'svg').and.returnValue(document.createElementNS("http://www.w3.org/2000/svg","svg"));
-				funcion.plot();
+				spyOn(functionGraph, 'remove');
+				spyOn(functionGraph, 'svg').and.returnValue(document.createElementNS("http://www.w3.org/2000/svg","svg"));
+				functionGraph.plot();
       });
       it("deberia empezar llamando a remove", function() {
-				expect(funcion.remove).toHaveBeenCalled();
+				expect(functionGraph.remove).toHaveBeenCalled();
       });
       it("deberia crear un dibujo reconocible por su identificator", function() {
-				expect(funcion.svg().getElementById(funcion.identificator)).not.toBeNull();
+				expect(functionGraph.svg().getElementById(functionGraph.identificator)).not.toBeNull();
       });
       
     });
@@ -135,25 +244,19 @@ describe("FunctionGraph", function() {
 });
 
 describe("ListaDeElements", function() {
-  var plot;
+  var scene;
   var elements;
 
   beforeEach(function() {
-    plot = {
+    scene = {
     }; //double
-    elements = new ListaDeElementos(plot);
+    elements = new GroupOfSceneElements(scene);
   });
 
   it("deberia estar definidos", function() {
     expect(elements).toBeDefined();
   });
   
-  describe("#_plotThatBelongs", function() {
-    it("no deberia tener su plot definido", function() {
-      expect(elements._plotThatBelongs).not.toBeDefined();
-    });
-  });
-
   describe("#father", function() {
     it("deberia tener father definido", function() {
       expect(elements.father).toBeDefined();
@@ -229,7 +332,7 @@ describe("ListaDeElements", function() {
       elements.add(element);
 			elements.plot();
     });
-		it('deberia llamar Element#plot', function() {
+		it('deberia llamar SceneElement#plot', function() {
 			expect(element.plot).toHaveBeenCalled();
 		});
 	});
@@ -242,63 +345,6 @@ describe("Rango", function() {
 	});
 });
 
-describe("Plot", function() {
-  var plot;
-  var element;
-  var numeroDeSVG;
-
-  beforeEach(function() {
-		numeroDeSVG = document.getElementsByTagName('svg').length;
-    plot = new Plot(); 
-    spyOn(plot.elementos, 'add');
-		spyOn(plot.elementos, 'plot');
-  });
-  
-	it("al inicio no deberia crear svg", function() {
-		expect(document.getElementsByTagName('svg').length).toBe(numeroDeSVG);
-	});
-
-	describe("#rango", function() {
-		it("al inicion deberia tener xMin = 0", function() {
-			expect(plot.rango.xMin).toBe(0);
-		});
-	});
-
-  describe("#add", function() {
-    it("responde", function() {
-      expect(plot.add).toBeDefined();
-    });
-    it("llama ListaDeElements#add", function() {
-      plot.add(element);
-      expect(plot.elementos.add).toHaveBeenCalled();
-    });
-  });
-  
-  describe("#plot", function() {
-		beforeEach(function(){
-			plot.plot();
-		});
-    it("responde", function() {
-      expect(plot.plot).toBeDefined();
-    });
-		it("deberia llamar elements.plot", function() {
-			expect(plot.elementos.plot).toHaveBeenCalled();
-		});
-  });
-
-  describe("#svg", function() {
-		beforeEach(function() {
-			plot.svg();
-		});
-		it("it shoud create div with id 'Grafica'", function() {
-      expect(document.getElementById('divGrafica')).not.toBe(null);
-    });
-		it("deberia crear svg", function() {
-			expect(document.getElementsByTagName('svg').length).toBe(numeroDeSVG+1);
-		});
-  })
-
-});
 
 describe("Poste", function() {
   describe("#tipo", function() {

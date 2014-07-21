@@ -1,6 +1,6 @@
 // Lista de funciones:
-//    Plot
-//    ListaDeElementos
+//    Scene
+//    GroupOfSceneElements
 //    FunctionGraph
 //    Poste
 //    Text
@@ -8,20 +8,58 @@
 
 var NUMBER_POINTS = 600;
 
-function Plot() {
+function SVGException() {
+  this.message = 'Function Element#svg called, but element does not have a father';
+  this.name = "SVGException";
+}
+
+var Rango = function(xMin, xMax, yMin, yMax) {
+  this.xMin = xMin;
+  this.xMax = xMax;
+  this.yMin = yMin;
+  this.yMax = yMax;
+}
+
+function SceneElement() {
+  this.father = null;
+  this.identificator = null;
+
+  this.svg = function() {
+	  if (this.father) {
+	    return this.father.svg();
+	  }
+    throw new SVGException;
+  };
+
+	this.tagSVG = null;
+};
+
+function Scene() {
 	
 	this.rango = new Rango(0,100,0,100); 
 
+	this.updateTagSVG = function(div) {
+		if (!this.tagSVG) {
+			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","svg");
+			if (div) {
+				div.appendChild(this.tagSVG);
+			}
+		}
+	};
+
+	this.elements = new GroupOfSceneElements(this);
+
   this.creaSVG = function() {
-		var svg = null;
+
     var div = document.getElementById('divGrafica');
     if(!div) {
       div = document.createElement("div");
       div.setAttribute("id", "divGrafica");
       document.body.appendChild(div);
     };
-    svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-    div.appendChild(svg);
+
+		this.updateTagSVG(div);
+		var svg = this.tagSVG;
     svg.setAttribute('width' , '90%');
     svg.setAttribute('height', '90%');
 		
@@ -36,49 +74,25 @@ function Plot() {
 		}
 	}
   this.svg = this._svg();
-  this.elementos = new ListaDeElementos(this);
+
+
 
 
   // Estas funciones tontas solo sirven para simplificar el acceso a los elementos
   this.add = function(elemento) {
-    this.elementos.add(elemento);
+    this.elements.add(elemento);
   }
 
   this.remove = function(elemento) {
-    this.elementos.remove(elemento);
+    this.elements.remove(elemento);
   }
 
   this.plot = function() {
-    this.elementos.plot();
+    this.elements.plot();
   }
 }
 
-function SVGException() {
-  this.message = 'Function Element#svg called, but element does not have a father';
-  this.name = "SVGException";
-}
-
-function Element() {
-  this.father = null;
-  this.identificator = null;
-
-  this.svg = function() {
-		console.log(this.father);
-	  if (this.father) {
-	    return this.father.svg();
-	  }
-    throw new SVGException;
-  };
-
-	this.tagSVG = function() {return null};
-};
-
-var Rango = function(xMin, xMax, yMin, yMax) {
-  this.xMin = xMin;
-  this.xMax = xMax;
-  this.yMin = yMin;
-  this.yMax = yMax;
-}
+Scene.prototype = new SceneElement();
 
 var limitaSVG = function(svg, rango) {
   xRange = rango.xMax - rango.xMin;
@@ -87,12 +101,7 @@ var limitaSVG = function(svg, rango) {
 		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////
-
-
-function ListaDeElementos(father) {
+function GroupOfSceneElements(father) {
   this._lista = [];
   this.father = father;
   //interface:
@@ -124,7 +133,7 @@ function ListaDeElementos(father) {
   }
 }
 
-ListaDeElementos.prototype = new Element();
+GroupOfSceneElements.prototype = new SceneElement();
 
 function FunctionGraph(f, rango) {
 	this.identificator = Math.random().toString();
@@ -142,10 +151,16 @@ function FunctionGraph(f, rango) {
     if(pathf) { this.svg().removeChild(pathf) }
   }
 
+	this.updateTagSVG = function() {
+		if (!this.tagSVG) {
+			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		};
+	};
+
   this.plot = function () {
     this.remove();
-   
-    var pathf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		this.updateTagSVG();
+    var pathf = this.tagSVG; 
     pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
     pathf.setAttribute('id', this.identificator);
     
@@ -171,7 +186,7 @@ function FunctionGraph(f, rango) {
   }
 }
 
-FunctionGraph.prototype = new Element();
+FunctionGraph.prototype = new SceneElement();
 
 function Poste(x, y, altura, identificator, tipo) {
   this.x = x;
@@ -215,7 +230,7 @@ function Poste(x, y, altura, identificator, tipo) {
   }
 }
 
-Poste.prototype = new Element();
+Poste.prototype = new SceneElement();
 
 
 
@@ -246,7 +261,7 @@ function Text(texto, x,y, identificator) {
   }
 }
 
-Text.prototype = new Element();
+Text.prototype = new SceneElement();
 
 /////////////////////////////////////////////
 
@@ -313,4 +328,4 @@ function Flecha(x1,y1,x2,y2, identificator) {
   }
 }
 
-Flecha.prototype = new Element();
+Flecha.prototype = new SceneElement();
