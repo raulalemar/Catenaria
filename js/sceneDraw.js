@@ -41,9 +41,9 @@ function Scene() {
 	this.updateTagSVG = function(div) {
 		if (!this.tagSVG) {
 			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","svg");
-			if (div) {
-				div.appendChild(this.tagSVG);
-			}
+		}
+		if (div) {
+			div.appendChild(this.tagSVG);
 		}
 	};
 
@@ -75,9 +75,6 @@ function Scene() {
 	}
   this.svg = this._svg();
 
-
-
-
   // Estas funciones tontas solo sirven para simplificar el acceso a los elementos
   this.add = function(elemento) {
     this.elements.add(elemento);
@@ -94,21 +91,26 @@ function Scene() {
 
 Scene.prototype = new SceneElement();
 
-var limitaSVG = function(svg, rango) {
-  xRange = rango.xMax - rango.xMin;
-  yRange = rango.yMax - rango.yMin;
-  svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
-		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
-}
 
 function GroupOfSceneElements(father) {
+
   this._lista = [];
+
+	this.updateTagSVG = function() {
+		if (!this.tagSVG) {
+			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","g");
+			}
+		if (this.father.tagSVG) {
+			this.father.tagSVG.appendChild(this.tagSVG);
+		}
+	};
+
   this.father = father;
+
   //interface:
   this.length = function() {
     return this._lista.length;
   };
-
 
   // Manipular la lista
   this.add = function(elemento) {
@@ -134,6 +136,16 @@ function GroupOfSceneElements(father) {
 }
 
 GroupOfSceneElements.prototype = new SceneElement();
+
+
+
+
+var limitaSVG = function(svg, rango) {
+  xRange = rango.xMax - rango.xMin;
+  yRange = rango.yMax - rango.yMin;
+  svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
+		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
+}
 
 function FunctionGraph(f, rango) {
 	this.identificator = Math.random().toString();

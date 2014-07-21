@@ -6,7 +6,7 @@ describe("Creating standard plot:", function() {
 		var scene = new Scene();
 		scene.updateTagSVG();
 		it("should plot a graph of a quadratic recurrence equation function", function() {
-			expect(DIV1).toBe(false);
+			expect(DIV1 instanceof HTMLElement).toBe(true);
 		});
 	});
 });
