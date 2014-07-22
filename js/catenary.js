@@ -41,17 +41,26 @@ function resuelvaParabola(a,x1,y1,x2,y2) {
 
 
 
-function Tramo(referenceSpecs, cableSpecs) {
+function Tramo(refSpecs, newSpecs) {
 
-  this.referenceSpecs = referenceSpecs;
-  this.cableSpecs = cableSpecs;
+  this.refSpecs = refSpecs;
+  this.newSpecs = newSpecs;
 
   this.sag = function() {
-    return this.referenceSpecs.span*this.referenceSpecs.span*this.referenceSpecs.linearDensity*this.cableSpecs.loadRate*G / (8*this.cableSpecs.tension);
+    return this.refSpecs.span*this.refSpecs.span*this.refSpecs.linearDensity*this.newSpecs.loadRate*G / (8*this.newSpecs.tension);
   };
 
   this.a = function() {
-    return this.referenceSpecs.tension/(G*this.referenceSpecs.linearDensity);
+    return this.newSpecs.tension/(G*this.refSpecs.linearDensity*this.newSpecs.loadRate);
   };
+
+  this.K = function() {
+    var a = this.refSpecs.tension/(G*this.refSpecs.section);
+    var b = this.refSpecs.span*this.refSpecs.loadRate()*this.refSpecs.linearDensity/(this.refSpecs.tension*1000);
+    var c = Math.pow(b,2)*this.refSpecs.elasticModulus*G/24;
+
+    var K = a-c;    
+    return K;
+  }
 
 };

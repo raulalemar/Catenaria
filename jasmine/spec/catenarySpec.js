@@ -128,99 +128,103 @@ describe("resuelvaParabola", function() {
 
 describe("Tramo", function() {
   var tramo;
-  var referenceSpecs = {
-    span: 30,
+  var refSpecs = {
+    span: 300,
     height: 30,
-    tension: 10,
+
+    elasticModulus: 7730*1000000*G,
+    dilationCoefficient: 0.00001899,
+    section: 281.10, //mm^2
+    linearDensity: 0.9746,
+
+    tension: 2939*G,
     temperature: 20,
-    linearDensity: 1.0,
-    elasticModulus: 1000,
+
     loadRate: function() {
-      return 1;
+      return 2.72;
     },
     K: function() {
       return 17.25;
     }
   };
-  var cableSpecs = {
+  var newSpecs = {
     temperature: 10,
-    loadRate: 1,
-    tension: 10
+    loadRate: 2.72,
+    tension: 2939*G
   };
   
   beforeEach(function() {
-    tramo = new Tramo(referenceSpecs, cableSpecs);
+    tramo = new Tramo(refSpecs, newSpecs);
   });
 
 
-  describe("referenceSpecs", function() {
+  describe("refSpecs", function() {
     it("they should be defined", function() {
-      expect(tramo.referenceSpecs).toBeDefined();
+      expect(tramo.refSpecs).toBeDefined();
     });
 
 
-    it("should have span defined .............................(now span = 30 m)", function() {
-      expect(tramo.referenceSpecs.span).toBeDefined();
+    it("should have span defined .............................(now span = 300 m)", function() {
+      expect(tramo.refSpecs.span).toBeDefined();
     });
     
     it("should have height defined ...........................(now height = 30 m)", function() {
-      expect(tramo.referenceSpecs.height).toBeDefined();
+      expect(tramo.refSpecs.height).toBeDefined();
     });
     
-    it("should have tension defined ..........................(now tension = 10 N)", function() {
-      expect(tramo.referenceSpecs.tension).toBeDefined();
+    it("should have linearDensity defined ....................(now linearDensity = 0.9746 kg/m)", function() {
+      expect(tramo.refSpecs.linearDensity).toBeDefined();
+    });
+
+    it("should have section defined ..........................(now section = 281.10 mm^2)", function() {
+      expect(tramo.refSpecs.section).toBeDefined();
+    });
+
+    it("should have dilationCoefficient defined ..............(now dilationCoefficient = 0.00001899 ºC^-1)", function() {
+      expect(tramo.refSpecs.dilationCoefficient).toBeDefined();
+    });
+    
+    it("should have tension defined ..........................(now tension = 2939*9.81 N = 28831 N)", function() {
+      expect(tramo.refSpecs.tension).toBeDefined();
     });
 
     it("should have temperature defined ......................(now temperature = 20 ºC)", function() {
-      expect(tramo.referenceSpecs.temperature).toBeDefined();
-    });
-    
-    it("should have linearDensity defined ....................(now linearDensity = 1 kg/m)", function() {
-      expect(tramo.referenceSpecs.linearDensity).toBeDefined();
+      expect(tramo.refSpecs.temperature).toBeDefined();
     });
 
-    it("should have elasticModulus defined ...................(now elasticModulus = 1000 Pa)", function() {
-      expect(tramo.referenceSpecs.elasticModulus).toBeDefined();
+    it("should have elasticModulus defined ...................(now elasticModulus = 7.5*10^10 Pa)", function() {
+      expect(tramo.refSpecs.elasticModulus).toBeDefined();
     });
     
     describe("#loadRate", function() {
       it("this method should be defined", function() {
-	expect(tramo.referenceSpecs.loadRate).toBeDefined();
+	expect(tramo.refSpecs.loadRate).toBeDefined();
       });
-      it("at least now, it should return 1", function() {
-	expect(tramo.referenceSpecs.loadRate()).toBe(1);
+      xit("at least in this example, it will return 2.72", function() {
+	expect(tramo.refSpecs.loadRate()).toBe(2.72);
       });
     });
-
-    describe("#K", function() {
-      it("this method should be defined", function() {
-	expect(tramo.referenceSpecs.K).toBeDefined();
-      });
-      it("at least now, it should return 17.25", function() {
-	expect(tramo.referenceSpecs.K()).toBe(17.25);
-      });
-    });    
 
   });
 
 
 
-  describe("cableSpecs", function() {
+  describe("newSpecs", function() {
     it("they should be defined", function() {
-      expect(tramo.cableSpecs).toBeDefined();
+      expect(tramo.newSpecs).toBeDefined();
     });
 
     it("should have temperature defined ......................(now temperature = 10 ºC)", function() {
-      expect(tramo.cableSpecs.temperature).toBeDefined();
+      expect(tramo.newSpecs.temperature).toBeDefined();
     });
     
     // the following should be calcualated in terms of temperature, wind, ice, etc
     it("should have loadRate defined .........................(now loadRate = 1)", function() {
-      expect(tramo.cableSpecs.loadRate).toBeDefined();
+      expect(tramo.newSpecs.loadRate).toBeDefined();
     });
     // and the following should be calculated in terms of the loadRate
     it("should have tension defined ..........................(now tension = 10)", function() {
-      expect(tramo.cableSpecs.tension).toBeDefined();
+      expect(tramo.newSpecs.tension).toBeDefined();
     });
   });
 
@@ -229,8 +233,8 @@ describe("Tramo", function() {
     it("this method should be defined", function() {
       expect(tramo.sag).toBeDefined();
     });
-    it("should return 110.3625, (recall that sag = span^2 * linearDensity * m * G / (8*tension))", function () {
-      expect(tramo.sag()).toBe(110.3625);
+    it("should return 10.13, (recall that sag = span^2 * linearDensity * m * G / (8*tension))", function () {
+      expect(tramo.sag()).toBeBetween(10.1,10.2);
     });
   });
 
@@ -238,19 +242,19 @@ describe("Tramo", function() {
     it("this method should be defined", function() {
       expect(tramo.a).toBeDefined();
     });
-    it("should return something close to 1.019, (recall that a = tension / (G * linearDensity))", function () {
-      expect(tramo.a()).toBeBetween(1.018, 1.020);
+    it("should return something close to 1.019, (recall that a = tension / (G * linearDensity * m))", function () {
+      expect(tramo.a()).toBeBetween(1106, 1109);
     });
   });
 
-
-  xit("should have a left pole defined", function() {
-    expect(tramo.leftPole).toBeDefined();
-  });
-  xit("should have a right pole defined", function() {
-    expect(tramo.rightPole).toBeDefined();
-  });
-
+  describe("#K", function() {
+    it("this method should be defined", function() {
+      expect(tramo.K).toBeDefined();
+    });
+    it("it should be close to -13.06", function() {
+      expect(tramo.K()).toBeBetween(-14, -13);
+    });
+  });    
 
 
 });
