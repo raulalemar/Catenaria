@@ -124,6 +124,8 @@ describe("resuelvaParabola", function() {
 
 
 
+
+
 describe("Tramo", function() {
   var tramo;
   var referenceSpecs = {
@@ -132,7 +134,13 @@ describe("Tramo", function() {
     tension: 10,
     temperature: 20,
     linearDensity: 1.0,
-    loadRate: 1
+    elasticModulus: 1000,
+    loadRate: function() {
+      return 1;
+    },
+    K: function() {
+      return 17.25;
+    }
   };
   var cableSpecs = {
     temperature: 10,
@@ -170,9 +178,28 @@ describe("Tramo", function() {
     it("should have linearDensity defined ....................(now linearDensity = 1 kg/m)", function() {
       expect(tramo.referenceSpecs.linearDensity).toBeDefined();
     });
-    it("should have loadRate defined .........................(now loadRate = 1)", function() {
-      expect(tramo.referenceSpecs.loadRate).toBeDefined();
+
+    it("should have elasticModulus defined ...................(now elasticModulus = 1000 Pa)", function() {
+      expect(tramo.referenceSpecs.elasticModulus).toBeDefined();
     });
+    
+    describe("#loadRate", function() {
+      it("this method should be defined", function() {
+	expect(tramo.referenceSpecs.loadRate).toBeDefined();
+      });
+      it("at least now, it should return 1", function() {
+	expect(tramo.referenceSpecs.loadRate()).toBe(1);
+      });
+    });
+
+    describe("#K", function() {
+      it("this method should be defined", function() {
+	expect(tramo.referenceSpecs.K).toBeDefined();
+      });
+      it("at least now, it should return 17.25", function() {
+	expect(tramo.referenceSpecs.K()).toBe(17.25);
+      });
+    });    
 
   });
 
@@ -217,7 +244,7 @@ describe("Tramo", function() {
   });
 
 
-  xit("should have a left pole defined HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", function() {
+  xit("should have a left pole defined", function() {
     expect(tramo.leftPole).toBeDefined();
   });
   xit("should have a right pole defined", function() {
