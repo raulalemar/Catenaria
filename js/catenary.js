@@ -1,3 +1,5 @@
+var G = 9.81
+
 /*
 Funciones generales para calcular una catenaria
 */
