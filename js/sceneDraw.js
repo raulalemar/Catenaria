@@ -13,7 +13,7 @@ function SVGException() {
   this.name = "SVGException";
 }
 
-var Rango = function(xMin, xMax, yMin, yMax) {
+var Range = function(xMin, xMax, yMin, yMax) {
   this.xMin = xMin;
   this.xMax = xMax;
   this.yMin = yMin;
@@ -31,35 +31,46 @@ function SceneElement() {
     throw new SVGException;
   };
 
-	this.tagSVG = null;
+	this.svgElement = null;
 };
 
-function Scene() {
+function Scene(div) {
 	
-	this.rango = new Rango(0,100,0,100); 
-
-	this.updateTagSVG = function(div) {
-		if (!this.tagSVG) {
-			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","svg");
+	this.div = div || null;
+	this.elements = new GroupOfSceneElements(this);
+	this.rango = new Range(0,100,0,100); 
+	this.xRange = this.rango.xMax - this.rango.xMin;
+  this.yRange = this.rango.yMax - this.rango.yMin;
+	this.add = function(elemento) {
+    this.elements.add(elemento);
+  }
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","svg");
+			this.svgElement.setAttribute('viewBox', '' + this.rango.xMin + 
+		   ' ' + (-this.rango.yMax) + ' ' + this.xRange + ' ' + this.yRange);
 		}
-		if (div) {
-			div.appendChild(this.tagSVG);
+		if (this.div) {
+			div.appendChild(this.svgElement);
 		}
 	};
-
-	this.elements = new GroupOfSceneElements(this);
+	this.plotSVG = function() {
+		this.updateSVG();
+		this.elements.plotSVG();
+	};
+	
+	
 
   this.creaSVG = function() {
 
-    var div = document.getElementById('divGrafica');
-    if(!div) {
-      div = document.createElement("div");
-      div.setAttribute("id", "divGrafica");
-      document.body.appendChild(div);
+    if(!this.div) {
+      this.div = document.createElement("div");
+      this.div.setAttribute("id", "divGrafica");
+      document.body.appendChild(this.div);
     };
 
-		this.updateTagSVG(div);
-		var svg = this.tagSVG;
+		this.updateSVG();
+		var svg = this.svgElement;
     svg.setAttribute('width' , '90%');
     svg.setAttribute('height', '90%');
 		
@@ -75,10 +86,6 @@ function Scene() {
 	}
   this.svg = this._svg();
 
-  // Estas funciones tontas solo sirven para simplificar el acceso a los elementos
-  this.add = function(elemento) {
-    this.elements.add(elemento);
-  }
 
   this.remove = function(element) {
     this.elements.remove(element);
@@ -95,28 +102,28 @@ Scene.prototype = new SceneElement();
 function GroupOfSceneElements(parentSceneElement) {
 
   this._lista = [];
-
-	this.updateTagSVG = function() {
-		if (!this.tagSVG) {
-			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","g");
-			}
-		if (this.parentSceneElement.tagSVG) {
-			this.parentSceneElement.tagSVG.appendChild(this.tagSVG);
-		}
-	};
-
-  this.parentSceneElement = parentSceneElement;
-
-  //interface:
+	this.forEach = function(f) {this._lista.forEach(f)};
+	
+	this.parentSceneElement = parentSceneElement;
   this.length = function() {
     return this._lista.length;
   };
-
-  // Manipular la lista
-  this.add = function(elemento) {
-		elemento.parentSceneElement = this;
-    this._lista.push(elemento);
+  this.add = function(element) {
+		element.parentSceneElement = this;
+    this._lista.push(element);
   };
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+			}
+		if (this.parentSceneElement.svgElement) {
+			((this.parentSceneElement).svgElement).appendChild(this.svgElement);
+		}
+	};
+	this.plotSVG = function() {
+		this.updateSVG();
+		this.forEach(function(element) {element.plotSVG()});
+	};
 
   this.remove = function(elemento) {
     elemento.remove();
@@ -124,20 +131,79 @@ function GroupOfSceneElements(parentSceneElement) {
     this._lista.splice(index, 1);
   };
 
-  // Manipular los dibujos que estan en la lista
   this.plot = function() {
 		this._lista.forEach(function(elemento) {elemento.plot()});
   }
 
-  this.hide = function(elemento) {
-    // To be defined
-    
-  }
 }
 
 GroupOfSceneElements.prototype = new SceneElement();
 
+function FunctionGraph(f, rango) {
 
+	this.identificator = Math.random().toString();
+  if (f) {
+		this.f = f
+	} else {
+		this.f = function(x) {return 4*x*(1-x/100)}
+	};
+  if (rango) { 
+		this.rango = rango
+	} else {
+		this.rango = new Range(0,100,0,100)
+	};
+  this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
+
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		};
+		if (this.parentSceneElement) {
+			this.parentSceneElement.svgElement.appendChild(this.svgElement);
+		};
+		this.svgElement.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
+		this.svgElement.setAttribute('id', this.identificator);
+		
+		this.pointXY = function (x) {
+			var valorX = x;
+			var valorY = this.f(x);
+			if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
+				return ""+valorX+" "+ (-valorY);
+			}
+		}
+
+		var ruta = "M";
+		for (var i=0; i<600; i++) {	
+			var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
+			var xy = this.pointXY(x);
+			if (xy) {
+				if (ruta!="M") {ruta += " L";}
+				ruta += xy;
+			}
+		}
+		this.svgElement.setAttribute('d', ruta);
+	};
+
+	this.plotSVG = function() {
+		this.updateSVG();
+	};
+
+	this.remove = function() {
+    var pathf = this.svg().getElementById(this.identificator);
+    if(pathf) { this.svg().removeChild(pathf) }
+  }
+
+
+  this.plot = function () {
+    this.remove();
+		this.updateSVG();
+    var pathf = this.svgElement; 
+    
+    this.svg().appendChild(pathf); 
+  }
+}
+
+FunctionGraph.prototype = new SceneElement();
 
 
 var limitaSVG = function(svg, rango) {
@@ -147,58 +213,6 @@ var limitaSVG = function(svg, rango) {
 		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
 }
 
-function FunctionGraph(f, rango) {
-	this.identificator = Math.random().toString();
-
-  if (f) this.f = f
-  else this.f = function(x) {return 4*x*(1-x/100);};
-
-  if (rango)  this.rango = rango
-  else this.rango = new Rango(0,100,0,100);
-
-  this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
-
-  this.remove = function() {
-    var pathf = this.svg().getElementById(this.identificator);
-    if(pathf) { this.svg().removeChild(pathf) }
-  }
-
-	this.updateTagSVG = function() {
-		if (!this.tagSVG) {
-			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg", "path");
-		};
-	};
-
-  this.plot = function () {
-    this.remove();
-		this.updateTagSVG();
-    var pathf = this.tagSVG; 
-    pathf.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
-    pathf.setAttribute('id', this.identificator);
-    
-    this.pathXY = function (x) {
-      var valorX = x;
-      var valorY = this.f(x);
-      if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
-				return ""+valorX+" "+ (-valorY);
-      }
-    }
-
-    var ruta = "M";
-    for (var i=0; i<600; i++) {	
-      var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
-      var xy = this.pathXY(x);
-      if (xy) {
-				if (ruta!="M") {ruta += " L";}
-				ruta += xy;
-      }
-    }
-    pathf.setAttribute('d', ruta);
-    this.svg().appendChild(pathf); 
-  }
-}
-
-FunctionGraph.prototype = new SceneElement();
 
 function Poste(x, y, altura, identificator, tipo) {
   this.x = x;
