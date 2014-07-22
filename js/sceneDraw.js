@@ -9,7 +9,7 @@
 var NUMBER_POINTS = 600;
 
 function SVGException() {
-  this.message = 'Function Element#svg called, but element does not have a father';
+  this.message = 'Function Element#svg called, but element does not have a parentSceneElement';
   this.name = "SVGException";
 }
 
@@ -21,12 +21,12 @@ var Rango = function(xMin, xMax, yMin, yMax) {
 }
 
 function SceneElement() {
-  this.father = null;
+  this.parentSceneElement = null;
   this.identificator = null;
 
   this.svg = function() {
-	  if (this.father) {
-	    return this.father.svg();
+	  if (this.parentSceneElement) {
+	    return this.parentSceneElement.svg();
 	  }
     throw new SVGException;
   };
@@ -80,8 +80,8 @@ function Scene() {
     this.elements.add(elemento);
   }
 
-  this.remove = function(elemento) {
-    this.elements.remove(elemento);
+  this.remove = function(element) {
+    this.elements.remove(element);
   }
 
   this.plot = function() {
@@ -92,7 +92,7 @@ function Scene() {
 Scene.prototype = new SceneElement();
 
 
-function GroupOfSceneElements(father) {
+function GroupOfSceneElements(parentSceneElement) {
 
   this._lista = [];
 
@@ -100,12 +100,12 @@ function GroupOfSceneElements(father) {
 		if (!this.tagSVG) {
 			this.tagSVG = document.createElementNS("http://www.w3.org/2000/svg","g");
 			}
-		if (this.father.tagSVG) {
-			this.father.tagSVG.appendChild(this.tagSVG);
+		if (this.parentSceneElement.tagSVG) {
+			this.parentSceneElement.tagSVG.appendChild(this.tagSVG);
 		}
 	};
 
-  this.father = father;
+  this.parentSceneElement = parentSceneElement;
 
   //interface:
   this.length = function() {
@@ -114,7 +114,7 @@ function GroupOfSceneElements(father) {
 
   // Manipular la lista
   this.add = function(elemento) {
-		elemento.father = this;
+		elemento.parentSceneElement = this;
     this._lista.push(elemento);
   };
 

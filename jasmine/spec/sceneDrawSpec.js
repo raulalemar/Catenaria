@@ -40,9 +40,9 @@ describe("SceneElement", function() {
   beforeEach(function() {
     element = new SceneElement();
   });
-  describe("#father", function() {
-    it("should have #father defined", function() {
-      expect(element.father).toBeDefined();
+  describe("#parentSceneElement", function() {
+    it("should have #parentSceneElement defined", function() {
+      expect(element.parentSceneElement).toBeDefined();
     });
 	});
 
@@ -62,12 +62,12 @@ describe("SceneElement", function() {
     it("deberia estar definida", function() {
       expect(element.svg).toBeDefined();
     });
-    it("deberia saltar una excepcion si no tiene father", function() {
+    it("deberia saltar una excepcion si no tiene parentSceneElement", function() {
       expect(element.svg).toThrow(new SVGException());
     });
-    it("devuelve svg del father", function() {
+    it("devuelve svg del parentSceneElement", function() {
       element2 = new SceneElement();
-      element.father = element2;
+      element.parentSceneElement = element2;
       spyOn(element2,'svg');
       element.svg();
       expect(element2.svg).toHaveBeenCalled();
@@ -183,9 +183,9 @@ describe("GroupOfSceneElementos", function() {
 			elements = new GroupOfSceneElements(scene);
 		});
 
-		describe("#father", function() {
-			it("deberia tener father definido", function() {
-				expect(elements.father).toBeDefined();
+		describe("#parentSceneElement", function() {
+			it("deberia tener parentSceneElement definido", function() {
+				expect(elements.parentSceneElement).toBeDefined();
 			});
 		});
 
@@ -226,12 +226,12 @@ describe("GroupOfSceneElementos", function() {
     describe("despues de añadir un element", function() {
       var element;
       beforeEach(function() {
-				element = {father: null};
+				element = {parentSceneElement: null};
 				elements.add(element);
       });
 
-      it("deberia asignar el father al element", function() {
-				expect(element.father).toBe(elements);
+      it("deberia asignar el parentSceneElement al element", function() {
+				expect(element.parentSceneElement).toBe(elements);
       });
 
       it("deberia tener longitud 1", function() {
@@ -283,9 +283,9 @@ describe("FunctionGraph", function() {
 			})
 		});
 
-		describe("#father", function() {
+		describe("#parentSceneElement", function() {
 			it("should be null", function() {
-				expect(functionGraph.father).toBeNull();
+				expect(functionGraph.parentSceneElement).toBeNull();
 			});
 		});
 
