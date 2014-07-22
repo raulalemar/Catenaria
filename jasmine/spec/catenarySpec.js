@@ -217,7 +217,7 @@ describe("Tramo", function() {
   });
 
 
-  xit("should have a left pole defined", function() {
+  xit("should have a left pole defined HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", function() {
     expect(tramo.leftPole).toBeDefined();
   });
   xit("should have a right pole defined", function() {
