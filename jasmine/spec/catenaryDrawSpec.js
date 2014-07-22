@@ -1,3 +1,12 @@
+describe("new CatenaryGraph()", function() {
+	var catenaryGraph;
+	beforeEach(function() {
+		catenaryGraph = new CatenaryGraph();
+	});
+	
+});
+
+
 describe("pideLongitud", function() {
 	it("llama promp", function() {
 		spyOn(window, 'prompt');

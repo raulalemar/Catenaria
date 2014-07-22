@@ -1,3 +1,5 @@
+
+
 function FuncionCatenaria(a,c1,c2,rango,identificador) {
   this.a = a;
   this.c1 = c1;
