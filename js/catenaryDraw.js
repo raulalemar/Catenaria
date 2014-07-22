@@ -10,11 +10,11 @@ function FuncionCatenaria(a,c1,c2,rango,identificador) {
 FuncionCatenaria.prototype = new FunctionGraph();
 
 var creaRangoLinea = function(distancia, altura) {
-  return new Rango(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
+  return new Range(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
 }
 
 var creaRangoCatenaria = function(postes, i, alturaPoste) {
-  return new Rango(postes[i].x, postes[i+1].x, -0.2*alturaPoste, 4*alturaPoste);
+  return new Range(postes[i].x, postes[i+1].x, -0.2*alturaPoste, 4*alturaPoste);
 }
 
 var creaEjesLinea = function(escena, rango) {
