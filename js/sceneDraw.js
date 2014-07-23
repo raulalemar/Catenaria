@@ -1,17 +1,9 @@
-// Lista de funciones:
-//    Scene
-//    GroupOfSceneElements
-//    FunctionGraph
-//    Poste
-//    Text
-//    Flecha
-
 var NUMBER_POINTS = 600;
 
-function SVGException() {
-  this.message = 'Function Element#svg called, but element does not have a parentSceneElement';
-  this.name = "SVGException";
-}
+//function SVGException() {
+//  this.message = 'Function Element#svg called, but element does not have a parentSceneElement';
+//  this.name = "SVGException";
+//}
 
 var Range = function(xMin, xMax, yMin, yMax) {
   this.xMin = xMin;
@@ -23,32 +15,23 @@ var Range = function(xMin, xMax, yMin, yMax) {
 function SceneElement() {
   this.parentSceneElement = null;
   this.identificator = null;
-
-  this.svg = function() {
-	  if (this.parentSceneElement) {
-	    return this.parentSceneElement.svg();
-	  }
-    throw new SVGException;
-  };
-
 	this.svgElement = null;
 };
 
 function Scene(div) {
-	
 	this.div = div || null;
 	this.elements = new GroupOfSceneElements(this);
-	this.rango = new Range(0,100,0,100); 
-	this.xRange = this.rango.xMax - this.rango.xMin;
-  this.yRange = this.rango.yMax - this.rango.yMin;
+	this.range = new Range(0,100,0,100); 
+	this.xRange = function() {return this.range.xMax - this.range.xMin};
+  this.yRange = function() {return this.range.yMax - this.range.yMin};
 	this.add = function(elemento) {
     this.elements.add(elemento);
   }
 	this.updateSVG = function() {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","svg");
-			this.svgElement.setAttribute('viewBox', '' + this.rango.xMin + 
-		   ' ' + (-this.rango.yMax) + ' ' + this.xRange + ' ' + this.yRange);
+			this.svgElement.setAttribute('viewBox', '' + this.range.xMin + 
+		   ' ' + (-this.range.yMax) + ' ' + this.xRange() + ' ' + this.yRange());
 		}
 		if (this.div) {
 			div.appendChild(this.svgElement);
@@ -58,49 +41,13 @@ function Scene(div) {
 		this.updateSVG();
 		this.elements.plotSVG();
 	};
-	
-	
-
-  this.creaSVG = function() {
-
-    if(!this.div) {
-      this.div = document.createElement("div");
-      this.div.setAttribute("id", "divGrafica");
-      document.body.appendChild(this.div);
-    };
-
-		this.updateSVG();
-		var svg = this.svgElement;
-    svg.setAttribute('width' , '90%');
-    svg.setAttribute('height', '90%');
-		
-    return svg;
-  };
-
-  this._svg = function() {
-		var svg = null;
-		return function() {
-			if (!svg) {svg = this.creaSVG()};
-			return svg;
-		}
-	}
-  this.svg = this._svg();
-
-
   this.remove = function(element) {
     this.elements.remove(element);
   }
-
-  this.plot = function() {
-    this.elements.plot();
-  }
 }
-
 Scene.prototype = new SceneElement();
 
-
 function GroupOfSceneElements(parentSceneElement) {
-
   this._lista = [];
 	this.forEach = function(f) {this._lista.forEach(f)};
 	
@@ -124,57 +71,43 @@ function GroupOfSceneElements(parentSceneElement) {
 		this.updateSVG();
 		this.forEach(function(element) {element.plotSVG()});
 	};
-
   this.remove = function(elemento) {
     elemento.remove();
     var index = this._lista.indexOf(elemento);
     this._lista.splice(index, 1);
   };
-
-  this.plot = function() {
-		this._lista.forEach(function(elemento) {elemento.plot()});
-  }
-
 }
-
 GroupOfSceneElements.prototype = new SceneElement();
 
-function FunctionGraph(f, rango) {
-
+function FunctionGraph(f, range) {
 	this.identificator = Math.random().toString();
-  if (f) {
-		this.f = f
-	} else {
-		this.f = function(x) {return 4*x*(1-x/100)}
-	};
-  if (rango) { 
-		this.rango = rango
-	} else {
-		this.rango = new Range(0,100,0,100)
-	};
-  this.fxRange = function() {return this.rango.xMax - this.rango.xMin;};
-
+	this.f = f || function(x) {return 4*x*(1-x/100)};
+	this.range = range || new Range(0,100,0,100);
+  this.fxRange = function() {return this.range.xMax - this.range.xMin;};
 	this.updateSVG = function() {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+			this.svgElement.classList.add("functionGraph"); 
 		};
 		if (this.parentSceneElement) {
 			this.parentSceneElement.svgElement.appendChild(this.svgElement);
 		};
-		this.svgElement.setAttribute('style', "stroke:red;stroke-width:3px; fill:none");
+		if (window.getComputedStyle(this.svgElement)['stroke']=='none') {
+			this.svgElement.setAttribute('style', "stroke:black; fill:none");
+		};
 		this.svgElement.setAttribute('id', this.identificator);
 		
 		this.pointXY = function (x) {
 			var valorX = x;
 			var valorY = this.f(x);
-			if (valorY < this.rango.yMax && valorY > this.rango.yMin){ 
+			if (valorY < this.range.yMax && valorY > this.range.yMin){ 
 				return ""+valorX+" "+ (-valorY);
 			}
 		}
 
 		var ruta = "M";
 		for (var i=0; i<600; i++) {	
-			var x = this.rango.xMin + i*this.fxRange()/NUMBER_POINTS;
+			var x = this.range.xMin + i*this.fxRange()/NUMBER_POINTS;
 			var xy = this.pointXY(x);
 			if (xy) {
 				if (ruta!="M") {ruta += " L";}
@@ -183,111 +116,15 @@ function FunctionGraph(f, rango) {
 		}
 		this.svgElement.setAttribute('d', ruta);
 	};
-
 	this.plotSVG = function() {
 		this.updateSVG();
 	};
-
 	this.remove = function() {
     var pathf = this.svg().getElementById(this.identificator);
     if(pathf) { this.svg().removeChild(pathf) }
   }
-
-
-  this.plot = function () {
-    this.remove();
-		this.updateSVG();
-    var pathf = this.svgElement; 
-    
-    this.svg().appendChild(pathf); 
-  }
 }
-
 FunctionGraph.prototype = new SceneElement();
-
-
-var limitaSVG = function(svg, rango) {
-  xRange = rango.xMax - rango.xMin;
-  yRange = rango.yMax - rango.yMin;
-  svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
-		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
-}
-
-
-function Poste(x, y, altura, identificator, tipo) {
-  this.x = x;
-  this.y = y;
-  this.altura = altura;
-  this.identificator = identificator;
-  //this.svg = null;
-
-  this.tipo = tipo || 'suspension';
-
-  this.remove = function() {
-    var poste = this.svg().getElementById('poste' + identificator);
-    if(poste) { this.svg().removeChild(poste) }
-  }
-
-  this.plot = function() {
-	
-    this.remove();
-    
-    var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    poste.setAttribute('id', 'poste' + identificator);
-    
-    // poste
-    poste.setAttribute('x1', this.x);
-    poste.setAttribute('y1', -this.y);
-    poste.setAttribute('x2', this.x);
-    poste.setAttribute('y2', -(this.y + this.altura));
-    
-    // Colores
-    switch(this.tipo) {
-      case 'amarre':
-        poste.setAttribute('style', "stroke:#000000;stroke-width:4px");
-        break;
-      case 'suspension':
-      default:
-        poste.setAttribute('style', "stroke:#0000aa;stroke-width:2px");
-    }
-
-    // Las añadimos
-    this.svg().appendChild(poste);
-  }
-}
-
-Poste.prototype = new SceneElement();
-
-
-
-function Text(texto, x,y, identificator) {
-  this.texto = texto;
-  this.x = x;
-  this.y = y;
-
-  this.remove = function() {
-		var text = this.svg().getElementById('texto' + identificator);
-		if(text) { this.svg().removeChild(text) }
-  }
-
-  this.plot = function() {
-    this.remove();
-    // Aqui vamos a añadir el texto con el valor del parametro
-    
-    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('id', "texto"+identificator);
-    text.setAttribute('x', this.x);
-    text.setAttribute('y', this.y);
-    text.setAttribute('font-size', '5%');
-    
-    var textNode = document.createTextNode(this.texto);
-    text.appendChild(textNode);
-    
-    this.svg().appendChild(text);
-  }
-}
-
-Text.prototype = new SceneElement();
 
 /////////////////////////////////////////////
 
