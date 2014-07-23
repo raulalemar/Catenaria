@@ -1,5 +1,3 @@
-
-
 function FuncionCatenaria(a,c1,c2,rango,identificador) {
   this.a = a;
   this.c1 = c1;
@@ -64,8 +62,59 @@ var creaLinea = function (distancia, a, alturaPoste) {
   escena.plot();
 }
 
+
+
+function Poste(x, y, altura, identificator, tipo) {
+  this.x = x;
+  this.y = y;
+  this.altura = altura;
+  this.identificator = identificator;
+  //this.svg = null;
+
+  this.tipo = tipo || 'suspension';
+
+  this.remove = function() {
+    var poste = this.svg().getElementById('poste' + identificator);
+    if(poste) { this.svg().removeChild(poste) }
+  }
+
+  this.plot = function() {
+	
+    this.remove();
+    
+    var poste = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    poste.setAttribute('id', 'poste' + identificator);
+    
+    // poste
+    poste.setAttribute('x1', this.x);
+    poste.setAttribute('y1', -this.y);
+    poste.setAttribute('x2', this.x);
+    poste.setAttribute('y2', -(this.y + this.altura));
+    
+    // Colores
+    switch(this.tipo) {
+      case 'amarre':
+        poste.setAttribute('style', "stroke:#000000;stroke-width:4px");
+        break;
+      case 'suspension':
+      default:
+        poste.setAttribute('style', "stroke:#0000aa;stroke-width:2px");
+    }
+
+    // Las añadimos
+    this.svg().appendChild(poste);
+  }
+}
+Poste.prototype = new SceneElement();
+
+var limitaSVG = function(svg, rango) {
+  xRange = rango.xMax - rango.xMin;
+  yRange = rango.yMax - rango.yMin;
+  svg.setAttribute('viewBox', '' + (rango.xMin-0.1*xRange) + 
+		   ' ' + (-rango.yMax-0.1*yRange) + ' ' + (1.1*xRange) + ' ' + (1.1)*yRange);
+}
+
 var pideLongitud = function() {
 	var longitud = window.prompt("Longitud de la linea:", 1000);
 	return longitud;
 }
-
