@@ -60,52 +60,78 @@ function Conditions() {
 
 
 
-function Tramo(refSpecs, newSpecs) {
+function Tramo(cable, initialConditions, finalConditions) {
 
-  this.refSpecs = refSpecs;
-  this.newSpecs = newSpecs;
+
+  this.cable = cable;
+  this.initialConditions = initialConditions;
+  this.finalConditions = finalConditions;
+
+  this.loadRate = function (conditions) {
+    var ph = conditions.iceCoefficient*Math.sqrt(this.cable.diameter);
+    var pv = conditions.windPressure * (this.cable.diameter/1000 + 2*conditions.iceWidth); //note that diameter is converted to meters
+    var p  = this.cable.linearDensity;
+
+    pApparent = Math.sqrt((p+ph)*(p+ph) + pv*pv);
+    m = pApparent / p;
+
+    conditions.loadRate = m; // we store the value, just in case
+
+    // esta linea redondea m a 2.72, con mas decimales resulta que otras pruebas fallan, pues los numeros se desvian un poco
+    //m = Math.round(m*Math.pow(10,2))/Math.pow(10,2);
+    return m;
+  };
 
   this.sag = function() {
-    return this.refSpecs.span*this.refSpecs.span*this.refSpecs.linearDensity*this.newSpecs.loadRate*G / (8*this.newSpecs.tension);
+    return this.initialConditions.span*this.initialConditions.span*this.cable.linearDensity*this.finalConditions.loadRate*G / (8*this.finalConditions.tension);
   };
 
   this.a = function() {
     return this.newSpecs.tension/(G*this.refSpecs.linearDensity*this.newSpecs.loadRate);
   };
 
-  this.K = function() {
-    var a = this.refSpecs.tension/(G*this.refSpecs.section);
-    var b = this.refSpecs.span*this.refSpecs.loadRate()*this.refSpecs.linearDensity/(this.refSpecs.tension*1000);
-    var c = Math.pow(b,2)*this.refSpecs.elasticModulus*G/24;
-
-    var K = a-c;    
-    return K;
-  };
-
-  this.A = function() {
-    var deltaT = this.newSpecs.temperature - this.refSpecs.temperature;
-    var a = this.refSpecs.dilationCoefficient * deltaT * this.refSpecs.elasticModulus/(1000000*G);
-
-    return a-this.K();
-  };
-
-  this.B = function() {
-    var a = this.refSpecs.span * this.newSpecs.loadRate * this.refSpecs.linearDensity / (1000*this.refSpecs.section);
-    var b = this.refSpecs.elasticModulus / (24*G)
-    var c = Math.pow(a,2) * b;
-
-    return c;
-  }
-
   this.solveChangeEquation = function () {
+    this.loadRate(initialConditions);
+    this.loadRate(finalConditions);
+
     var x = solveGeneralChangeEquation(this.A(), this.B());
-    var tension = x * G * this.refSpecs.section;
+    var tension = x * G * this.cable.section;  // N
 
     //console.log('K: ', this.K(), 'A: ', this.A(), 'B: ', this.B(), 't: ', x, 'tension: ', tension/G);
 
     return tension;
   };
 
+
+
+
+  // the following functions are needen only when solving the change equation.
+  this.A = function() {
+    var deltaT = this.finalConditions.temperature - this.initialConditions.temperature;
+    var a = this.cable.dilationCoefficient * deltaT * this.cable.elasticModulus/(1000000*G);
+
+    return a-this.K();
+  };
+
+  this.B = function() {
+    var a = this.finalConditions.span * this.finalConditions.loadRate * this.cable.linearDensity / (1000*this.cable.section);
+    var b = this.cable.elasticModulus / (24*G)
+    var c = Math.pow(a,2) * b;
+
+    return c;
+  }
+
+
+  this.K = function() {
+    var a = this.initialConditions.tension/(G*this.cable.section);
+    var b = this.initialConditions.span*this.initialConditions.loadRate*this.cable.linearDensity/(this.initialConditions.tension*1000);
+    var c = Math.pow(b,2)*this.cable.elasticModulus*G/24;
+
+    //console.log('a,b,c: ', a,b,c);
+
+    var K = a-c;    
+    return K;
+  };
 };
 
 
@@ -152,47 +178,27 @@ var solveGeneralChangeEquation = function(A,B) {
 
 
 
-var refSpecs = {
-  span: 300,
-  height: 30,
+  var cable = new Cable();
+    cable.elasticModulus = 7730*1000000*G;     // Pa;
+    cable.dilationCoefficient = 0.00001899;    // ºC^-1
+    cable.section = 281.10;                    // mm^2
+    cable.linearDensity = 0.9746;              // kg/m
+    cable.diameter = 21.793;                   // mm
 
-  elasticModulus: 7730*1000000*G,
-  dilationCoefficient: 0.00001899,
-  section: 281.10, // mm^2
-  linearDensity: 0.9746, // kg/m
-  diameter: 21.793, // mm
+  var conditions1 = new Conditions();
+    conditions1.span = 300;                    // m
+    conditions1.temperature = -20;             // ºC
+    conditions1.iceCoefficient = 0.36;
+    conditions1.tension = 2939*G;
 
-  tension: 2939*G,
-  temperature: -20,
-  iceCoefficient: 0.36, // or 0.18 or 0.
-  iceWidth: 0, // needed when considering ice and wind together, in meters
-  windPressure: 0,
+  var conditions2 = new Conditions();
+    conditions2.span = 300;
+    conditions2.temperature = 10;
 
-  loadRate: function() {
-
-    var ph = this.iceCoefficient*Math.sqrt(this.diameter);
-    var pv = this.windPressure * (this.diameter/1000 + 2*this.iceWidth);
-    var p  = this.linearDensity;
-    pApparent = Math.sqrt((p+ph)*(p+ph) + pv*pv);
-    m = pApparent / p;
-
-    // esta linea redondea m a 2.72, con mas decimales resulta que otras pruebas fallan, pues los numeros se desvian un poco
-    m = Math.round(m*Math.pow(10,2))/Math.pow(10,2);
-    return m;
-  },
-  K: function() {
-    return 17.25;
-  }
-};
-var newSpecs = {
-  temperature: 0,
-  loadRate: 1,
-};
-
-var tramo = new Tramo(refSpecs, newSpecs);
+  var tramo = new Tramo(cable, conditions1, conditions2);
 
 for(var i=0; i<9; i++) {
-  tramo.newSpecs.temperature = 5*i;
-  tramo.newSpecs.tension = tramo.solveChangeEquation();
-  console.log('Temperatura: ', tramo.newSpecs.temperature, '  ------->    Tension: ', tramo.newSpecs.tension/G, ', flecha: ', tramo.sag());
+  tramo.finalConditions.temperature = 5*i;
+  tramo.finalConditions.tension = tramo.solveChangeEquation();
+  console.log('Temperatura: ', tramo.finalConditions.temperature, '  ------->    Tension: ', tramo.finalConditions.tension/G, ', flecha: ', tramo.sag());
 }

@@ -126,175 +126,175 @@ describe("resuelvaParabola", function() {
 
 
 
-describe("Tramo", function() {
-  var tramo;
-  var refSpecs = {
-    span: 300,
-    height: 30,
+// describe("Tramo", function() {
+//   var tramo;
+//   var refSpecs = {
+//     span: 300,
+//     height: 30,
 
-    elasticModulus: 7730*1000000*G,
-    dilationCoefficient: 0.00001899,
-    section: 281.10, // mm^2
-    linearDensity: 0.9746, // kg/m
-    diameter: 21.793, // mm
+//     elasticModulus: 7730*1000000*G,
+//     dilationCoefficient: 0.00001899,
+//     section: 281.10, // mm^2
+//     linearDensity: 0.9746, // kg/m
+//     diameter: 21.793, // mm
 
-    tension: 2939*G,
-    temperature: 20,
-    iceCoefficient: 0.36, // or 0.18 or 0.
-    iceWidth: 0, // needed when considering ice and wind together, in meters
-    windPressure: 0,
+//     tension: 2939*G,
+//     temperature: 20,
+//     iceCoefficient: 0.36, // or 0.18 or 0.
+//     iceWidth: 0, // needed when considering ice and wind together, in meters
+//     windPressure: 0,
 
-    loadRate: function() {
+//     loadRate: function() {
 
-      var ph = this.iceCoefficient*Math.sqrt(this.diameter);
-      var pv = this.windPressure * (this.diameter/1000 + 2*this.iceWidth);
-      var p  = this.linearDensity;
-      pApparent = Math.sqrt((p+ph)*(p+ph) + pv*pv);
-      m = pApparent / p;
+//       var ph = this.iceCoefficient*Math.sqrt(this.diameter);
+//       var pv = this.windPressure * (this.diameter/1000 + 2*this.iceWidth);
+//       var p  = this.linearDensity;
+//       pApparent = Math.sqrt((p+ph)*(p+ph) + pv*pv);
+//       m = pApparent / p;
 
-      // esta linea redondea m a 2.72, con mas decimales resulta que otras pruebas fallan, pues los numeros se desvian un poco
-      m = Math.round(m*Math.pow(10,2))/Math.pow(10,2);
-      return m;
-    },
-    K: function() {
-      return 17.25;
-    }
-  };
-  var newSpecs = {
-    temperature: 20,
-    loadRate: 2.72,
-    tension: 2939*G
-  };
+//       // esta linea redondea m a 2.72, con mas decimales resulta que otras pruebas fallan, pues los numeros se desvian un poco
+//       m = Math.round(m*Math.pow(10,2))/Math.pow(10,2);
+//       return m;
+//     },
+//     K: function() {
+//       return 17.25;
+//     }
+//   };
+//   var newSpecs = {
+//     temperature: 20,
+//     loadRate: 2.72,
+//     tension: 2939*G
+//   };
   
-  beforeEach(function() {
-    tramo = new Tramo(refSpecs, newSpecs);
-  });
+//   beforeEach(function() {
+//     tramo = new Tramo(refSpecs, newSpecs);
+//   });
 
 
-  describe("refSpecs", function() {
-    it("they should be defined", function() {
-      expect(tramo.refSpecs).toBeDefined();
-    });
+//   describe("refSpecs", function() {
+//     it("they should be defined", function() {
+//       expect(tramo.refSpecs).toBeDefined();
+//     });
 
 
-    it("should have span defined .............................(now span = 300 m)", function() {
-      expect(tramo.refSpecs.span).toBeDefined();
-    });
+//     it("should have span defined .............................(now span = 300 m)", function() {
+//       expect(tramo.refSpecs.span).toBeDefined();
+//     });
     
-    it("should have height defined ...........................(now height = 30 m)", function() {
-      expect(tramo.refSpecs.height).toBeDefined();
-    });
+//     it("should have height defined ...........................(now height = 30 m)", function() {
+//       expect(tramo.refSpecs.height).toBeDefined();
+//     });
     
-    it("should have linearDensity defined ....................(now linearDensity = 0.9746 kg/m)", function() {
-      expect(tramo.refSpecs.linearDensity).toBeDefined();
-    });
+//     it("should have linearDensity defined ....................(now linearDensity = 0.9746 kg/m)", function() {
+//       expect(tramo.refSpecs.linearDensity).toBeDefined();
+//     });
 
-    it("should have section defined ..........................(now section = 281.10 mm^2)", function() {
-      expect(tramo.refSpecs.section).toBeDefined();
-    });
+//     it("should have section defined ..........................(now section = 281.10 mm^2)", function() {
+//       expect(tramo.refSpecs.section).toBeDefined();
+//     });
 
-    it("should have dilationCoefficient defined ..............(now dilationCoefficient = 0.00001899 ºC^-1)", function() {
-      expect(tramo.refSpecs.dilationCoefficient).toBeDefined();
-    });
+//     it("should have dilationCoefficient defined ..............(now dilationCoefficient = 0.00001899 ºC^-1)", function() {
+//       expect(tramo.refSpecs.dilationCoefficient).toBeDefined();
+//     });
     
-    it("should have tension defined ..........................(now tension = 2939*9.81 N = 28831 N)", function() {
-      expect(tramo.refSpecs.tension).toBeDefined();
-    });
+//     it("should have tension defined ..........................(now tension = 2939*9.81 N = 28831 N)", function() {
+//       expect(tramo.refSpecs.tension).toBeDefined();
+//     });
 
-    it("should have temperature defined ......................(now temperature = 20 ºC)", function() {
-      expect(tramo.refSpecs.temperature).toBeDefined();
-    });
+//     it("should have temperature defined ......................(now temperature = 20 ºC)", function() {
+//       expect(tramo.refSpecs.temperature).toBeDefined();
+//     });
 
-    it("should have elasticModulus defined ...................(now elasticModulus = 7.5*10^10 Pa)", function() {
-      expect(tramo.refSpecs.elasticModulus).toBeDefined();
-    });
+//     it("should have elasticModulus defined ...................(now elasticModulus = 7.5*10^10 Pa)", function() {
+//       expect(tramo.refSpecs.elasticModulus).toBeDefined();
+//     });
     
-    describe("#loadRate", function() {
-      it("this method should be defined", function() {
-	expect(tramo.refSpecs.loadRate).toBeDefined();
-      });
-      it("at least in this example, it will return 2.72", function() {
-	expect(tramo.refSpecs.loadRate()).toBeBetween(2.71, 2.73);
-      });
-    });
+//     describe("#loadRate", function() {
+//       it("this method should be defined", function() {
+// 	expect(tramo.refSpecs.loadRate).toBeDefined();
+//       });
+//       it("at least in this example, it will return 2.72", function() {
+// 	expect(tramo.refSpecs.loadRate()).toBeBetween(2.71, 2.73);
+//       });
+//     });
 
-  });
+//   });
 
 
 
-  describe("newSpecs", function() {
-    it("they should be defined", function() {
-      expect(tramo.newSpecs).toBeDefined();
-    });
+//   describe("newSpecs", function() {
+//     it("they should be defined", function() {
+//       expect(tramo.newSpecs).toBeDefined();
+//     });
 
-    it("should have temperature defined ......................(now temperature = 20 ºC)", function() {
-      expect(tramo.newSpecs.temperature).toBeDefined();
-    });
+//     it("should have temperature defined ......................(now temperature = 20 ºC)", function() {
+//       expect(tramo.newSpecs.temperature).toBeDefined();
+//     });
     
-    // the following should be calcualated in terms of temperature, wind, ice, etc
-    it("should have loadRate defined .........................(now loadRate = 2.72)", function() {
-      expect(tramo.newSpecs.loadRate).toBeDefined();
-    });
-    // and the following should be calculated in terms of the loadRate
-    it("should have tension defined ..........................(now tension = 28831)", function() {
-      expect(tramo.newSpecs.tension).toBeDefined();
-    });
-  });
+//     // the following should be calcualated in terms of temperature, wind, ice, etc
+//     it("should have loadRate defined .........................(now loadRate = 2.72)", function() {
+//       expect(tramo.newSpecs.loadRate).toBeDefined();
+//     });
+//     // and the following should be calculated in terms of the loadRate
+//     it("should have tension defined ..........................(now tension = 28831)", function() {
+//       expect(tramo.newSpecs.tension).toBeDefined();
+//     });
+//   });
 
 
-  describe("#sag", function() {
-    it("this method should be defined", function() {
-      expect(tramo.sag).toBeDefined();
-    });
-    it("should return 10.13, (recall that sag = span^2 * linearDensity * m * G / (8*tension))", function () {
-      expect(tramo.sag()).toBeBetween(10.1,10.2);
-    });
-  });
+//   describe("#sag", function() {
+//     it("this method should be defined", function() {
+//       expect(tramo.sag).toBeDefined();
+//     });
+//     it("should return 10.13, (recall that sag = span^2 * linearDensity * m * G / (8*tension))", function () {
+//       expect(tramo.sag()).toBeBetween(10.1,10.2);
+//     });
+//   });
 
-  describe("#a, which gives the parameter that defines the catenary", function() {
-    it("this method should be defined", function() {
-      expect(tramo.a).toBeDefined();
-    });
-    it("should return something close to 1.019, (recall that a = tension / (G * linearDensity * m))", function () {
-      expect(tramo.a()).toBeBetween(1106, 1109);
-    });
-  });
+//   describe("#a, which gives the parameter that defines the catenary", function() {
+//     it("this method should be defined", function() {
+//       expect(tramo.a).toBeDefined();
+//     });
+//     it("should return something close to 1.019, (recall that a = tension / (G * linearDensity * m))", function () {
+//       expect(tramo.a()).toBeBetween(1106, 1109);
+//     });
+//   });
 
-  describe("#K, which gives the constant that appears in the changeEquation", function() {
-    it("this method should be defined", function() {
-      expect(tramo.K).toBeDefined();
-    });
-    it("it should be close to -13.06", function() {
-      expect(tramo.K()).toBeBetween(-14, -13);
-    });
-  });    
+//   describe("#K, which gives the constant that appears in the changeEquation", function() {
+//     it("this method should be defined", function() {
+//       expect(tramo.K).toBeDefined();
+//     });
+//     it("it should be close to -13.06", function() {
+//       expect(tramo.K()).toBeBetween(-14, -13);
+//     });
+//   });    
 
-  describe("#A, which gives one of the coefficients for the changeEquation", function() {
-    it("should be defined", function() {
-      expect(tramo.A).toBeDefined();
-    });
-    it("at least in this example, should return the same value as -K (i.e +13.06)", function() {
-      expect(tramo.A()).toBeBetween(13, 14);
-    });
-  });
+//   describe("#A, which gives one of the coefficients for the changeEquation", function() {
+//     it("should be defined", function() {
+//       expect(tramo.A).toBeDefined();
+//     });
+//     it("at least in this example, should return the same value as -K (i.e +13.06)", function() {
+//       expect(tramo.A()).toBeBetween(13, 14);
+//     });
+//   });
   
-  describe("#B, which gives the other coefficient for the changeEquation", function() {
-    it("should be defined", function() {
-      expect(tramo.B).toBeDefined();
-    });
-  });
+//   describe("#B, which gives the other coefficient for the changeEquation", function() {
+//     it("should be defined", function() {
+//       expect(tramo.B).toBeDefined();
+//     });
+//   });
 
-  describe("#solveChangeEquation", function () {
-    it("should be defined", function() {
-      expect(tramo.solveChangeEquation).toBeDefined();
-    })
-    it("at least in this example, should return 28831 as a solution", function() {
-      expect(tramo.solveChangeEquation()).toBeBetween(28830, 28832);
-    });
-  });
+//   describe("#solveChangeEquation", function () {
+//     it("should be defined", function() {
+//       expect(tramo.solveChangeEquation).toBeDefined();
+//     })
+//     it("at least in this example, should return 28831 as a solution", function() {
+//       expect(tramo.solveChangeEquation()).toBeBetween(28830, 28832);
+//     });
+//   });
 
 
-});
+// });
 
 
 
@@ -373,6 +373,83 @@ describe("Conditions: It describes the rest of the parameters required for the c
     });
   });
 
+});
 
-  
+
+
+describe("Tramo: created with a cable and two conditions (initial and final)", function() {
+
+  var cable = new Cable();
+    cable.elasticModulus = 7730*1000000*G;     // Pa;
+    cable.dilationCoefficient = 0.00001899;    // ºC^-1
+    cable.section = 281.10;                    // mm^2
+    cable.linearDensity = 0.9746;              // kg/m
+    cable.diameter = 21.793;                   // mm
+
+  var conditions1 = new Conditions();
+    conditions1.span = 300;                    // m
+    conditions1.temperature = -20;             // ºC
+    conditions1.iceCoefficient = 0.36;
+
+  var conditions2 = new Conditions();
+    conditions2.span = 300;
+    conditions2.temperature = 10;
+
+  var tramo = new Tramo(cable, conditions1, conditions2);
+
+  it("should have #cable defined", function() {
+    expect(tramo.cable).toBeDefined();
+  });
+  it("should have #initialConditions defined", function() {
+    expect(tramo.initialConditions).toBeDefined();
+  });
+  it("should have #finalConditions defined", function() {
+    expect(tramo.finalConditions).toBeDefined();
+  });
+  it("these two conditions should have the same span", function () {
+    expect(tramo.initialConditions.span).toBe(tramo.finalConditions.span);
+  });
+
+
+
+  describe("#loadRate: given the conditions as a parameter, it returns the loadRate", function() {
+    it("should be defined", function() {
+      expect(tramo.loadRate).toBeDefined();
+    });
+    it("should return 2.72 with initialConditions (example from the book)", function () {
+      expect(tramo.loadRate(tramo.initialConditions)).toBeBetween(2.71, 2.73);
+    });
+    it("and set that value to the initialConditions.loadRate attribute", function () {
+      expect(tramo.initialConditions.loadRate).toBe(tramo.loadRate(tramo.initialConditions));
+    });
+    it("should return 1 in the finalConditions of the example (when not considering neither wind nor ice)", function () {
+      expect(tramo.loadRate(tramo.finalConditions)).toBe(1);
+    });
+    it("and set that value to finalConditions.loadRate attribute", function () {
+      expect(tramo.finalConditions.loadRate).toBe(tramo.loadRate(tramo.finalConditions));
+    });
+  });
+
+
+  describe("#solveChangeEquation", function () {
+    it("should be defined", function () {
+      expect(tramo.solveChangeEquation).toBeDefined();
+    });
+    it("should start calling loadRate", function () {
+      // write code with the spyOn and toHaveBeenCalled stuff.
+      spyOn(tramo, 'loadRate');
+      tramo.solveChangeEquation();
+      expect(tramo.loadRate).toHaveBeenCalled();
+    });
+  });
+
+
+  describe("#sag", function () {
+    
+  });
+
+
+  describe("#a", function () {
+    
+  });
 });
