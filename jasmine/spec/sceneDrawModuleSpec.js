@@ -10,6 +10,17 @@ describe("Creating standard plot:", function() {
 	});
 });
 
+describe("Creating standard plot no div:", function() {
+	var scene = new Scene(); //crear scene
+	var functionGraph = new FunctionGraph(); //cerar graph of a function
+	scene.add(functionGraph); //add the graph to scene
+	scene.plotSVG(); //plot
+	console.log(scene.svgElement.outerHTML);
+	it("should plot a graph of a quadratic recurrence equation function", function() {
+	});
+});
+
+
 describe("Scaling <svg> to fit <div>", function() {
 	var div = document.getElementById('div2');
 	var scene = new Scene(div);
