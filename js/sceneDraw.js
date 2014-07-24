@@ -1,10 +1,5 @@
 var NUMBER_POINTS = 600;
 
-//function SVGException() {
-//  this.message = 'Function Element#svg called, but element does not have a parentSceneElement';
-//  this.name = "SVGException";
-//}
-
 var Range = function(xMin, xMax, yMin, yMax) {
   this.xMin = xMin;
   this.xMax = xMax;
@@ -36,7 +31,6 @@ function Scene(div) {
 		}
 		if (this.div) {
 			div.appendChild(this.svgElement);
-			console.log(div.hasAttribute('width'));
 		}
 	};
 	this.plotSVG = function() {

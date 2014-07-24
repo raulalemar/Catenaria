@@ -379,12 +379,3 @@ describe("new Range()", function() {
 		expect(range).toBeDefined();
 	});
 });
-
-describe("Poste", function() {
-  describe("#tipo", function() {
-    it("cuando creas un poste sin parametro tipo, su tipo es suspension", function() {
-      var poste = new Poste();
-      expect(poste.tipo).toBe('suspension');
-    })
-  })
-})
