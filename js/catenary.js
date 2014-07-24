@@ -4,7 +4,7 @@ var G = 9.81
 Funciones generales para calcular una catenaria
 */
 
-function catenaria(x,a,c1,c2){
+var catenaria = function (x,a,c1,c2){
 
   switch(arguments.length) {
     case 1:
@@ -87,7 +87,7 @@ function Tramo(cable, initialConditions, finalConditions) {
   };
 
   this.a = function() {
-    return this.newSpecs.tension/(G*this.refSpecs.linearDensity*this.newSpecs.loadRate);
+    return this.finalConditions.tension/(G*this.cable.linearDensity*this.finalConditions.loadRate);
   };
 
   this.solveChangeEquation = function () {
@@ -205,7 +205,13 @@ for(var i=0; i<9; i++) {
   var space = '';
   if(temperature < 10 && temperature > -10) space = ' ';
   
-  console.log('Temperatura: ' + space, tramo.finalConditions.temperature, '  ------->    Tension: ', (tramo.finalConditions.tension/G).toFixed(2) , ', flecha: ', tramo.sag().toFixed(2));
+ 
+
+  var outputTemperature = 'Temperatura: ' + tramo.finalConditions.temperature;
+  var outputTension = 'Tension: ' + (tramo.finalConditions.tension/G).toFixed(2);
+  var outputFlecha = 'Flecha: ' + tramo.sag().toFixed(2);
+
+  console.log(outputTemperature , '  -------> ', outputTension,'  ', outputFlecha); 
 
 }
 

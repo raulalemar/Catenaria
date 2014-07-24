@@ -7,6 +7,7 @@
     <script type="text/javascript"
 	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
+    <link rel="stylesheet" type="text/css" href="css/calculo-mecanico.css" media="screen" />
     <title></title>
   </head>
   <body>
@@ -23,15 +24,24 @@
     </p>
 
     <form>
-      Vano:               <input type="text" value="300", name="span">        
-      Temperatura:        <input type="text" value="20",  name="temperature"> 
-      Presión de viento:  <input type="text" value="0", name="windPressure">  
+      <h4>Construcción inicial</h4>
+      <!-- Vano:               <input type="text" value="100",  name="span">          <br> -->
+      Temperatura:        <input type="text" value="20",   name="temperature">   <br>
+      Presión de viento:  <input type="text" value="0",    name="windPressure">  <br>
+      Tensión:            <input type="text" value="5500", name="tension">  <br>
       <br>
-      <input type="button" value="Actualizar dibujo", onClick="">
+      <input type="button" value="Construir", onClick="construirDibujo(this.form);">
+    </form>
+    <form>
+      <h4>Variaciones</h4>
+      <!-- Vano:               <input type="text" value="100",  name="span">          <br> -->
+      Temperatura:        <input type="text" value="20",   name="temperature">   <br>
+      Presión de viento:  <input type="text" value="0",    name="windPressure">  <br>
+      <input type="button" value="Actualizar dibujo", onClick="actualizarDibujo(this.form);">
     </form>
     </p>
 
-    <div>
+    <div id='divCatenaria'>
       
     </div>
 
@@ -96,9 +106,9 @@
 	<td>[mm]</td>
       </tr>
       <tr>
-	<td>Peso</td>
-	<td>$1.854$</td> 
-	<td>[N]</td>
+	<td>Densidad lineal</td>
+	<td>$0.189$</td> 
+	<td>[Kg/m]</td>
       </tr>
       <tr>
 	<td>Sección</td>
@@ -128,6 +138,13 @@
       A lo largo de los artículos hemos ido introduciendo las ecuaciones que modelan el comportamiento de los cables. En esta línea surgieron los conceptos de catenaria y de flecha.
     </p>
 
-    <script> src="js/catenary.js"</script>
+    <input type="button" value="Construir", onClick="tableCreate();">
+
+    <script src="js/catenary.js"></script>
+    <script src="js/sceneDraw.js"></script>
+    <script src="js/catenaryDraw.js"></script>
+    <script src="js/calculo-mecanico.js"></script>
+
+    
 </body>
 </html>
