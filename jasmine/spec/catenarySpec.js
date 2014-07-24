@@ -425,31 +425,44 @@ describe("Tramo: created with a cable and two conditions (initial and final)", f
     it("should return 1 in the finalConditions of the example (when not considering neither wind nor ice)", function () {
       expect(tramo.loadRate(tramo.finalConditions)).toBe(1);
     });
-    it("and set that value to finalConditions.loadRate attribute", function () {
+    it("and set that value to the finalConditions.loadRate attribute", function () {
       expect(tramo.finalConditions.loadRate).toBe(tramo.loadRate(tramo.finalConditions));
     });
   });
 
 
   describe("#solveChangeEquation", function () {
+
+    beforeEach(function() {
+      spyOn(tramo, 'loadRate');
+      tramo.solveChangeEquation();
+    });
+
     it("should be defined", function () {
       expect(tramo.solveChangeEquation).toBeDefined();
     });
-    it("should start calling loadRate", function () {
-      // write code with the spyOn and toHaveBeenCalled stuff.
-      spyOn(tramo, 'loadRate');
-      tramo.solveChangeEquation();
+    it("should start calling loadRate twice:", function () {
       expect(tramo.loadRate).toHaveBeenCalled();
+    });
+    it(" --------> with initialConditions as an argument (i.e. loadRate(initialConditions))", function () {
+      expect(tramo.loadRate).toHaveBeenCalledWith(conditions1);
+    });
+    it(" --------> with finalConditions  as an argument (i.e. loadRate(finalConditions))", function () {
+      expect(tramo.loadRate).toHaveBeenCalledWith(conditions2);
     });
   });
 
 
   describe("#sag", function () {
-    
+    it("should be defined", function () {
+      expect(tramo.sag).toBeDefined();
+    });
   });
 
 
   describe("#a", function () {
-    
+    it("should be defined", function () {
+      expect(tramo.a).toBeDefined();
+    });
   });
 });

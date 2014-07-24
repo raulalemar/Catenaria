@@ -127,7 +127,7 @@ function Tramo(cable, initialConditions, finalConditions) {
     var b = this.initialConditions.span*this.initialConditions.loadRate*this.cable.linearDensity/(this.initialConditions.tension*1000);
     var c = Math.pow(b,2)*this.cable.elasticModulus*G/24;
 
-    //console.log('a,b,c: ', a,b,c);
+    //console.log('k = a - c, donde a y c son: ', a,c);
 
     var K = a-c;    
     return K;
@@ -198,7 +198,16 @@ var solveGeneralChangeEquation = function(A,B) {
   var tramo = new Tramo(cable, conditions1, conditions2);
 
 for(var i=0; i<9; i++) {
-  tramo.finalConditions.temperature = 5*i;
+  var temperature = 5*i;
+  tramo.finalConditions.temperature = temperature;
   tramo.finalConditions.tension = tramo.solveChangeEquation();
-  console.log('Temperatura: ', tramo.finalConditions.temperature, '  ------->    Tension: ', tramo.finalConditions.tension/G, ', flecha: ', tramo.sag());
+  
+  var space = '';
+  if(temperature < 10 && temperature > -10) space = ' ';
+  
+  console.log('Temperatura: ' + space, tramo.finalConditions.temperature, '  ------->    Tension: ', (tramo.finalConditions.tension/G).toFixed(2) , ', flecha: ', tramo.sag().toFixed(2));
+
 }
+
+
+console.log('fin del bucle');
