@@ -30,11 +30,13 @@ function Scene(div) {
 	this.updateSVG = function() {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","svg");
+			this.svgElement.setAttribute('style', 'max-height:100%; max-width:100%;');
 			this.svgElement.setAttribute('viewBox', '' + this.range.xMin + 
 		   ' ' + (-this.range.yMax) + ' ' + this.xRange() + ' ' + this.yRange());
 		}
 		if (this.div) {
 			div.appendChild(this.svgElement);
+			console.log(div.hasAttribute('width'));
 		}
 	};
 	this.plotSVG = function() {

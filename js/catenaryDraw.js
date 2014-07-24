@@ -1,13 +1,11 @@
-function FuncionCatenaria(a,c1,c2,rango,identificador) {
-  this.a = a;
-  this.c1 = c1;
-  this.c2 = c2;
+function CatenaryGraph(a,c1,c2) {
+  this.a = a || 10;
+  this.c1 = c1 || 0;
+  this.c2 = c2 || 0;
   this.f = function(x) {return catenaria(x,this.a,this.c1,this.c2);};
-  this.rango = rango;
-  this.identificador = identificador;
 }
 
-FuncionCatenaria.prototype = new FunctionGraph();
+CatenaryGraph.prototype = new FunctionGraph();
 
 var creaRangoLinea = function(distancia, altura) {
   return new Range(-0.1*distancia, 1.1*distancia, -0.2*altura, 4*altura);
@@ -55,7 +53,7 @@ var creaLinea = function (distancia, a, alturaPoste) {
   for(var i = 0; i < postes.length - 1; i++) {
     var rangoCatenaria = creaRangoCatenaria(postes, i, alturaPoste);
     var constantes = resuelvaParabola(a, postes[i].x, postes[i].y + postes[i].altura, postes[i+1].x, postes[i+1].y + postes[i+1].altura);
-    catenarias[i] = new FuncionCatenaria(a, constantes[0], constantes[1], rangoCatenaria, i);
+    catenarias[i] = new CatenaryGraph(a, constantes[0], constantes[1], rangoCatenaria, i);
     escena.add(catenarias[i]);
   }
 

@@ -1,3 +1,14 @@
+function isDescendant(parent, child) {
+  var node = child.parentNode;
+  while (node != null) {
+    if (node == parent) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}
+
 Array.prototype.duplicates = function() {
 	var duplicates = this.filter(function(elem, pos, self) {
 		return self.indexOf(elem) != pos;
@@ -41,6 +52,16 @@ beforeEach(function() {
 				}
 			}
 		},
+		toBeDescendantOf: function() {
+			return {
+				compare: function(actual, element) {
+					return {
+						pass: isDescendant(element, actual),
+						message: "Expected the element to be inside the other."
+					}
+				}
+			}
+		}
 	});
 }); 
 
@@ -100,7 +121,7 @@ describe("new Scene()", function() {
 			beforeEach(function () {
 				scene.updateSVG();
 			});
-			it("should be an object", function() {
+			it("should be an instance of SVGElement", function() {
 				expect(scene.svgElement instanceof SVGElement).toBe(true);
 			});
 		});
@@ -155,6 +176,9 @@ describe("new Scene(div)", function() {
 			});
 			it("should have the div as parent", function() {
 				expect(scene.svgElement.parentNode).toBe(div);
+			});
+			it("should be descendant of div", function() {
+				expect(scene.svgElement).toBeDescendantOf(div);
 			});
 		});
 	});
