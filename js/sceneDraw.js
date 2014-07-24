@@ -84,12 +84,13 @@ function FunctionGraph(f, range) {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
 			this.svgElement.classList.add("functionGraph"); 
+			this.svgElement.setAttribute("vector-effect", "non-scaling-stroke");
 		};
 		if (this.parentSceneElement) {
 			this.parentSceneElement.svgElement.appendChild(this.svgElement);
 		};
 		if (window.getComputedStyle(this.svgElement)['stroke']=='none') {
-			this.svgElement.setAttribute('style', "stroke:black; fill:none");
+			this.svgElement.setAttribute('style', "stroke:black; fill:none;");
 		};
 		this.svgElement.setAttribute('id', this.identificator);
 		

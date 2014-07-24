@@ -15,13 +15,14 @@ function Pole(x, y, height, tipo) {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","line");
 			this.svgElement.classList.add("pole"); 
+			this.svgElement.setAttribute("vector-effect", "non-scaling-stroke");
 		}
 		this.svgElement.setAttribute('id', this.identificator);
 		this.svgElement.setAttribute('x1', this.x);
     this.svgElement.setAttribute('y1', -this.y);
     this.svgElement.setAttribute('x2', this.x);
     this.svgElement.setAttribute('y2', -(this.y + this.height));
-    this.svgElement.setAttribute('style', "stroke:#000000;stroke-width:4px");
+    this.svgElement.setAttribute('style', "stroke:black;stroke-width:4px");
 	};
 }
 Pole.prototype = new SceneElement();
