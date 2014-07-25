@@ -3,18 +3,21 @@ describe("new CatenaryGraph()", function() {
 	beforeEach(function() {
 		catenaryGraph = new CatenaryGraph();
 	});
-});
-
-
-describe("pideLongitud", function() {
-	it("llama promp", function() {
-		spyOn(window, 'prompt');
-		pideLongitud();
-		expect(prompt).toHaveBeenCalled();
-	})
-	it("devuelva valor intorducido", function() {
-		spyOn(window, 'prompt').and.returnValue(901);
-		expect(pideLongitud()).toBe(901);
+	it("should be instance of FunctionGraph", function() {
+		expect(catenaryGraph).toBeInstanceOf(FunctionGraph);
+	});
+	
+	describe("#svgElement", function() {
+		describe("after calling #updateSVG", function() {
+			describe("without parentSceneNode", function() {
+				beforeEach(function() {
+					catenaryGraph.updateSVG();
+				});
+				it("should have a 'functionGraph' class", function() {
+					expect(catenaryGraph.svgElement).toContainClass("catenaryGraph");
+				})
+			})
+		})
 	})
 })
 
@@ -54,16 +57,17 @@ describe("new Pole()", function() {
 })
 
 
-describe("How to create a graph of a catenary", function() {
-	var div = document.createElement('div');
-	div.setAttribute('style', 'height:100px; max-width:100px;'); 
-	//document.body.appendChild(div);
-	var scene = new Scene(div);
-	var catenaryGraph = new CatenaryGraph();
-	scene.add(catenaryGraph);
-	scene.plotSVG();
-	it("should produce a graph of a catenary", function() {
-		var funEl = scene.svgElement.getElementById(catenaryGraph.identificator);
-		expect(funEl).toBe(catenaryGraph.svgElement);
-	});
+
+
+describe("pideLongitud", function() {
+	it("llama promp", function() {
+		spyOn(window, 'prompt');
+		pideLongitud();
+		expect(prompt).toHaveBeenCalled();
+	})
+	it("devuelva valor intorducido", function() {
+		spyOn(window, 'prompt').and.returnValue(901);
+		expect(pideLongitud()).toBe(901);
+	})
 })
+
