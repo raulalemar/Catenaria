@@ -98,7 +98,8 @@ function Tramo(cable, initialConditions, finalConditions) {
     var tension = x * G * this.cable.section;  // N
 
     //console.log('K: ', this.K(), 'A: ', this.A(), 'B: ', this.B(), 't: ', x, 'tension: ', tension/G);
-
+    
+    this.finalConditions.tension = tension;
     return tension;
   };
 
@@ -131,6 +132,19 @@ function Tramo(cable, initialConditions, finalConditions) {
 
     var K = a-c;    
     return K;
+  };
+
+  this.table = function (minima, maxima, salto) {
+    var numeroEntradas = Math.floor((maxima-minima)/salto)+2;
+    var table=[];
+    var entrada=[];
+    for(var i=0; i<numeroEntradas; i++) {
+      temperature = minima + i*salto;
+      this.finalConditions.temperature   = temperature;
+      entrada = [temperature,  this.solveChangeEquation(), this.sag()];
+      table.push(entrada);
+    };
+    return table;
   };
 };
 
@@ -178,42 +192,44 @@ var solveGeneralChangeEquation = function(A,B) {
 
 
 
-  var cable = new Cable();
-    cable.elasticModulus = 7730*1000000*G;     // Pa;
-    cable.dilationCoefficient = 0.00001899;    // ºC^-1
-    cable.section = 281.10;                    // mm^2
-    cable.linearDensity = 0.9746;              // kg/m
-    cable.diameter = 21.793;                   // mm
+var cable = new Cable();
+cable.elasticModulus = 7730*1000000*G;     // Pa;
+cable.dilationCoefficient = 0.00001899;    // ºC^-1
+cable.section = 281.10;                    // mm^2
+cable.linearDensity = 0.9746;              // kg/m
+cable.diameter = 21.793;                   // mm
 
-  var conditions1 = new Conditions();
-    conditions1.span = 300;                    // m
-    conditions1.temperature = -20;             // ºC
-    conditions1.iceCoefficient = 0.36;
-    conditions1.tension = 2939*G;
+var conditions1 = new Conditions();
+conditions1.span = 300;                    // m
+conditions1.temperature = -20;             // ºC
+conditions1.iceCoefficient = 0.36;
+conditions1.tension = 2939*G;
 
-  var conditions2 = new Conditions();
-    conditions2.span = 300;
-    conditions2.temperature = 10;
+var conditions2 = new Conditions();
+conditions2.span = 300;
+conditions2.temperature = 10;
 
-  var tramo = new Tramo(cable, conditions1, conditions2);
+var tramo = new Tramo(cable, conditions1, conditions2);
 
-for(var i=0; i<9; i++) {
-  var temperature = 5*i;
-  tramo.finalConditions.temperature = temperature;
-  tramo.finalConditions.tension = tramo.solveChangeEquation();
+console.log(tramo.table(0,40,5));
+
+// for(var i=0; i<9; i++) {
+//   var temperature = 5*i;
+//   tramo.finalConditions.temperature = temperature;
+//   tramo.finalConditions.tension = tramo.solveChangeEquation();
   
-  var space = '';
-  if(temperature < 10 && temperature > -10) space = ' ';
+//   var space = '';
+//   if(temperature < 10 && temperature > -10) space = ' ';
   
  
 
-  var outputTemperature = 'Temperatura: ' + tramo.finalConditions.temperature;
-  var outputTension = 'Tension: ' + (tramo.finalConditions.tension/G).toFixed(2);
-  var outputFlecha = 'Flecha: ' + tramo.sag().toFixed(2);
+//   var outputTemperature = 'Temperatura: ' + tramo.finalConditions.temperature;
+//   var outputTension = 'Tension: ' + (tramo.finalConditions.tension/G).toFixed(2);
+//   var outputFlecha = 'Flecha: ' + tramo.sag().toFixed(2);
 
-  console.log(outputTemperature , '  -------> ', outputTension,'  ', outputFlecha); 
+//   console.log(outputTemperature , '  -------> ', outputTension,'  ', outputFlecha); 
 
-}
+// }
 
 
-console.log('fin del bucle');
+// console.log('fin del bucle');
