@@ -18,25 +18,19 @@
       Vamos a ver cómo deben tenerse en cuenta las condiciones atmosféricas a la hora de calcular los parámetros de una línea eléctrica. En particular, estaremos interesados en estudiar como varía la <b>flecha</b>
     </p>
 
-    <h2>Gráfica</h2>
-    <p>
-      Comenzaremos viendo el resultado final, que mostramos a continuación.
-    </p>
-
     <form>
       <h4>Construcción inicial</h4>
       <!-- Vano:               <input type="text" value="100",  name="span">          <br> -->
-      Temperatura:        <input type="text" value="20",   name="temperature">   <br>
-      Presión de viento:  <input type="text" value="0",    name="windPressure">  <br>
-      Tensión:            <input type="text" value="5500", name="tension">  <br>
-      <br>
-      <input type="button" value="Construir", onClick="construirDibujo(this.form);">
+      Temperatura:        <input type="text" value="20",   name="temperature">  
+      Presión de viento:  <input type="text" value="0",    name="windPressure"> 
+      Tensión:            <input type="text" value="5500", name="tension">       
+      <input type="button" value="Construir", onClick="if(!construido) construirDibujo(this.form);">
     </form>
     <form>
       <h4>Variaciones</h4>
       <!-- Vano:               <input type="text" value="100",  name="span">          <br> -->
-      Temperatura:        <input type="text" value="20",   name="temperature">   <br>
-      Presión de viento:  <input type="text" value="0",    name="windPressure">  <br>
+      Temperatura:        <input type="text" value="20",   name="temperature">   
+      Presión de viento:  <input type="text" value="0",    name="windPressure">  
       <input type="button" value="Actualizar dibujo", onClick="actualizarDibujo(this.form);">
     </form>
     </p>
@@ -135,7 +129,7 @@
     <h2>Explicación</h2>
 
     <p>
-      A lo largo de los artículos hemos ido introduciendo las ecuaciones que modelan el comportamiento de los cables. En esta línea surgieron los conceptos de catenaria y de flecha.
+      A lo largo de los artículos hemos ido introduciendo las ecuaciones que modelan el comportamiento de los cables. Así fue como aparecieron los conceptos de catenaria y de flecha.
     </p>
 
     <input type="button" value="Construir", onClick="tableCreate();">
