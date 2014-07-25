@@ -6,15 +6,15 @@ function CatenaryGraph(a,c1,c2) {
 	this.plotSVG = function() {
 		this.updateSVG();
 		this.svgElement.classList.add("catenaryGraph"); 
-		console.log(this.svgElement);
 	}
 }
 CatenaryGraph.prototype = new FunctionGraph();
 
 function Pole(x, y, height) {
-  this.x = x;
-  this.y = y;
-  this.height = height;
+	this.identificator = Math.random().toString();
+  this.x = x||0;
+  this.y = y||0;
+  this.height = height||30;
   this.type = null;
 	this.updateSVG = function() {
 		if (!this.svgElement) {
@@ -22,6 +22,9 @@ function Pole(x, y, height) {
 			this.svgElement.classList.add("pole"); 
 			this.svgElement.setAttribute("vector-effect", "non-scaling-stroke");
 		}
+		if (this.parentSceneElement) {
+			this.parentSceneElement.svgElement.appendChild(this.svgElement);
+		};
 		this.svgElement.setAttribute('id', this.identificator);
 		this.svgElement.setAttribute('x1', this.x);
     this.svgElement.setAttribute('y1', -this.y);

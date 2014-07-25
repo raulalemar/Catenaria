@@ -1,12 +1,21 @@
-function isDescendant(parent, child) {
-  var node = child.parentNode;
-  while (node != null) {
-    if (node == parent) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
+function isDescendant(descendant, child) {
+//descendant, child: Elements objects (nodes) 
+  var parent = child.parentNode;
+  if (parent == null) {
+		return false
+	} else if (descendant == parent) {
+		return true
+	} else {
+		return isDescendant(descendant, parent)
+	}
+}
+function isAntecedent(child, parent) {
+	return isDescendant(parent, child)
+}
+
+function isInside(rect1,rect2) {
+//rect1,rect2: TextRectangles objects
+	return (rect1.height<=rect2.height) && (rect1.width<=rect2.width) && (rect1.bottom<=rect2.bottom) && (rect1.left>=rect2.left);
 }
 
 Array.prototype.duplicates = function() {
@@ -54,10 +63,10 @@ beforeEach(function() {
 		},
 		toBeDescendantOf: function() {
 			return {
-				compare: function(actual, element) {
+				compare: function(actual, parent) {
 					return {
-						pass: isDescendant(element, actual),
-						message: "Expected the element to be inside the other."
+						pass: isDescendant(parent, actual),
+						message: "Expected the element to be descendant of the other."
 					}
 				}
 			}
@@ -67,10 +76,21 @@ beforeEach(function() {
 				compare: function(objectName, className) {
 					return {
 						pass: objectName instanceof className,
-						message: "Expected the element to be inside the other."
+						message: "Expected the element to be instance of the class."
 					}
 				}
 			}
-		}
+		},
+		//the following works only with a browser
+		toBeFullyContainedIn: function() {
+			return {
+				compare: function(actual, parent) {
+					return {
+						pass: isAntecedent(actual, parent) && isInside(actual.getBoundingClientRect(),parent.getBoundingClientRect()),
+						message: "Expected the element to be antecendent of and inside the other."
+					}
+				}
+			}
+		},
 	});
 }); 
