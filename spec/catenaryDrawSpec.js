@@ -26,41 +26,79 @@ describe("new Pole()", function() {
 	beforeEach(function() {
 		pole = new Pole();
 	});
-	describe("#identificatod", function() {
-		//it("sho")
+	describe("#identificator", function() {
+		it("should be truthy", function() {
+			expect(pole.identificator).toBeTruthy();
+		})
 	});
-	
+	describe("#updateSVG",function() {
+		describe("without  parentSceneNode",function() {
+			beforeEach(function() {
+				pole.updateSVG();
+			});
+			it("should create pole.SVGElement", function() {
+				expect(pole.svgElement instanceof SVGElement).toBe(true);
+			});
+		})
+		describe("with  parentSceneNode",function() {
+			var elements = {
+				svgElement: document.createElementNS("http://www.w3.org/2000/svg","g")
+			};
+			beforeEach(function() {
+				pole.parentSceneElement = elements;
+				spyOn(pole.parentSceneElement.svgElement, 'appendChild');
+				pole.updateSVG();
+			});
+			it("should call appendChild", function() {
+				expect(pole.parentSceneElement.svgElement.appendChild).toHaveBeenCalled();
+			})
+		})
+	});
+
 	describe("#svgElement", function() {
 		it("should be null", function() {
 			expect(pole.svgElement).toBeNull();
 		});
-		describe("after calling #updateSVG()",function() {
+		describe("after calling #plotSVG()",function() {
 			describe("without parentSceneNode", function() {
 				beforeEach(function() {
-					pole.updateSVG();
-				});
-				it("should be a SVGElement", function() {
-					expect(pole.svgElement instanceof SVGElement).toBe(true);
+					pole.plotSVG();
 				});
 				it("should have a 'pole' class", function() {
 					expect(pole.svgElement).toContainClass("pole");
 				});
-				it("should have attribute", function () {
+				it("should have id attribute", function () {
 					expect(pole.svgElement.hasAttribute('id')).toBe(true);
 				});
+				it("should not be too hight", function() {
+					console.log(pole.svgElement.offsetHeight);
+					expect(true).toBe(false);
+				});
 			});
-		});
+			describe("with parentSceneNode", function() {
+				var elements = {
+					svgElement: document.createElementNS("http://www.w3.org/2000/svg","g")
+				};
+				beforeEach(function() {
+					pole.parentSceneElement = elements;
+					pole.updateSVG();
+				});
+				it("should have a SVGElement as its value", function() {
+					expect(pole.svgElement instanceof SVGElement).toBe(true);
+				});
+				it("should have elements#svgElement as parent", function() {
+					expect(pole.svgElement.parentNode).toBe(elements.svgElement);
+				});
+			});
+		})
 	});
 			
   describe("#type", function() {
-    it("shoud be null", function() {
-      expect(pole.tipo).toBe('suspension');
+    it("should be null", function() {
+      expect(pole.type).toBeNull();
     })
   })
 })
-
-
-
 
 describe("pideLongitud", function() {
 	it("llama promp", function() {

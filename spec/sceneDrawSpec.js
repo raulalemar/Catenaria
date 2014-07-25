@@ -209,7 +209,7 @@ describe("new GroupOfSceneElementos(scene)", function() {
 	});
 
 	describe("#svgElement", function() {
-		describe("after calling #updatesvgElement", function() {
+		describe("after calling #updateSVG", function() {
 			beforeEach(function() {
 				elements.updateSVG();
 			});
