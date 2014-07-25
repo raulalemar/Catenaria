@@ -22,7 +22,7 @@ describe("Feature: creating electric lines", function() {
 	
 	describe("Scenario: Ploting a pole", function() {
 		var scene = new Scene(div);
-		var pole = new Pole();
+		var pole = new Pole(0,0,30);
 		it("Given instances scene and a pole created", function() {
 			expect(scene instanceof Scene).toBe(true);
 			expect(pole instanceof Pole).toBe(true);
@@ -33,11 +33,11 @@ describe("Feature: creating electric lines", function() {
 		console.log(pole);
 		console.log(scene);
 		console.log(scene.elements._lista[0]);
-		//scene.plotSVG();
-		//it("Then scene.plotSVG() should produce a pole.", function() {
-			//var poleElement = scene.svgElement.getElementById(pole.identificator);
-			//expect(poleElement).toBe(catenaryGraph.svgElement);
-		//});
+		scene.plotSVG();
+		it("Then scene.plotSVG() should produce a pole.", function() {
+			var poleElement = scene.svgElement.getElementById(pole.identificator);
+			expect(poleElement).toBe(pole.svgElement);
+		});
 	});
 	
 })

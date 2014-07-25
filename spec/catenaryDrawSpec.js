@@ -8,12 +8,12 @@ describe("new CatenaryGraph()", function() {
 	});
 	
 	describe("#svgElement", function() {
-		describe("after calling #updateSVG", function() {
+		describe("after calling #plotSVG", function() {
 			describe("without parentSceneNode", function() {
 				beforeEach(function() {
-					catenaryGraph.updateSVG();
+					catenaryGraph.plotSVG();
 				});
-				it("should have a 'functionGraph' class", function() {
+				it("should have a 'catenaryGraph' class", function() {
 					expect(catenaryGraph.svgElement).toContainClass("catenaryGraph");
 				})
 			})
@@ -26,7 +26,10 @@ describe("new Pole()", function() {
 	beforeEach(function() {
 		pole = new Pole();
 	});
-
+	describe("#identificatod", function() {
+		//it("sho")
+	});
+	
 	describe("#svgElement", function() {
 		it("should be null", function() {
 			expect(pole.svgElement).toBeNull();
@@ -49,8 +52,8 @@ describe("new Pole()", function() {
 		});
 	});
 			
-  describe("#tipo", function() {
-    it("cuando creas un poste sin parametro tipo, su tipo es suspension", function() {
+  describe("#type", function() {
+    it("shoud be null", function() {
       expect(pole.tipo).toBe('suspension');
     })
   })

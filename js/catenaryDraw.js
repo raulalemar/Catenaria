@@ -3,14 +3,19 @@ function CatenaryGraph(a,c1,c2) {
   this.c1 = c1 || 0;
   this.c2 = c2 || 0;
   this.f = function(x) {return catenaria(x,this.a,this.c1,this.c2);};
+	this.plotSVG = function() {
+		this.updateSVG();
+		this.svgElement.classList.add("catenaryGraph"); 
+		console.log(this.svgElement);
+	}
 }
 CatenaryGraph.prototype = new FunctionGraph();
 
-function Pole(x, y, height, tipo) {
+function Pole(x, y, height) {
   this.x = x;
   this.y = y;
   this.height = height;
-  this.tipo = tipo || 'suspension';
+  this.type = null;
 	this.updateSVG = function() {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -24,6 +29,7 @@ function Pole(x, y, height, tipo) {
     this.svgElement.setAttribute('y2', -(this.y + this.height));
     this.svgElement.setAttribute('style', "stroke:black;stroke-width:4px");
 	};
+	this.plotSVG = this.updateSVG;
 }
 Pole.prototype = new SceneElement();
 
