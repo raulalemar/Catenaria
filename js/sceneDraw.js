@@ -30,7 +30,7 @@ function Scene(div) {
 		   ' ' + (-this.range.yMax) + ' ' + this.xRange() + ' ' + this.yRange());
 		}
 		if (this.div) {
-			div.appendChild(this.svgElement);
+			this.div.appendChild(this.svgElement);
 		}
 	};
 	this.plotSVG = function() {

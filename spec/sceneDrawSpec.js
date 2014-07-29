@@ -60,6 +60,17 @@ describe("new Scene()", function() {
 		});
 	});
 
+	describe("#updateSVG",function() {
+		describe("after the assigin non null div", function() {
+			var div = jasmine.createSpyObj('div', ['appendChild']);;
+			it("should call div.appendChild", function() {
+				scene.div = div; 
+				scene.updateSVG();
+				expect(div.appendChild).toHaveBeenCalled();
+			});
+		});
+	});
+
 	describe("#elements", function() {
 		it("should be instance of GroupOfSceneElements", function() {
 			expect(scene.elements instanceof GroupOfSceneElements).toBe(true)

@@ -1,6 +1,6 @@
 describe("Feature: creating electric lines", function() {
 	var div; 
-	describe("Scenary: Drawing catenary", function() {
+	describe("Scenario: Drawing catenary", function() {
 		div = document.getElementById("div1");
 		var scene = new Scene(div);
 		var catenaryGraph = new CatenaryGraph();
