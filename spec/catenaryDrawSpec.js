@@ -70,8 +70,7 @@ describe("new Pole()", function() {
 				it("should have id attribute", function () {
 					expect(pole.svgElement.hasAttribute('id')).toBe(true);
 				});
-				it("should not be too hight", function() {
-					console.log(pole.svgElement.offsetHeight);
+				xit("should not be too hight", function() {
 					expect(true).toBe(false);
 				});
 			});

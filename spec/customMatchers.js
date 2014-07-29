@@ -13,11 +13,6 @@ function isAntecedent(child, parent) {
 	return isDescendant(parent, child)
 }
 
-function isInside(rect1,rect2) {
-//rect1,rect2: TextRectangles objects
-	return (rect1.height<=rect2.height) && (rect1.width<=rect2.width) && (rect1.bottom<=rect2.bottom) && (rect1.left>=rect2.left);
-}
-
 Array.prototype.duplicates = function() {
 	var duplicates = this.filter(function(elem, pos, self) {
 		return self.indexOf(elem) != pos;
@@ -83,11 +78,19 @@ beforeEach(function() {
 		},
 		//the following works only with a browser
 		toBeFullyContainedIn: function() {
+			function isInside(rect1,rect2) {
+				//rect1,rect2: TextRectangles objects
+				return (rect1.height<=rect2.height) && (rect1.width<=rect2.width) && (rect1.bottom<=rect2.bottom) && (rect1.left>=rect2.left);
+			};
 			return {
 				compare: function(actual, parent) {
+					var rectInside = actual.getBoundingClientRect();
+					var rectOutside = parent.getBoundingClientRect();
 					return {
-						pass: isAntecedent(actual, parent) && isInside(actual.getBoundingClientRect(),parent.getBoundingClientRect()),
-						message: "Expected the element to be antecendent of and inside the other."
+						pass: isInside(rectInside, rectOutside),
+						message: "Expected the element to be inside the other. It should, "+rectInside.height+'<='+
+							rectOutside.height+'::'+rectInside.width+"<="+rectOutside.width+"::"+rectInside.bottom+
+							'<='+rectOutside.bottom+"::"+rectInside.left+">="+rectOutside.left
 					}
 				}
 			}

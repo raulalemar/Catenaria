@@ -22,50 +22,59 @@ describe("Feature: Create a plot of a function, as developer, so that I can pres
 		});
 		it("and the SVGElement of the scene should be fully inside the <div>.", function() {
 			expect(scene.svgElement).toBeFullyContainedIn(div);
-			//console.log(div.getBoundingClientRect());
-			//console.log(scene.svgElement.getBoundingClientRect());
 		})
 	});
 
 	describe("Background: Having scene, and functionGraph created", function() {
-		var div = document.getElementById('div2');
-		var scene = new Scene(div);
-		
 		describe("Scenario: Scaling <svg> to fit horizontal <div>", function() {
+			var scene = new Scene();
 			var functionGraph = new FunctionGraph();
 			scene.add(functionGraph); 
+			var div = document.getElementById('div2');
+			scene.div = div;
 			scene.plotSVG();
-			it("should fit well", function() {
-				expect(true).toBe(true);
+			it("The SVGElement of the scene be descendant of 'div'", function() {
+				expect(scene.svgElement).toBeDescendantOf(div);
+			});
+			xit("and should be fully contained inside the <div>.", function() {
+				expect(scene.svgElement).toBeFullyContainedIn(div);
+			});
+		});
+		describe("Scenario: Scaling horizontal <svg> to fit squared <div>", function() {
+			var scene = new Scene();
+			var functionGraph = new FunctionGraph();
+			scene.add(functionGraph); 
+			var div = document.getElementById('div3');
+			scene.div = div;
+			var range = new Range(0,100,0,50);
+			scene.range =range;
+			functionGraph.range = range;
+			scene.plotSVG();
+			it("The SVGElement of the scene be descendant of 'div'", function() {
+				expect(scene.svgElement).toBeDescendantOf(div);
+			});
+			it("and should be fully contained inside the <div>.", function() {
+				expect(scene.svgElement).toBeFullyContainedIn(div);
+			});
+		});
+		describe("Scaling vertical <svg> to fit squared <div>", function() {
+			var div = document.getElementById('div4');
+			var scene = new Scene(div);
+			var range = new Range(0,50,0,100);
+			scene.range =range;
+			var functionGraph = new FunctionGraph();
+			functionGraph.range = range;
+			scene.add(functionGraph); 
+			scene.plotSVG();
+			it("The SVGElement of the scene be descendant of 'div'", function() {
+				expect(scene.svgElement).toBeDescendantOf(div);
+			});
+			xit("and should be fully contained inside the <div>.", function() {
+				expect(scene.svgElement).toBeFullyContainedIn(div);
 			});
 		});
 	});
 
-	describe("Scenario: Scaling horizontal <svg> to fit squared <div>", function() {
-		var div = document.getElementById('div3');
-		var scene = new Scene(div);
-		var range = new Range(0,100,0,50);
-		scene.range =range;
-		var functionGraph = new FunctionGraph();
-		functionGraph.range = range;
-		scene.add(functionGraph); 
-		scene.plotSVG();
-		it("should fit well", function() {
-			expect(true).toBe(true);
-		});
-	});
-
-	describe("Scaling vertical <svg> to fit squared <div>", function() {
-		var div = document.getElementById('div4');
-		var scene = new Scene(div);
-		var range = new Range(0,50,0,100);
-		scene.range =range;
-		var functionGraph = new FunctionGraph();
-		functionGraph.range = range;
-		scene.add(functionGraph); 
-		scene.plotSVG();
-		it("should fit well", function() {
-			expect(true).toBe(true);
-		});
-	});
+	
+	
 });
