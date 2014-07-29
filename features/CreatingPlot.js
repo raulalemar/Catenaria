@@ -1,4 +1,4 @@
-describe("Feature: Crear plots of functions", function() {
+describe("Feature: Create a plot of a function, as developer, so that I can present data, I want to plot a graph", function() {
 	describe("Scenario: Creating standard square plot in rectanguled div", function() {
 		var div = document.getElementById("div1");
 		//var div = document.createElement('div');
@@ -27,53 +27,45 @@ describe("Feature: Crear plots of functions", function() {
 		})
 	});
 
-describe("Creating standard plot no div:", function() {
-	var scene = new Scene(); //crear scene
-	var functionGraph = new FunctionGraph(); //cerar graph of a function
-	scene.add(functionGraph); //add the graph to scene
-	scene.plotSVG(); //plot
-	//console.log(scene.svgElement.outerHTML);
-	it("should plot a graph of a quadratic recurrence equation function", function() {
+	describe("Background: Having scene, and functionGraph created", function() {
+		var div = document.getElementById('div2');
+		var scene = new Scene(div);
+		
+		describe("Scenario: Scaling <svg> to fit horizontal <div>", function() {
+			var functionGraph = new FunctionGraph();
+			scene.add(functionGraph); 
+			scene.plotSVG();
+			it("should fit well", function() {
+				expect(true).toBe(true);
+			});
+		});
 	});
-});
 
-
-describe("Scaling <svg> to fit <div>", function() {
-	var div = document.getElementById('div2');
-	var scene = new Scene(div);
-	var functionGraph = new FunctionGraph();
-	scene.add(functionGraph); 
-	scene.plotSVG();
-	it("should fit well", function() {
-		expect(true).toBe(true);
+	describe("Scenario: Scaling horizontal <svg> to fit squared <div>", function() {
+		var div = document.getElementById('div3');
+		var scene = new Scene(div);
+		var range = new Range(0,100,0,50);
+		scene.range =range;
+		var functionGraph = new FunctionGraph();
+		functionGraph.range = range;
+		scene.add(functionGraph); 
+		scene.plotSVG();
+		it("should fit well", function() {
+			expect(true).toBe(true);
+		});
 	});
-});
 
-describe("Scaling <svg> to fit <div>", function() {
-	var div = document.getElementById('div3');
-	var scene = new Scene(div);
-	var range = new Range(0,100,0,50);
-	scene.range =range;
-	var functionGraph = new FunctionGraph();
-	functionGraph.range = range;
-	scene.add(functionGraph); 
-	scene.plotSVG();
-	it("should fit well", function() {
-		expect(true).toBe(true);
+	describe("Scaling vertical <svg> to fit squared <div>", function() {
+		var div = document.getElementById('div4');
+		var scene = new Scene(div);
+		var range = new Range(0,50,0,100);
+		scene.range =range;
+		var functionGraph = new FunctionGraph();
+		functionGraph.range = range;
+		scene.add(functionGraph); 
+		scene.plotSVG();
+		it("should fit well", function() {
+			expect(true).toBe(true);
+		});
 	});
-});
-
-describe("Scaling <svg> to fit <div>", function() {
-	var div = document.getElementById('div4');
-	var scene = new Scene(div);
-	var range = new Range(0,50,0,100);
-	scene.range =range;
-	var functionGraph = new FunctionGraph();
-	functionGraph.range = range;
-	scene.add(functionGraph); 
-	scene.plotSVG();
-	it("should fit well", function() {
-		expect(true).toBe(true);
-	});
-});
 });
