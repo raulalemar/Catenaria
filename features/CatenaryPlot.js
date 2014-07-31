@@ -1,4 +1,4 @@
-describe("Feature: creating electric lines", function() {
+describe("Feature: creating electric lines. As developer, I want to create a scheme of electric line, in order to have a visual representation", function() {
 	var div; 
 	describe("Scenario: Drawing catenary", function() {
 		div = document.getElementById("div1");
@@ -33,9 +33,28 @@ describe("Feature: creating electric lines", function() {
 		scene.plotSVG();
 		it("Then scene.plotSVG() should produce a pole.", function() {
 			var poleElement = scene.svgElement.getElementById(pole.identificator);
-			console.log(poleElement.getBoundingClientRect());
 			expect(poleElement).toBe(pole.svgElement);
 		});
 	});
+
+	describe("Scenario: Ploting a fancy pole", function() {
+		div = document.getElementById("div3");
+		var scene = new Scene(div);
+		var pole = new FancyPole(50,0,80);
+		it("Given instances scene and a pole created", function() {
+			expect(scene instanceof Scene).toBe(true);
+			expect(pole instanceof FancyPole).toBe(true);
+		});
+		scene.add(pole);
+		it("and adding the graph to scene.", function() {
+		});
+		scene.plotSVG();
+		it("Then scene.plotSVG() should produce a pole.", function() {
+			var poleElement = scene.svgElement.getElementById(pole.identificator);
+			expect(poleElement).toBe(pole.svgElement);
+		});
+	});
+
+
 	
 })

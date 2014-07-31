@@ -29,8 +29,18 @@ beforeEach(function() {
 			return {
 				compare: function(actual,lower, upper) {
 					return {
-						pass: actual >= lower && actual <= upper,
+						pass: actual && actual >= lower && actual <= upper,
 						message: "Expected " + actual + " to be between " + lower + " and " + upper + " (inclusive)"
+					}
+				}
+			}
+		},
+		toBeGoodId: function() {
+			return {
+				compare: function(actual) {
+					return {
+						pass: actual && actual >= 0 && actual <= 1,
+						message: "Expected " + actual + " to be a good identificator (see customMatchers.js)"
 					}
 				}
 			}

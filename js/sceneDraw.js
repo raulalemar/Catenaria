@@ -8,9 +8,20 @@ var Range = function(xMin, xMax, yMin, yMax) {
 }
 
 function SceneElement() {
-  this.parentSceneElement = null;
-  this.identificator = null;
+
+	this.generateIdentificator = function() {
+		return Math.random().toString();
+	};
+  this.identificator = this.generateIdentificator();
+
+	this.parentSceneElement = null;
+
 	this.svgElement = null;
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+		};
+	};
 };
 
 function Scene(div) {
@@ -34,8 +45,9 @@ function Scene(div) {
 		}
 	};
 	this.plotSVG = function() {
-		this.updateSVG();
 		this.elements.plotSVG();
+		this.updateSVG();
+		this.svgElement.appendChild(this.elements.svgElement);
 	};
   this.remove = function(element) {
     this.elements.remove(element);
@@ -45,9 +57,15 @@ Scene.prototype = new SceneElement();
 
 function GroupOfSceneElements(parentSceneElement) {
   this._lista = [];
-	this.forEach = function(f) {this._lista.forEach(f)};
+	this.forEach = function(f) {
+		//this._lista.forEach(f)
+		for (var i; i<this._lista.length; i++) {
+			f(this._lista[i]);
+		}
+	};
 	
-	this.parentSceneElement = parentSceneElement;
+	this.identificator = this.generateIdentificator();
+	this.parentSceneElement = parentSceneElement||null;
   this.length = function() {
     return this._lista.length;
   };
@@ -58,14 +76,18 @@ function GroupOfSceneElements(parentSceneElement) {
 	this.updateSVG = function() {
 		if (!this.svgElement) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
-			}
-		if (this.parentSceneElement.svgElement) {
-			((this.parentSceneElement).svgElement).appendChild(this.svgElement);
 		}
+		if (this.parentSceneElement && this.parentSceneElement.svgElement) {
+			this.parentSceneElement.svgElement.appendChild(this.svgElement);
+		}
+		this.forEach(function(element) {
+			this.svgElement.appendChild(element.svgElement)
+		});
+		console.log(this.svgElement)
 	};
 	this.plotSVG = function() {
-		this.updateSVG();
 		this.forEach(function(element) {element.plotSVG()});
+		this.updateSVG();
 	};
   this.remove = function(elemento) {
     elemento.remove();
@@ -74,6 +96,33 @@ function GroupOfSceneElements(parentSceneElement) {
   };
 }
 GroupOfSceneElements.prototype = new SceneElement();
+
+function Circle(x,y,r) {
+	this.identificator = this.generateIdentificator();
+	this.x = x||0;
+	this.y = y||0;
+	this.r = r||1;
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+			this.svgElement.classList.add("circle"); 
+		};
+		this.svgElement.setAttribute("id", this.identificator);
+		this.svgElement.setAttribute("cx", this.x);
+		this.svgElement.setAttribute("cy", - this.y);
+		this.svgElement.setAttribute("r", this.r);
+		
+	};
+	this.plotSVG=this.updateSVG;
+}
+Circle.prototype = new SceneElement();
+
+function Point(x,y) {
+	this.identificator = generateIdentificator();
+	this.x = x||0;
+	this.y = y||0;
+}
+Point.prototype = new Circle();
 
 function FunctionGraph(f, range) {
 	this.identificator = Math.random().toString();
@@ -85,9 +134,6 @@ function FunctionGraph(f, range) {
 			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
 			this.svgElement.classList.add("functionGraph"); 
 			this.svgElement.setAttribute("vector-effect", "non-scaling-stroke");
-		};
-		if (this.parentSceneElement) {
-			this.parentSceneElement.svgElement.appendChild(this.svgElement);
 		};
 		if (window.getComputedStyle(this.svgElement)['stroke']=='none') {
 			this.svgElement.setAttribute('style', "stroke:black; fill:none;");
@@ -122,6 +168,8 @@ function FunctionGraph(f, range) {
   }
 }
 FunctionGraph.prototype = new SceneElement();
+
+
 
 /////////////////////////////////////////////
 

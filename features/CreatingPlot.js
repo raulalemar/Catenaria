@@ -1,5 +1,5 @@
-describe("Feature: Create a plot of a function, as developer, so that I can present data, I want to plot a graph", function() {
-	describe("Scenario: Creating standard square plot in rectanguled div", function() {
+describe("Feature: Create a plot, as developer, so that I can present data", function() {
+	describe("Scenario: Creating standard square plot of a function in rectanguled div", function() {
 		var div = document.getElementById("div1");
 		//var div = document.createElement('div');
 		var scene = new Scene(div); //crear scene
@@ -33,7 +33,7 @@ describe("Feature: Create a plot of a function, as developer, so that I can pres
 			var div = document.getElementById('div2');
 			scene.div = div;
 			scene.plotSVG();
-			it("The SVGElement of the scene be descendant of 'div'", function() {
+			xit("The SVGElement of the scene be descendant of 'div'", function() {
 				expect(scene.svgElement).toBeDescendantOf(div);
 			});
 			xit("and should be fully contained inside the <div>.", function() {
@@ -50,10 +50,10 @@ describe("Feature: Create a plot of a function, as developer, so that I can pres
 			scene.range =range;
 			functionGraph.range = range;
 			scene.plotSVG();
-			it("The SVGElement of the scene be descendant of 'div'", function() {
+			xit("The SVGElement of the scene be descendant of 'div'", function() {
 				expect(scene.svgElement).toBeDescendantOf(div);
 			});
-			it("and should be fully contained inside the <div>.", function() {
+			xit("and should be fully contained inside the <div>.", function() {
 				expect(scene.svgElement).toBeFullyContainedIn(div);
 			});
 		});
@@ -66,15 +66,34 @@ describe("Feature: Create a plot of a function, as developer, so that I can pres
 			functionGraph.range = range;
 			scene.add(functionGraph); 
 			scene.plotSVG();
-			it("The SVGElement of the scene be descendant of 'div'", function() {
+			xit("The SVGElement of the scene be descendant of 'div'", function() {
 				expect(scene.svgElement).toBeDescendantOf(div);
 			});
 			xit("and should be fully contained inside the <div>.", function() {
 				expect(scene.svgElement).toBeFullyContainedIn(div);
 			});
 		});
-	});
+	});	
 
-	
-	
+	describe("Scenario: Creating a Plot with two points and a line between them", function() {
+		var div = document.getElementById('div5');
+		var scene, point1, point2, line;
+		xit("Given a new Scene", function() {
+			scene = new Scene();
+			scene.div = div;
+			//scene.plotSVG();
+			//expect(expect(scene.svgElement).toBeFullyContainedIn(div));
+		});
+		xit("and creating two points and adding them to the scene", function() {
+			point1 = new Point(10,10);
+			point2 = new Point(90,60);
+			scene.add(point1);
+			expect(point1.parentSceneElement).toBe(scene.elements);
+			scene.add(point2);
+			scene.plotSVG();
+			expect(expect(point1.svgElement).toBeFullyContainedIn(scene.svgElement));
+		});
+		xit("and creating line beetwen them", function() {});
+		xit("then we should see a plot with two points and a line", function() {});
+	});
 });

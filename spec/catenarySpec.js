@@ -1,20 +1,3 @@
-beforeEach(function() {
-  jasmine.addMatchers({
-    toBeBetween: function() {
-      return {
-	compare: function(actual,lower, upper) {
-	  return {
-	    pass: actual >= lower && actual <= upper,
-	    message: "Expected " + actual + " to be between " + lower + " and " + upper + " (inclusive)"
-	  }
-	}
-      }
-    }
-  });
-});
-
-
-
 describe("catenaria", function() {
 
   describe("cuando pasas un argumento", function() {

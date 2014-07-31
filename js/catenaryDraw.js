@@ -36,6 +36,28 @@ function Pole(x, y, height) {
 }
 Pole.prototype = new SceneElement();
 
+function FancyPole(x, y, height) {
+	this.identificator = Math.random().toString();
+  this.x = x||0;
+  this.y = y||0;
+  this.height = height||30;
+  this.type = null;
+	this.color = "#cc3333";
+	this.updateSVG = function() {
+		if (!this.svgElement) {
+			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+			this.svgElement.classList.add("fancyPole"); 
+		}
+		if (this.parentSceneElement) {
+			this.parentSceneElement.svgElement.appendChild(this.svgElement);
+		};
+		this.svgElement.setAttribute('id', this.identificator);
+		this.svgElement.innerHTML = '<path d="M-8 0 L8 0 L3 -100 L-3 -100 Z" style="stroke:#660000; fill:'+this.color+';" />';
+		this.svgElement.setAttribute('transform', "translate("+this.x+","+this.y+"), scale("+(this.height/100)+")");
+	};
+	this.plotSVG = this.updateSVG;
+}
+FancyPole.prototype = new SceneElement();
 
 var creaRangoLinea = function(distancia, height) {
   return new Range(-0.1*distancia, 1.1*distancia, -0.2*height, 4*height);
