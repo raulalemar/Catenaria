@@ -8,19 +8,46 @@ describe("new SceneElement()", function() {
       expect(element.parentSceneElement).toBeNull();
     });
 	});
-
 	describe("#identificator", function() {
-		it("should be null", function() {
-			expect(element.identificator).toBeNull();
+		it("should be good", function() {
+			expect(element.identificator).toBeGoodId();
 		});
 	});
-
 	describe("#svgElement", function() {
 		it("should be null", function() {
 			expect(element.svgElement).toBeNull();
 		});
+		describe("after calling #updateSVG", function() {
+			it("should be <g>", function() {
+				element.updateSVG();
+				expect(element.svgElement.tagName).toBe("g");
+			});
+		}) 
+	/*describe("having parent element with SVGElement", function(){
+			element2 = new SceneElement();
+			element.parentSceneElement = element2;
+			element.svgElement = jasmine.createSpyObj('svgElement', ['appendChild']);
+			describe("after calling appendToParentSVG", function() {
+				element.appendToParentSVG();
+				it("should be appended to parent SVG", function() {
+					expect(element2.svgElement).toHaveBeenCalledWith(element.svgElement);
+				})
+			});
+		})*/
+	});	
+	describe("#appendSVG", function() {
+		describe("when the argument is SceneElement", function() {
+			element = new SceneElement();
+			element2 = new SceneElement();
+			element.svgElement = {
+				appendChild: function() {}
+			}
+			spyOn('svgElement', 'appendChild');
+			it("should append SVGElements", function() {
+				expect(element.svgElement.appendChild).toHaveBeenCalledWith(element2.svgElement);
+			});
+		})
 	});
-
 });
 
 describe("new Scene()", function() {
@@ -62,7 +89,7 @@ describe("new Scene()", function() {
 
 	describe("#updateSVG",function() {
 		describe("after the assigin non null div", function() {
-			var div = jasmine.createSpyObj('div', ['appendChild']);;
+			var div = jasmine.createSpyObj('div', ['appendChild']);
 			it("should call div.appendChild", function() {
 				scene.div = div; 
 				scene.updateSVG();
@@ -75,6 +102,13 @@ describe("new Scene()", function() {
 		it("should be instance of GroupOfSceneElements", function() {
 			expect(scene.elements instanceof GroupOfSceneElements).toBe(true)
 		});
+		describe("after calling #plotSVG", function() {
+			it("#elements.plotSVG should be called", function() {
+				spyOn(scene.svgElement, appendChild);
+				scene.plotSVG();
+				expect(scene.elements.plotSVG).toHaveBeenCalled();
+			})
+		})
 	});
 
 	describe("#range", function() {
@@ -137,6 +171,9 @@ describe("new GroupOfSceneElementos()", function() {
 
 	it("should be instance of SceneElement", function() {
 		expect(elements instanceof SceneElement).toBe(true);
+	});
+	it("#identificator should be defined", function() {
+		expect(elements.identificator).toBeBetween(0,1);
 	});
 
   describe("#length", function() {
@@ -232,6 +269,55 @@ describe("new GroupOfSceneElementos(scene)", function() {
 			});
 		});
 	});
+});
+
+describe("new Circle", function() {
+	var circle = new Circle();
+	it("should have x = 0, y = 0 and r=1", function() {
+		expect(circle.x).toBe(0);
+		expect(circle.y).toBe(0);
+		expect(circle.r).toBe(1);
+	});
+	it("should be instance of SceneElement", function() {
+		expect(circle instanceof SceneElement).toBe(true);
+	});
+	describe("#plotSVG", function() {
+		var elements;
+		it("should be called by elements.plotSVG", function() {
+			elements = new GroupOfSceneElements();
+			elements.add(circle);
+			spyOn(circle, 'plotSVG');
+			elements.plotSVG();
+			expect(circle.plotSVG).toHaveBeenCalled();
+		});
+		beforeEach(function() {
+			circle.plotSVG();
+		});
+		it("should create SVGEelement",function() {
+			expect(circle.svgElement instanceof SVGElement).toBe(true);
+		});
+		it("should create a circle of radius 1", function() {
+			expect(circle.svgElement.tagName).toBe("circle");
+		});
+
+	});
+});
+
+
+describe("new Point()", function() {
+	var point = new Point();
+	it("should have x = 0 and y = 0", function() {
+		expect(point.x).toBe(0);
+		expect(point.y).toBe(0);
+	});
+	it("should be instance of SceneElement", function() {
+		expect(point instanceof SceneElement).toBe(true);
+	});
+	it("should be instance of Circle", function() {
+		expect(point instanceof Circle).toBe(true);
+	});
+	
+	
 });
   
 describe("new FunctionGraph()", function() {
