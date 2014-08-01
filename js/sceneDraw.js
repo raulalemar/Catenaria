@@ -13,13 +13,32 @@ function SceneElement() {
 		return Math.random().toString();
 	};
   this.identificator = this.generateIdentificator();
+	this.tagSVG="g";
 
 	this.parentSceneElement = null;
 
 	this.svgElement = null;
 	this.updateSVG = function() {
-		if (!this.svgElement) {
-			this.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+		var newElement = document.createElementNS("http://www.w3.org/2000/svg",this.tagSVG);
+		newElement.setAttribute('id', this.identificator);
+		if (!this.svgElement || !this.svgElement.parentNode) {
+			this.svgElement = newElement;
+		}
+		else {
+			this.svgElement.outerHTML = newElement.outerHTML;
+		};
+	};
+	this.appendSVG = function(that) {
+		if (this.svgElement==null) {
+			this.updateSVG();
+		}
+		if (that instanceof SceneElement) {
+			if (that.svgElement) {
+				this.svgElement.appendChild(that.svgElement);
+			};
+		}
+		else if (that instanceof HTMLElement || that instanceof SVGElement) {
+			this.svgElement.appendChild(that);
 		};
 	};
 };
@@ -47,7 +66,7 @@ function Scene(div) {
 	this.plotSVG = function() {
 		this.elements.plotSVG();
 		this.updateSVG();
-		this.svgElement.appendChild(this.elements.svgElement);
+		this.appendSVG(this.elements);
 	};
   this.remove = function(element) {
     this.elements.remove(element);
@@ -83,7 +102,6 @@ function GroupOfSceneElements(parentSceneElement) {
 		this.forEach(function(element) {
 			this.svgElement.appendChild(element.svgElement)
 		});
-		console.log(this.svgElement)
 	};
 	this.plotSVG = function() {
 		this.forEach(function(element) {element.plotSVG()});
