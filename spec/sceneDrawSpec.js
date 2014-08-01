@@ -8,43 +8,103 @@ describe("new SceneElement()", function() {
       expect(element.parentSceneElement).toBeNull();
     });
 	});
+	
 	describe("#identificator", function() {
 		it("should be good", function() {
 			expect(element.identificator).toBeGoodId();
 		});
 	});
+	
 	describe("#svgElement", function() {
 		it("should be null", function() {
 			expect(element.svgElement).toBeNull();
 		});
 		describe("after calling #updateSVG", function() {
-			it("should be <g>", function() {
+			beforeEach(function() {
 				element.updateSVG();
+			});
+			it("should be <g>", function() {
+				console.log("aaaa", element.svgElement.outerHTML);
 				expect(element.svgElement.tagName).toBe("g");
 			});
-		}) 
-	/*describe("having parent element with SVGElement", function(){
-			element2 = new SceneElement();
-			element.parentSceneElement = element2;
-			element.svgElement = jasmine.createSpyObj('svgElement', ['appendChild']);
-			describe("after calling appendToParentSVG", function() {
-				element.appendToParentSVG();
-				it("should be appended to parent SVG", function() {
-					expect(element2.svgElement).toHaveBeenCalledWith(element.svgElement);
-				})
+			it("shoud have id = #identificator", function() {
+				expect(element.svgElement.id).toBe(element.identificator);
 			});
-		})*/
-	});	
+			describe("after changing tagSVG to 'path' and updating again", function() {
+				beforeEach(function() {
+					element.tagSVG = "path";
+					element.updateSVG();
+				});
+				it("should be <path>", function() {
+					expect(element.svgElement.tagName).toBe("path");
+				})
+			})
+		}); 
+	});
+
 	describe("#appendSVG", function() {
 		describe("when the argument is SceneElement", function() {
-			element = new SceneElement();
-			element2 = new SceneElement();
-			element.svgElement = {
-				appendChild: function() {}
-			}
-			spyOn('svgElement', 'appendChild');
-			it("should append SVGElements", function() {
-				expect(element.svgElement.appendChild).toHaveBeenCalledWith(element2.svgElement);
+			beforeEach(function() {
+				element2 = new SceneElement();
+				element2.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+			});
+			describe("if #svgElement is not defined", function() {
+				it("should call updateSVG", function() {
+					expect(element.svgElement).toBeNull();
+					spyOn(element,'updateSVG').and.callThrough();
+					element.appendSVG(element2);
+					expect(element.updateSVG).toHaveBeenCalled();
+				})
+			});
+			describe("when #svgElement is defined", function() {
+				beforeEach(function() {
+					element.svgElement=document.createElementNS("http://www.w3.org/2000/svg","g");
+					element.appendSVG(element2);
+				});
+				it("should append SVGElements", function() {
+					expect(Array.prototype.slice.call(element.svgElement.children)).toContain(element2.svgElement);
+				});				
+			})
+		});
+		describe("when the argument is a HTMLElement", function() {
+			beforeEach(function() {
+				element.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+			});
+			it("should append it to svg", function() {
+				htmlElement = document.createElement("p");
+				element.appendSVG(htmlElement);
+				expect(Array.prototype.slice.call(element.svgElement.children)).toContain(htmlElement);
+			});
+			it("should also do it if the argument is SVGElement", function() {
+				svgElement = document.createElementNS("http://www.w3.org/2000/svg","path");
+				element.appendSVG(svgElement);
+				expect(Array.prototype.slice.call(element.svgElement.children)).toContain(svgElement);
+			});
+			xit("should also inject argument if it is string", function() {
+				svgElement = "<p>html code</p>"
+				element.appendSVG(svgElement);
+				expect(Array.prototype.slice.call(element.svgElement.children)).toContain(svgElement);
+			});
+		});		
+	})
+
+	describe("#updateSVG of a child element", function() {
+		describe("after appendig a child, updating it , changing its tagName and updating again", function() {
+			it("should be the only child ", function() {
+				element.svgElement=document.createElementNS("http://www.w3.org/2000/svg","g");
+				element2 = new SceneElement();
+				element2.svgElement = document.createElementNS("http://www.w3.org/2000/svg","g");
+				element.appendSVG(element2);
+				console.log("dddd",element.svgElement.children[0].parentNode)
+				element2.tagSVG = 'path';
+				element2.updateSVG();
+				console.log("ccc", element2.svgElement)
+				console.log("bbb", element2.svgElement.parentNode)
+				expect(element2.svgElement.tagName).toBe("path");
+				console.log(element2.svgElement.attributes)
+				console.log(element);
+				console.log(element2);
+				expect(element.svgElement.children[0].tagName).toBe("path");
 			});
 		})
 	});
@@ -54,7 +114,6 @@ describe("new Scene()", function() {
   var scene;
   var element;
   var numbersOfSVGtags;
-
   beforeEach(function() {
 		numbersOfSVGtags = document.getElementsByTagName('svg').length;
     scene = new Scene(); 
@@ -104,7 +163,7 @@ describe("new Scene()", function() {
 		});
 		describe("after calling #plotSVG", function() {
 			it("#elements.plotSVG should be called", function() {
-				spyOn(scene.svgElement, appendChild);
+				scene.svgElement=jasmine.createSpyObj('svgElement', ['appendChild']); 
 				scene.plotSVG();
 				expect(scene.elements.plotSVG).toHaveBeenCalled();
 			})
@@ -162,7 +221,7 @@ describe("new Scene(div)", function() {
 	});
 });
 
-describe("new GroupOfSceneElementos()", function() {
+describe("new GroupOfSceneElements()", function() {
 	var elements;
 
 	beforeEach(function() {
