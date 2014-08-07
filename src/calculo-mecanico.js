@@ -1,12 +1,7 @@
 var div = document.getElementById('divCatenaria');
-var escena = new Scene(div);
+var scene = SD.sceneMaker({div: div});
 
-var cable = new Cable();
-cable.elasticModulus = 7.9641*Math.pow(10,10);     // Pa;
-cable.dilationCoefficient = 0.00001910;            // ºC^-1
-cable.section = 54.60;                             // mm^2
-cable.linearDensity = 0.189;                       // kg/m
-cable.diameter = 9.5;                              // mm
+var cable = CableLA56;
 
 var conditions1 = new Conditions();
 var conditions2 = new Conditions();
@@ -17,7 +12,7 @@ var tramo;
 var range;
 var sceneRange;
 var constantes;
-var catenariaInicalGraph;
+var catenariaInicialGraph;
 var catenariaNuevaGraph;
 var posteIzquierdoGraph;
 var posteDerechoGraph;
@@ -41,27 +36,25 @@ var construirDibujo = function (form) {
   conditions2.span = span;
   conditions2.temperature = temperature;
   conditions2.windPressure = windPressure;
-
-  range = new Range(-conditions1.span/2,conditions1.span/2, 0, 35);
-  sceneRange = new Range(-conditions1.span/2 - 0.1*span,conditions1.span/2 + 0.1*span, 0, 40);
+  
+  range      = SD.rangeMaker({xMin: -conditions1.span/2, xMax: conditions1.span/2, yMin: 0, yMax: 35});
+  sceneRange = SD.rangeMaker({xMin: -conditions1.span/2, xMax: conditions1.span/2, yMin: 0, yMax: 40});
+  scene.range = sceneRange;
+  console.log(scene);
   
   tramo = new Tramo(cable, conditions1, conditions2);
-  tramo.finalConditions.tension = tramo.solveChangeEquation();
+  tramo.sag();
 
-  constantes = resuelvaParabola(tramo.a(), -conditions1.span/2,30, conditions1.span/2, 30);
-  catenariaInicalGraph = new CatenaryGraph(tramo.a(), constantes[0], constantes[1]);
-  catenariaNuevaGraph = new CatenaryGraph(tramo.a(), constantes[0], constantes[1]);
-  posteIzquierdoGraph = new Pole(-conditions1.span, 0, 30);
-  posteDerechoGraph   = new Pole(+conditions1.span, 0, 30);
+  constantes = resuelveParabola(tramo.a(), -conditions1.span/2,30, conditions1.span/2, 30);
+  catenariaInicialGraph = CD.parabolaGraphMaker({a: tramo.a(), c1: constantes[0], c2: constantes[1]});
+  catenariaInicialGraph.range = range;
 
-  escena.add(catenariaInicalGraph);
-  escena.add(posteIzquierdoGraph);
-  escena.add(posteDerechoGraph);
+  console.log(catenariaInicialGraph);
+
+  scene.add(catenariaInicialGraph);
   
-  escena.range = sceneRange;
-  catenariaInicalGraph.range = range;
 
-  escena.plotSVG();
+  scene.plotSVG();
 };
 
 var actualizarDibujo = function (form) {
@@ -73,17 +66,13 @@ var actualizarDibujo = function (form) {
 
   tramo.finalConditions.tension = tramo.solveChangeEquation();
   
-  constantes = resuelvaParabola(tramo.a(), -conditions1.span/2,30, conditions1.span/2, 30);
-
-  
-  catenariaNuevaGraph.a = tramo.a();
-  catenariaNuevaGraph.c1 = constantes[0];
-  catenariaNuevaGraph.c2 = constantes[1];
-
-  escena.add(catenariaNuevaGraph);
+  constantes = resuelveParabola(tramo.a(), -conditions1.span/2,30, conditions1.span/2, 30);
+  catenariaNuevaGraph = CD.parabolaGraphMaker({a: tramo.a(), c1: constantes[0], c2: constantes[1]});
   catenariaNuevaGraph.range = range;
 
-  catenariaNuevaGraph.plotSVG();
+  scene.add(catenariaNuevaGraph);
+
+  scene.plotSVG();
 };      
 
 var tablaConstruida = false;
