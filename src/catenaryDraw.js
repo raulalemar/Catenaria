@@ -1,3 +1,22 @@
+CD = {}
+CD.PARABOLA_GRAPH_SPEC = {a: 12.5, c1: 50, c2: -12.5};
+
+CD.parabolaGraphMaker = function(spec) {
+	var parabolaGraphProto = SD.functionGraphMaker(CD.PARABOLA_GRAPH_SPEC);
+	console.log(parabolaGraphProto);
+	parabolaGraphProto.f = function(x) {return parabola(x,this.a,this.c1,this.c2)};
+	var newParabolaGraph = SD.objectCloner(parabolaGraphProto, spec);
+	return newParabolaGraph;
+}
+
+CD.catenariaGraphMaker = function(spec) {
+	var catenariaGraphProto = SD.functionGraphMaker(CD.PARABOLA_GRAPH_SPEC);
+	catenariaGraphProto.f = function(x) {return catenaria(x,this.a,this.c1,this.c2)};
+	var newCatenariaGraph = SD.objectCloner(catenariaGraphProto, spec);
+	return newCatenariaGraph;
+}
+
+
 function CatenaryGraph(a,c1,c2) {
   this.a = a || 10;
   this.c1 = c1 || 0;

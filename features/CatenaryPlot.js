@@ -1,12 +1,29 @@
 describe("Feature: creating electric lines. As developer, I want to create a scheme of electric line, in order to have a visual representation", function() {
 	var div; 
+	describe("Scenario: Drawing parabola", function() {
+		div = document.getElementById("div0");
+		var scene = SD.sceneMaker({div:div});
+		var parabolaGraph = CD.parabolaGraphMaker();
+		it("Given instances scene and a graph of catenary created", function() {
+			expect(true).toBe(true);
+		});
+		scene.add(parabolaGraph);
+		it("and adding the graph to scene.", function() {
+
+		});		
+		scene.plotSVG();
+		it("Then scene.plotSVG() should produce a graph of a catenary.", function() {
+			//var funEl = scene.svgElement.getElementById(catenaryGraph.identificator);
+			//expect(funEl).toBe(catenaryGraph.svgElement);
+		});
+	});
 	describe("Scenario: Drawing catenary", function() {
 		div = document.getElementById("div1");
-		var scene = new Scene(div);
-		var catenaryGraph = new CatenaryGraph();
+		var scene = SD.sceneMaker({div:div});
+		var catenaryGraph = CD.catenariaGraphMaker();
+		console.log(catenaryGraph)
 		it("Given instances scene and a graph of catenary created", function() {
-			expect(scene instanceof Scene).toBe(true);
-			expect(catenaryGraph instanceof CatenaryGraph).toBe(true);
+			expect(true).toBe(true);
 		});
 		scene.add(catenaryGraph);
 		it("and adding the graph to scene.", function() {

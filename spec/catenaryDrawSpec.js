@@ -1,3 +1,28 @@
+describe("parabolaGraphMaker", function() {
+	var parabolaGraph;
+	var spec;
+	it("should have "+ spec, function() {
+		spec = CD.PARABOLA_GRAPH_SPEC;
+		parabolaGraph = CD.parabolaGraphMaker();
+		for (var key in spec) {
+			expect(parabolaGraph[key]).toBe(spec[key]);
+		}
+	})
+})
+
+describe("catenariaGraphMaker", function() {
+	var catenariaGraph;
+	var spec;
+	it("should have "+ spec, function() {
+		spec = CD.PARABOLA_GRAPH_SPEC;
+		catenariaGraph = CD.catenariaGraphMaker();
+		for (var key in spec) {
+			expect(catenariaGraph[key]).toBe(spec[key]);
+		}
+	})
+})
+
+
 describe("new CatenaryGraph()", function() {
 	var catenaryGraph;
 	beforeEach(function() {
