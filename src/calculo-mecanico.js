@@ -38,7 +38,7 @@ var construirDibujo = function (form) {
   conditions2.windPressure = windPressure;
   
   range      = SD.rangeMaker({xMin: -conditions1.span/2, xMax: conditions1.span/2, yMin: 0, yMax: 35});
-  sceneRange = SD.rangeMaker({xMin: -conditions1.span/2, xMax: conditions1.span/2, yMin: 0, yMax: 40});
+  sceneRange = SD.rangeMaker({xMin: -conditions1.span/2-10, xMax: conditions1.span/2+10, yMin: 0, yMax: 40});
   scene.range = sceneRange;
   console.log(scene);
   
@@ -51,13 +51,15 @@ var construirDibujo = function (form) {
 
   console.log(catenariaInicialGraph);
 
-  scene.add(catenariaInicialGraph);
-  
+  scene.add(catenariaInicialGraph);  
 
   scene.plotSVG();
 };
 
 var actualizarDibujo = function (form) {
+
+  scene.remove(catenariaNuevaGraph);
+
   var temperature = form.temperature.value;
   var windPressure = form.windPressure.value;
 
@@ -70,8 +72,10 @@ var actualizarDibujo = function (form) {
   catenariaNuevaGraph = CD.parabolaGraphMaker({a: tramo.a(), c1: constantes[0], c2: constantes[1]});
   catenariaNuevaGraph.range = range;
 
-  scene.add(catenariaNuevaGraph);
+  console.log('catenaria nueva: ', catenariaNuevaGraph);
 
+  
+  scene.add(catenariaNuevaGraph);
   scene.plotSVG();
 };      
 
